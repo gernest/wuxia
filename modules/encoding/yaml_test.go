@@ -7,7 +7,7 @@ import (
 	"github.com/robertkrimen/otto"
 )
 
-func TestYAML_Marhsal(t *testing.T) {
+func TestYAML(t *testing.T) {
 	vm := otto.New()
 	vm.Set("YAML", func(_ otto.FunctionCall) otto.Value {
 		return util.ToValue(NewYAML(vm))
