@@ -1,18 +1,17 @@
 package encoding
 
 import (
-	"fmt"
-
 	"github.com/gernest/valeria/modules/util"
 	"github.com/robertkrimen/otto"
 	"gopkg.in/yaml.v2"
 )
 
 type YAML struct {
+	vm *otto.Otto
 }
 
 func NewYAML(vm *otto.Otto) otto.Value {
-	o := &YAML{}
+	o := &YAML{vm: vm}
 	y, _ := vm.Object(`({})`)
 	y.Set("encode", o.Marshal)
 	y.Set("decode", o.Unmarshal)
@@ -31,17 +30,19 @@ func (y *YAML) Marshal(call otto.FunctionCall) otto.Value {
 	return util.ToValue(string(rst))
 }
 
-func (t *YAML) Unmarshal(call otto.FunctionCall) otto.Value {
-	arg, err := call.Argument(8).ToString()
-	v, _ := call.Argument(8).Export()
-	fmt.Println(v)
+func (y *YAML) Unmarshal(call otto.FunctionCall) otto.Value {
+	arg, err := call.Argument(0).ToString()
 	if err != nil {
 		util.Panic(err)
 	}
 	rst := make(map[string]interface{})
-	err = yaml.Unmarshal([]byte(arg), &rst)
+	err = yaml.Unmarshal([]byte(arg), rst)
 	if err != nil {
 		util.Panic(err)
 	}
-	return util.ToValue(rst)
+	v, err := y.vm.ToValue(rst)
+	if err != nil {
+		util.Panic(err)
+	}
+	return v
 }

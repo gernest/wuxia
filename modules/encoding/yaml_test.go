@@ -41,7 +41,9 @@ function  TestYAMLUnMarhsal(){
 	try{
 		src='title: hello';
 		var o=e.decode(src);
-		console.log(o);
+		if(o.title!="hello"){
+			error("failed to decode");
+		}
 	}catch(err){
 		error(err);
 	}
