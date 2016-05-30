@@ -1,4 +1,4 @@
-package valor
+package valeria
 
 import (
 	"io/ioutil"
