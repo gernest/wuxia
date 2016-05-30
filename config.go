@@ -7,26 +7,20 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-const configFile = "_valor.yml"
+const configFile = "_valeria.yml"
 
 //Config is the configuration object for valor. The supported format is yaml.
 type Config struct {
-	WorkingDir   string          `yaml:"working_dir"`
-	BaseURL      string          `yaml:"base_url"`
-	DataDir      string          `yaml:"data_dir"`
-	SourceDir    string          `yaml:"source_dir"`
-	OutputDir    string          `yaml:"output_dir"`
-	PluginDir    string          `yaml:"plugin_dir"`
-	ThemesDir    string          `yaml:"themes_dir"`
-	Handlers     []HandlerConfig `yaml:"handlers"`
-	Boot         []string        `yaml:"boot"`
-	ShuttingDown []string        `yaml:"shutting_down"`
-}
-
-type HandlerConfig struct {
-	Pattern  string   `yaml:"pattern"`
-	Renderer string   `yaml:"renderer"`
-	Plugins  []string `yaml:"plugin"`
+	WorkingDir string   `yaml:"working_dir"`
+	BaseURL    string   `yaml:"base_url"`
+	DataDir    string   `yaml:"data_dir"`
+	SourceDir  string   `yaml:"source_dir"`
+	OutputDir  string   `yaml:"output_dir"`
+	PluginDir  string   `yaml:"plugin_dir"`
+	ThemesDir  string   `yaml:"themes_dir"`
+	Plugins    []string `json:"plugins"`
+	Up         []string `yaml:"up"`
+	Down       []string `yaml:"down"`
 }
 
 func loadConfig(root string) (*Config, error) {
