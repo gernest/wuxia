@@ -7,11 +7,10 @@ import (
 )
 
 type YAML struct {
-	vm *otto.Otto
 }
 
 func NewYAML(vm *otto.Otto) otto.Value {
-	o := &YAML{vm: vm}
+	o := &YAML{}
 	y, _ := vm.Object(`({})`)
 	y.Set("encode", o.Marshal)
 	y.Set("decode", o.Unmarshal)
@@ -40,7 +39,7 @@ func (y *YAML) Unmarshal(call otto.FunctionCall) otto.Value {
 	if err != nil {
 		util.Panic(err)
 	}
-	v, err := y.vm.ToValue(rst)
+	v, err := call.Otto.ToValue(rst)
 	if err != nil {
 		util.Panic(err)
 	}
