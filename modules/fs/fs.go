@@ -42,6 +42,7 @@ func NewFS(vm *otto.Otto) otto.Value {
 		return NewFile(call.Otto, name)
 	})
 	fs.Set("readFile", ReadFile)
+	fs.Set("writeFile", WriteFile)
 	fs.Set("readDir", ReadDir)
 	fs.Set("pwd", Getwd)
 	fs.Set("remove", Remove)
@@ -117,6 +118,22 @@ func ReadFile(call otto.FunctionCall) otto.Value {
 		util.Panic(err)
 	}
 	return util.ToValue(string(b))
+}
+
+func WriteFile(call otto.FunctionCall) otto.Value {
+	fileName, err := call.Argument(0).ToString()
+	if err != nil {
+		util.Panic(err)
+	}
+	data, err := call.Argument(0).ToString()
+	if err != nil {
+		util.Panic(err)
+	}
+	err = ioutil.WriteFile(fileName, []byte(data), 0600)
+	if err != nil {
+		util.Panic(err)
+	}
+	return otto.Value{}
 }
 
 func Getwd(call otto.FunctionCall) otto.Value {

@@ -17,6 +17,8 @@ func TestFS(t *testing.T) {
 	var fsTest = `
 try{
 // Open a new file
+name="sample.txt";
+FS.writeFile(name,"");
 var f=FS.open("sample.txt");
 var msg="hello";
 f.write(msg);
