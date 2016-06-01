@@ -18,7 +18,7 @@ type Config struct {
 	OutputDir  string   `yaml:"output_dir"`
 	PluginDir  string   `yaml:"plugin_dir"`
 	ThemesDir  string   `yaml:"themes_dir"`
-	Plugins    []string `json:"plugins"`
+	Plugins    []string `yaml:"plugins"`
 	Up         []string `yaml:"up"`
 	Down       []string `yaml:"down"`
 }
