@@ -1,11 +1,6 @@
 package valeria
 
-import (
-	"io/ioutil"
-	"testing"
-
-	"gopkg.in/yaml.v2"
-)
+import "testing"
 
 var sampleConfig = &Config{
 	BaseURL:   "http:/example.com",
@@ -26,11 +21,11 @@ var sampleConfig = &Config{
 }
 
 func TestConfig(t *testing.T) {
-	data, err := yaml.Marshal(sampleConfig)
-	if err != nil {
-		t.Fatal(err)
-	}
-	ioutil.WriteFile("fixture/_valeria.yml", data, 0600)
+	//data, err := yaml.Marshal(sampleConfig)
+	//if err != nil {
+	//t.Fatal(err)
+	//}
+	//ioutil.WriteFile("fixture/_valeria.yml", data, 0600)
 }
 
 func TestLoadConfig(t *testing.T) {
