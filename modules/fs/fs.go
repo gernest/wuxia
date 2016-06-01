@@ -21,7 +21,7 @@ func NewFile(vm *otto.Otto, path string) otto.Value {
 	if err != nil {
 		util.Panic(err)
 	}
-	file := &File{path: path, info: info}
+	file := &File{path: path, info: info, buf: &bytes.Buffer{}}
 	f, _ := vm.Object(`({})`)
 	f.Set("read", file.Read)
 	f.Set("write", file.Write)
@@ -44,6 +44,9 @@ func NewFS(vm *otto.Otto) otto.Value {
 	fs.Set("readFile", ReadFile)
 	fs.Set("readDir", ReadDir)
 	fs.Set("pwd", Getwd)
+	fs.Set("remove", Remove)
+	fs.Set("removeALL", RemoveAll)
+	fs.Set("fileExist", IsExist)
 	return util.ToValue(fs)
 }
 
@@ -76,6 +79,7 @@ func (f *File) Write(call otto.FunctionCall) otto.Value {
 }
 
 func (f *File) Flush(call otto.FunctionCall) otto.Value {
+	defer f.buf.Reset()
 	err := ioutil.WriteFile(f.path, f.buf.Bytes(), 0600)
 	if err != nil {
 		util.Panic(err)
@@ -121,4 +125,40 @@ func Getwd(call otto.FunctionCall) otto.Value {
 		util.Panic(err)
 	}
 	return util.ToValue(wd)
+}
+
+func Remove(call otto.FunctionCall) otto.Value {
+	fileName, err := call.Argument(0).ToString()
+	if err != nil {
+		util.Panic(err)
+	}
+	err = os.Remove(fileName)
+	if err != nil {
+		util.Panic(err)
+	}
+	return otto.Value{}
+}
+
+func RemoveAll(call otto.FunctionCall) otto.Value {
+	fileName, err := call.Argument(0).ToString()
+	if err != nil {
+		util.Panic(err)
+	}
+	err = os.RemoveAll(fileName)
+	if err != nil {
+		util.Panic(err)
+	}
+	return otto.Value{}
+}
+
+func IsExist(call otto.FunctionCall) otto.Value {
+	fileName, err := call.Argument(0).ToString()
+	if err != nil {
+		util.Panic(err)
+	}
+	_, err = os.Stat(fileName)
+	if err != nil {
+		return util.ToValue(!os.IsNotExist(err))
+	}
+	return util.ToValue(false)
 }
