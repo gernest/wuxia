@@ -23,6 +23,7 @@ var f=FS.open("sample.txt");
 var msg="hello";
 f.write(msg);
 f.flush();
+FS.remove(name);
 }catch(e){
 	error(e);
 }
