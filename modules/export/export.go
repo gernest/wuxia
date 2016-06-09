@@ -12,13 +12,13 @@ func (e Export) Set(key string, value interface{}) {
 	e[key] = value
 }
 
-func (e Export) Register(vm *otto.Otto) error {
+func (e Export) Register(vm *otto.Otto) otto.Value {
 	o, err := vm.Object(`({})`)
 	if err != nil {
-		return err
+		panic(err)
 	}
 	for key, value := range e {
 		o.Set(key, value)
 	}
-	return nil
+	return o.Value()
 }
