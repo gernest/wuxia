@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"html/template"
 
-	"github.com/gernest/valeria/modules/util"
 	"github.com/robertkrimen/otto"
+	"github.com/valor-pw/backend/modules/util"
 )
 
 type Template struct {

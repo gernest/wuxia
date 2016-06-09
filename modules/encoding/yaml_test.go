@@ -3,8 +3,8 @@ package encoding
 import (
 	"testing"
 
-	"github.com/gernest/valeria/modules/util"
 	"github.com/robertkrimen/otto"
+	"github.com/valor-pw/backend/modules/util"
 )
 
 func TestYAML(t *testing.T) {
