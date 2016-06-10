@@ -6,6 +6,8 @@ import (
 )
 
 type ModuleLoader interface {
+	Init(*otto.Otto, func(otto.FunctionCall) otto.Value)
+	IsInit() bool
 	Load(name string) (otto.Value, bool)
 }
 
