@@ -12,7 +12,7 @@ func (e Export) Set(key string, value interface{}) {
 	e[key] = value
 }
 
-func (e Export) Register(vm *otto.Otto) otto.Value {
+func (e Export) ToValue(vm *otto.Otto) otto.Value {
 	o, err := vm.Object(`({})`)
 	if err != nil {
 		panic(err)
