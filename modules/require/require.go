@@ -11,20 +11,33 @@ type ModuleLoader interface {
 	Load(name string) (otto.Value, bool)
 }
 
-func New(loades ...ModuleLoader) func(otto.FunctionCall) otto.Value {
-	var findModule = func(mod string) otto.Value {
-		for i := 0; i < len(loades); i++ {
-			if m, ok := loades[i].Load(mod); ok {
-				return m
-			}
-		}
-		return otto.UndefinedValue()
+func New(loaders ...ModuleLoader) *Require {
+	return &Require{l: loaders}
+}
+
+type Require struct {
+	l []ModuleLoader
+}
+
+func (r *Require) ToValue() func(otto.FunctionCall) otto.Value {
+	return r.require
+}
+
+func (r *Require) require(call otto.FunctionCall) otto.Value {
+	name, err := call.Argument(0).ToString()
+	if err != nil {
+		util.Panic(err)
 	}
-	return func(call otto.FunctionCall) otto.Value {
-		name, err := call.Argument(0).ToString()
-		if err != nil {
-			util.Panic(err)
+	return r.findModule(call.Otto, name)
+}
+func (r *Require) findModule(vm *otto.Otto, name string) otto.Value {
+	for i := 0; i < len(r.l); i++ {
+		if !r.l[i].IsInit() {
+			r.l[i].Init(vm, r.require)
 		}
-		return findModule(name)
+		if m, ok := r.l[i].Load(name); ok {
+			return m
+		}
 	}
+	return otto.UndefinedValue()
 }
