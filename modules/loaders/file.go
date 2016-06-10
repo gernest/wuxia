@@ -11,6 +11,22 @@ type File struct {
 	cache   map[string]otto.Value
 	vm      *otto.Otto
 	require func(otto.FunctionCall) otto.Value
+	isInit  bool
+}
+
+func (f *File) IsInit() bool {
+	return f.isInit
+}
+
+func (f *File) Init(vm *otto.Otto, require func(otto.FunctionCall) otto.Value) {
+	if f.IsInit() {
+		return
+	}
+	f.vm = vm
+	f.require = require
+	if f.cache == nil {
+		f.cache = make(map[string]otto.Value)
+	}
 }
 
 func (f *File) Load(name string) (otto.Value, bool) {
