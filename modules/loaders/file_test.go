@@ -10,6 +10,7 @@ import (
 
 func TestFile_Load(t *testing.T) {
 	req := require.New(&File{})
+	req.SetWorkingDir("fixture")
 	vm := otto.New()
 	vm.Set("require", req.ToValue())
 	data, err := ioutil.ReadFile("fixture/index.js")

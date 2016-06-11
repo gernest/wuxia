@@ -8,7 +8,7 @@ import (
 type ModuleLoader interface {
 	Init(*otto.Otto, func(otto.FunctionCall) otto.Value)
 	IsInit() bool
-	Load(name string) (otto.Value, bool)
+	Load(name, pwd string) (otto.Value, bool)
 }
 
 func New(loaders ...ModuleLoader) *Require {
@@ -16,7 +16,8 @@ func New(loaders ...ModuleLoader) *Require {
 }
 
 type Require struct {
-	l []ModuleLoader
+	l   []ModuleLoader
+	pwd string
 }
 
 func (r *Require) ToValue() func(otto.FunctionCall) otto.Value {
@@ -35,9 +36,13 @@ func (r *Require) findModule(vm *otto.Otto, name string) otto.Value {
 		if !r.l[i].IsInit() {
 			r.l[i].Init(vm, r.require)
 		}
-		if m, ok := r.l[i].Load(name); ok {
+		if m, ok := r.l[i].Load(name, r.pwd); ok {
 			return m
 		}
 	}
 	return otto.UndefinedValue()
+}
+
+func (r *Require) SetWorkingDir(dir string) {
+	r.pwd = dir
 }

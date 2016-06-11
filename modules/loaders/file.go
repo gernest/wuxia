@@ -31,10 +31,13 @@ func (f *File) Init(vm *otto.Otto, require func(otto.FunctionCall) otto.Value) {
 	}
 }
 
-func (f *File) Load(name string) (otto.Value, bool) {
+func (f *File) Load(name, pwd string) (otto.Value, bool) {
 	// The following code is addopted from
 	//https://github.com/ddliu/motto
-	name = filepath.Clean(name)
+	if !filepath.IsAbs(name) {
+		name = filepath.Clean(name)
+		name = filepath.Join(pwd, name)
+	}
 	if m, ok := f.cache[name]; ok {
 		return m, ok
 	}

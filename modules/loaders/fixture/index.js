@@ -1,6 +1,4 @@
-var msg=require("./message.js");
 var echo=require("./echo.js");
-console.log("HERE");
+echo.echo("hello");
 
-//return echo.echo(msg.msg);
 
