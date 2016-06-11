@@ -1,8 +1,8 @@
-package export
+package vm
 
 import "github.com/robertkrimen/otto"
 
-func New() Export {
+func NewExport() Export {
 	return make(Export)
 }
 

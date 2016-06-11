@@ -1,4 +1,4 @@
-package require
+package vm
 
 import (
 	"github.com/gernest/valeria/modules/util"
@@ -11,7 +11,7 @@ type ModuleLoader interface {
 	Load(name, pwd string) (otto.Value, bool)
 }
 
-func New(loaders ...ModuleLoader) *Require {
+func NewRequre(loaders ...ModuleLoader) *Require {
 	return &Require{l: loaders}
 }
 

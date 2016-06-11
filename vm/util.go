@@ -1,4 +1,4 @@
-package util
+package vm
 
 import "github.com/robertkrimen/otto"
 

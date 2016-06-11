@@ -1,4 +1,4 @@
-package loaders
+package vm
 
 import (
 	"io/ioutil"
@@ -42,7 +42,7 @@ func (f *File) Load(name, pwd string) (otto.Value, bool) {
 	}
 	data, err := ioutil.ReadFile(name)
 	if err != nil {
-		util.Panic(err)
+		Panic(err)
 	}
 
 	v, err := f.loadFromSource(string(data))

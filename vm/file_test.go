@@ -1,15 +1,14 @@
-package loaders
+package vm
 
 import (
 	"io/ioutil"
 	"testing"
 
 	"github.com/robertkrimen/otto"
-	"github.com/valor-pw/backend/modules/require"
 )
 
 func TestFile_Load(t *testing.T) {
-	req := require.New(&File{})
+	req := NewRequre(&File{})
 	req.SetWorkingDir("fixture")
 	vm := otto.New()
 	vm.Set("require", req.ToValue())
