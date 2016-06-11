@@ -70,9 +70,9 @@ func (f *File) loadFromSource(src string) (otto.Value, error) {
 	if !val.IsUndefined() {
 		return val, nil
 	}
-	expVl, err := module.Get("exports")
+	expV, err := module.Get("exports")
 	if err != nil {
 		return otto.UndefinedValue(), err
 	}
-	return expVl, nil
+	return expV, nil
 }
