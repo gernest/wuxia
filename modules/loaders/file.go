@@ -1,7 +1,9 @@
 package loaders
 
 import (
+	"fmt"
 	"io/ioutil"
+	"path/filepath"
 
 	"github.com/gernest/valeria/modules/util"
 	"github.com/robertkrimen/otto"
@@ -32,19 +34,22 @@ func (f *File) Init(vm *otto.Otto, require func(otto.FunctionCall) otto.Value) {
 func (f *File) Load(name string) (otto.Value, bool) {
 	// The following code is addopted from
 	//https://github.com/ddliu/motto
+	name = filepath.Clean(name)
 	if m, ok := f.cache[name]; ok {
 		return m, ok
 	}
-
 	data, err := ioutil.ReadFile(name)
 	if err != nil {
+		fmt.Println("HERE "+name+" ", err)
 		util.Panic(err)
 	}
+
 	v, err := f.loadFromSource(string(data))
 	if err != nil {
 		util.Panic(err)
 	}
 	f.cache[name] = v
+	fmt.Println("HERE")
 	return v, true
 }
 
