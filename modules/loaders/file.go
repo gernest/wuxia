@@ -1,7 +1,6 @@
 package loaders
 
 import (
-	"fmt"
 	"io/ioutil"
 	"path/filepath"
 
@@ -43,7 +42,6 @@ func (f *File) Load(name, pwd string) (otto.Value, bool) {
 	}
 	data, err := ioutil.ReadFile(name)
 	if err != nil {
-		fmt.Println("HERE "+name+" ", err)
 		util.Panic(err)
 	}
 
@@ -52,7 +50,6 @@ func (f *File) Load(name, pwd string) (otto.Value, bool) {
 		util.Panic(err)
 	}
 	f.cache[name] = v
-	fmt.Println("HERE")
 	return v, true
 }
 
