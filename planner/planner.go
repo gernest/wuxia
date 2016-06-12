@@ -22,7 +22,7 @@ type Plan struct {
 
 //GetPlan retrieves Plan from a javascript src.
 func GetPlan(vm *otto.Otto, src string) (*Plan, error) {
-	source := "return JSON.stringify function(){" + src + "}()"
+	source := "JSON.stringify( function(){" + src + "}())"
 	v, err := vm.Run(source)
 	if err != nil {
 		return nil, err
