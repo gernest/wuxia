@@ -1,5 +1,12 @@
 package planner
 
+import (
+	"encoding/json"
+	"errors"
+
+	"github.com/robertkrimen/otto"
+)
+
 // Plan is the execution planner object. It states the steps and stages on which
 // the execution process should take.
 type Plan struct {
@@ -11,4 +18,26 @@ type Plan struct {
 	Before     []string `json:"before"`
 	Exec       []string `json:"exec"`
 	After      []string `json:"after"`
+}
+
+//GetPlan retrieves Plan from a javascript src.
+func GetPlan(vm *otto.Otto, src string) (*Plan, error) {
+	source := "return JSON.stringify function(){" + src + "}()"
+	v, err := vm.Run(source)
+	if err != nil {
+		return nil, err
+	}
+	if v.IsUndefined() || v.IsNull() {
+		return nil, errors.New("bad planner script")
+	}
+	s, err := v.ToString()
+	if err != nil {
+		return nil, err
+	}
+	p := &Plan{}
+	err = json.Unmarshal([]byte(s), p)
+	if err != nil {
+		return nil, err
+	}
+	return p, nil
 }
