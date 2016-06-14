@@ -5,7 +5,7 @@ import "github.com/robertkrimen/otto"
 // Plan is the execution planner object. It states the steps and stages on which
 // the execution process should take.
 type Plan struct {
-	Title string `json:"tito;e"`
+	Title string `json:"title"`
 
 	// Modules that are supposed to be loaded before the execution starts. The
 	// execution process wont start if one of the dependencies is missing.
