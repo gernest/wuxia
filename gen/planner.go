@@ -1,4 +1,4 @@
-package planner
+package gen
 
 import (
 	"encoding/json"
