@@ -4,7 +4,7 @@ type Config struct {
 	Source      string
 	Destination string
 	Safe        bool
-	Exclued     []string
+	Excluede    []string
 	Include     string
 	KeepFiles   string
 	TimeZone    string
