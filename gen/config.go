@@ -1,15 +1,15 @@
 package gen
 
 type Config struct {
-	Source      string
-	Destination string
-	Safe        bool
-	Excluede    []string
-	Include     string
-	KeepFiles   string
-	TimeZone    string
-	Encoding    string
-	Port        int
-	Host        string
-	BaseURL     string
+	Source      string   `json:"source"`
+	Destination string   `json:'destination"`
+	Safe        bool     `json:"safe"`
+	Excluede    []string `json:"exclude"`
+	Include     string   `json""include"`
+	KeepFiles   string   `json:"keep_files"`
+	TimeZone    string   `json:"timezone"`
+	Encoding    string   `json:"encoding"`
+	Port        int      `json:"port"`
+	Host        string   `json:"host"`
+	BaseURL     string   `json:"base_url"`
 }
