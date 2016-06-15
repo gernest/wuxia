@@ -13,3 +13,29 @@ type Config struct {
 	Host        string   `json:"host"`
 	BaseURL     string   `json:"base_url"`
 }
+
+type System struct {
+	Boot   *Boot   `json:"boot"`
+	Config *Config `json:"config"`
+	Plan   *Plan   `json:"plan"`
+}
+
+type Boot struct {
+	ConfiFile string            `json:"config_file"`
+	PlanFile  string            `json:"plan_file"`
+	ENV       map[string]string `json:"env"`
+}
+
+type Theme struct {
+	Name   string   `json:"name"`
+	Author []Author `json:"author"`
+}
+
+type Author struct {
+	Name     string `json:"name"`
+	Github   string `json:"github"`
+	Twitter  string `json:"twitter"`
+	Linkedin string `json:"linkedin"`
+	Email    string `json:"email"`
+	Website  string `json:"website"`
+}
