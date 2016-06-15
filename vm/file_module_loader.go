@@ -4,7 +4,6 @@ import (
 	"io/ioutil"
 	"path/filepath"
 
-	"github.com/gernest/valeria/modules/util"
 	"github.com/robertkrimen/otto"
 )
 
@@ -47,7 +46,7 @@ func (f *File) Load(name, pwd string) (otto.Value, bool) {
 
 	v, err := f.loadFromSource(string(data))
 	if err != nil {
-		util.Panic(err)
+		Panic(err)
 	}
 	f.cache[name] = v
 	return v, true

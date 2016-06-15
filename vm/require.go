@@ -1,7 +1,6 @@
 package vm
 
 import (
-	"github.com/gernest/valeria/modules/util"
 	"github.com/robertkrimen/otto"
 )
 
@@ -27,7 +26,7 @@ func (r *Require) ToValue() func(otto.FunctionCall) otto.Value {
 func (r *Require) require(call otto.FunctionCall) otto.Value {
 	name, err := call.Argument(0).ToString()
 	if err != nil {
-		util.Panic(err)
+		Panic(err)
 	}
 	return r.findModule(call.Otto, name)
 }
