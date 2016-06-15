@@ -7,7 +7,7 @@ import (
 )
 
 type Generator struct {
-	vm     *vm.VM
-	config *gen.Config
-	fs     afero.Fs
+	vm  *vm.VM
+	sys *gen.System
+	fs  afero.Fs
 }
