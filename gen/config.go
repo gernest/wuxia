@@ -15,9 +15,10 @@ type Config struct {
 }
 
 type System struct {
-	Boot   *Boot   `json:"boot"`
-	Config *Config `json:"config"`
-	Plan   *Plan   `json:"plan"`
+	Boot    *Boot   `json:"boot"`
+	Config  *Config `json:"config"`
+	Plan    *Plan   `json:"plan"`
+	WorkDir string  `json:"work_dir"`
 }
 
 type Boot struct {
