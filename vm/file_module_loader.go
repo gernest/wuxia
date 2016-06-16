@@ -1,6 +1,9 @@
 package vm
 
 import (
+	"bytes"
+	"errors"
+	"io"
 	"io/ioutil"
 	"path/filepath"
 
@@ -15,6 +18,7 @@ type File struct {
 	isInit  bool
 	paths   []string
 	fs      afero.Fs
+	ext     []string
 }
 
 func (f *File) IsInit() bool {
@@ -30,6 +34,53 @@ func (f *File) Init(vm *otto.Otto, require func(otto.FunctionCall) otto.Value) {
 	if f.cache == nil {
 		f.cache = make(map[string]otto.Value)
 	}
+}
+
+func (f *File) tryFind(pwd, name string) ([]byte, error) {
+	if filepath.IsAbs(name) {
+		return readFile(f.fs, name, f.ext...)
+	}
+	var lookup []string
+	lookup = append(lookup, pwd)
+	lookup = append(lookup, f.paths...)
+	for _, dir := range lookup {
+		p := filepath.Join(dir, name)
+		data, err := readFile(f.fs, p, f.ext...)
+		if err != nil {
+			continue
+		}
+		return data, nil
+	}
+	return nil, errors.New("nothing found")
+}
+func readFile(fs afero.Fs, name string, ext ...string) ([]byte, error) {
+	if filepath.Ext(name) == "" {
+		found := false
+		for _, e := range ext {
+			n := name + "." + e
+			_, err := fs.Stat(n)
+			if err != nil {
+				continue
+			}
+			found = true
+			name = name + "." + e
+			break
+		}
+		if !found {
+			return nil, errors.New("not found")
+		}
+	}
+	var b bytes.Buffer
+	f, err := fs.Open(name)
+	if err != nil {
+		return nil, err
+	}
+	defer func() { f.Close() }()
+	_, err = io.Copy(f, &b)
+	if err != nil {
+		return nil, err
+	}
+	return b.Bytes(), nil
 }
 
 func (f *File) Load(name, pwd string) (otto.Value, bool) {
