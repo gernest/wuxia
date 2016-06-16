@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 
 	"github.com/robertkrimen/otto"
+	"github.com/spf13/afero"
 )
 
 type File struct {
@@ -13,6 +14,7 @@ type File struct {
 	require func(otto.FunctionCall) otto.Value
 	isInit  bool
 	paths   []string
+	fs      afero.Fs
 }
 
 func (f *File) IsInit() bool {
