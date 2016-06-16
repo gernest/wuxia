@@ -12,6 +12,7 @@ type File struct {
 	vm      *otto.Otto
 	require func(otto.FunctionCall) otto.Value
 	isInit  bool
+	paths   []string
 }
 
 func (f *File) IsInit() bool {
