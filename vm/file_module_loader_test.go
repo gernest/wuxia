@@ -5,10 +5,13 @@ import (
 	"testing"
 
 	"github.com/robertkrimen/otto"
+	"github.com/spf13/afero"
 )
 
 func TestFile_Load(t *testing.T) {
-	req := NewRequre(&File{})
+	f := &File{}
+	f.fs = afero.NewOsFs()
+	req := NewRequre(f)
 	req.SetWorkingDir("fixture")
 	vm := otto.New()
 	vm.Set("require", req.ToValue())

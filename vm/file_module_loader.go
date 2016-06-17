@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"errors"
 	"io"
-	"io/ioutil"
 	"path/filepath"
 
 	"github.com/robertkrimen/otto"
@@ -88,12 +87,11 @@ func (f *File) Load(name, pwd string) (otto.Value, bool) {
 	//https://github.com/ddliu/motto
 	if !filepath.IsAbs(name) {
 		name = filepath.Clean(name)
-		name = filepath.Join(pwd, name)
 	}
 	if m, ok := f.cache[name]; ok {
 		return m, ok
 	}
-	data, err := ioutil.ReadFile(name)
+	data, err := f.tryFind(pwd, name)
 	if err != nil {
 		Panic(err)
 	}
