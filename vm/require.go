@@ -45,3 +45,22 @@ func (r *Require) findModule(vm *otto.Otto, name string) otto.Value {
 func (r *Require) SetWorkingDir(dir string) {
 	r.pwd = dir
 }
+
+type ValueLoader struct {
+	cache  map[string]otto.Value
+	isInit bool
+}
+
+func (v *ValueLoader) Init(*otto.Otto, func(otto.FunctionCall) otto.Value) {
+	if !v.isInit {
+		v.isInit = true
+	}
+}
+
+func (v *ValueLoader) IsInit() bool {
+	return v.isInit
+}
+func (v *ValueLoader) Load(name, pwd string) (otto.Value, bool) {
+	val, ok := v.cache[name]
+	return val, ok
+}
