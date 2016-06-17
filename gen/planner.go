@@ -1,7 +1,5 @@
 package gen
 
-import "github.com/robertkrimen/otto"
-
 // Plan is the execution planner object. It states the steps and stages on which
 // the execution process should take.
 type Plan struct {
@@ -13,14 +11,4 @@ type Plan struct {
 	Before     []string `json:"before"`
 	Exec       []string `json:"exec"`
 	After      []string `json:"after"`
-}
-
-//GetPlan retrieves Plan from a javascript src.
-func GetPlan(vm *otto.Otto, src string) (*Plan, error) {
-	p := &Plan{}
-	err := getToJSON(p, vm, src)
-	if err != nil {
-		return nil, err
-	}
-	return p, nil
 }
