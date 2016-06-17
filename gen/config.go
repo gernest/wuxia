@@ -5,7 +5,7 @@ type Config struct {
 	Destination string   `json:'destination"`
 	Safe        bool     `json:"safe"`
 	Excluede    []string `json:"exclude"`
-	Include     string   `json""include"`
+	Include     []string `json""include"`
 	KeepFiles   string   `json:"keep_files"`
 	TimeZone    string   `json:"timezone"`
 	Encoding    string   `json:"encoding"`
