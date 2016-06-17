@@ -75,7 +75,7 @@ func readFile(fs afero.Fs, name string, ext ...string) ([]byte, error) {
 		return nil, err
 	}
 	defer func() { f.Close() }()
-	_, err = io.Copy(f, &b)
+	_, err = io.Copy(&b, f)
 	if err != nil {
 		return nil, err
 	}
