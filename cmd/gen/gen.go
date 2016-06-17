@@ -1,10 +1,25 @@
 package gen
 
 import (
+	"encoding/json"
+
 	"github.com/gernest/valeria/gen"
 	"github.com/gernest/valeria/vm"
 	"github.com/spf13/afero"
 )
+
+type BuildError struct {
+	Stage   string `json:"stage"`
+	Message string `json:"msg"`
+}
+
+func (b BuildError) Error() string {
+	o, err := json.Marshal(b)
+	if err != nil {
+		return err.Error()
+	}
+	return string(o)
+}
 
 type Generator struct {
 	vm  *vm.VM
