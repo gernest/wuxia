@@ -1,8 +1,6 @@
 package vm
 
-import (
-	"github.com/robertkrimen/otto"
-)
+import "github.com/robertkrimen/otto"
 
 type ModuleLoader interface {
 	Init(*otto.Otto, func(otto.FunctionCall) otto.Value)

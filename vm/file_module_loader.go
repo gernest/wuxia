@@ -91,6 +91,7 @@ func (f *File) Load(name, pwd string) (otto.Value, bool) {
 	if m, ok := f.cache[name]; ok {
 		return m, ok
 	}
+
 	data, err := f.tryFind(pwd, name)
 	if err != nil {
 		Panic(err)

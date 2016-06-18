@@ -1,7 +1,7 @@
 package vm
 
 import (
-	"io/ioutil"
+	"fmt"
 	"testing"
 
 	"github.com/robertkrimen/otto"
@@ -9,17 +9,38 @@ import (
 )
 
 func TestFile_Load(t *testing.T) {
+	var echo = `
+function echo(msg){
+  return msg;
+}
+
+exports.echo=echo;
+`
+	var index = `
+var echo=require("./echo.js");
+echo.echo("hello");
+`
+	memFs := afero.NewMemMapFs()
+	efile, err := memFs.Create("fixture/echo.js")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = efile.Close() }()
+	fmt.Fprint(efile, echo)
+
+	ifile, err := memFs.Create("fixture/index.js")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = ifile.Close() }()
+	fmt.Fprint(ifile, index)
 	f := &File{}
-	f.fs = afero.NewOsFs()
+	f.fs = memFs
 	req := NewRequre(f)
 	req.SetWorkingDir("fixture")
 	vm := otto.New()
 	vm.Set("require", req.ToValue())
-	data, err := ioutil.ReadFile("fixture/index.js")
-	if err != nil {
-		t.Error(err)
-	}
-	result, err := vm.Run(data)
+	result, err := vm.Run(index)
 	if err != nil {
 		t.Error(err)
 	}
