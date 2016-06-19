@@ -2,6 +2,7 @@ package gen
 
 import (
 	"encoding/json"
+	"os"
 
 	"github.com/gernest/valeria/gen"
 	"github.com/gernest/valeria/vm"
@@ -38,7 +39,24 @@ func (g *Generator) Build() error {
 	return evaluate(g.init, g.config, g.plan, g.exec, g.down)
 }
 func (g *Generator) init() error {
+	if g.sys == nil {
+		g.sys = defalutSystem()
+	}
 	return nil
+}
+
+func defalutSystem() *gen.System {
+	pwd, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
+	return &gen.System{
+		Boot: &gen.Boot{
+			ConfigiFile: configFile,
+			PlanFile:    "index.js",
+		},
+		WorkDir: pwd,
+	}
 }
 func (g *Generator) config() error {
 	return nil
