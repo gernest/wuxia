@@ -62,8 +62,8 @@ func defalutSystem() *gen.System {
 	}
 }
 
-func defaultVM(sys *gen.System) gen.VM {
-	return &gen.VM{}
+func defaultVM(sys *gen.System) *vm.VM {
+	return &vm.VM{}
 }
 func (g *Generator) config() error {
 	return nil
