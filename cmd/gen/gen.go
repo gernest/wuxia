@@ -20,7 +20,7 @@ type BuildError struct {
 	Message string `json:"msg"`
 }
 
-func (b BuildError) Error() string {
+func (b *BuildError) Error() string {
 	o, err := json.Marshal(b)
 	if err != nil {
 		return err.Error()
