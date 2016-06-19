@@ -42,6 +42,9 @@ func (g *Generator) init() error {
 	if g.sys == nil {
 		g.sys = defalutSystem()
 	}
+	if g.vm == nil {
+		g.vm = defaultVM(g.sys)
+	}
 	return nil
 }
 
@@ -57,6 +60,10 @@ func defalutSystem() *gen.System {
 		},
 		WorkDir: pwd,
 	}
+}
+
+func defaultVM(sys *gen.System) gen.VM {
+	return &gen.VM{}
 }
 func (g *Generator) config() error {
 	return nil
