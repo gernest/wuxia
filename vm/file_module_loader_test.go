@@ -48,4 +48,28 @@ echo.echo("hello");
 	if o != "hello" {
 		t.Errorf("expected hello got %s", o)
 	}
+
+	// Loading json
+	var j = `{title: "hello"}`
+	jfile, err := memFs.Create("config.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Fprint(jfile, j)
+	var jscript = `
+var config=require("config.json");
+function out(){
+	return config.title;
+}
+out();
+`
+
+	result, err = vm.Run(jscript)
+	if err != nil {
+		t.Error(err)
+	}
+	o, _ = result.ToString()
+	if o != "hello" {
+		t.Errorf("expected hello got %s", o)
+	}
 }

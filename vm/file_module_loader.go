@@ -97,7 +97,7 @@ func (f *File) Load(name, pwd string) (otto.Value, bool) {
 		Panic(err)
 	}
 
-	v, err := f.loadFromSource(string(data))
+	v, err := f.loadFromSource(name, string(data))
 	if err != nil {
 		Panic(err)
 	}
@@ -105,9 +105,12 @@ func (f *File) Load(name, pwd string) (otto.Value, bool) {
 	return v, true
 }
 
-func (f *File) loadFromSource(src string) (otto.Value, error) {
+func (f *File) loadFromSource(name, src string) (otto.Value, error) {
 	// The following code is addopted from
 	//https://github.com/ddliu/motto
+	if filepath.Ext(name) == ".json" {
+		return f.vm.Call("JSON.parse", nil, src)
+	}
 	source := "(function(module) {var require = module.require;var exports = module.exports;\n" + src + "\n})"
 	module, err := f.vm.Object(`({exports: {}})`)
 	if err != nil {
