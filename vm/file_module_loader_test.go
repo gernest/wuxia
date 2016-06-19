@@ -50,20 +50,19 @@ echo.echo("hello");
 	}
 
 	// Loading json
-	var j = `{title: "hello"}`
-	jfile, err := memFs.Create("config.json")
+	var j = `{"title": "hello"}`
+	jfile, err := memFs.Create("fixture/config.json")
 	if err != nil {
 		t.Fatal(err)
 	}
+	defer func() { _ = jfile.Close() }()
 	fmt.Fprint(jfile, j)
-	var jscript = `
-var config=require("config.json");
-function out(){
-	return config.title;
-}
-out();
-`
 
+	var jscript = `
+var echo=require("./echo.js");
+var cfg=require("./config.json");
+echo.echo(cfg.title);
+`
 	result, err = vm.Run(jscript)
 	if err != nil {
 		t.Error(err)
