@@ -8,6 +8,13 @@ import (
 	"github.com/spf13/afero"
 )
 
+const (
+	scriptsDir = "_scripts"
+	initDri    = "init"
+	planDir    = "plan"
+	configFile = "config.json"
+)
+
 type BuildError struct {
 	Stage   string `json:"stage"`
 	Message string `json:"msg"`
