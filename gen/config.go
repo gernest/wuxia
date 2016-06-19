@@ -22,9 +22,9 @@ type System struct {
 }
 
 type Boot struct {
-	ConfiFile string            `json:"config_file"`
-	PlanFile  string            `json:"plan_file"`
-	ENV       map[string]string `json:"env"`
+	ConfigiFile string            `json:"config_file"`
+	PlanFile    string            `json:"plan_file"`
+	ENV         map[string]string `json:"env"`
 }
 
 type Theme struct {
