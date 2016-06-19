@@ -45,6 +45,7 @@ func (g *Generator) init() error {
 	if g.vm == nil {
 		g.vm = defaultVM(g.sys)
 	}
+	g.vm.Set("sys", g.sys)
 	return nil
 }
 
