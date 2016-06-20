@@ -21,6 +21,10 @@ type BuildError struct {
 	Message string `json:"msg"`
 }
 
+func buildErr(stage, msg string) error {
+	return &BuildError{Stage: stage, Message: msg}
+}
+
 func (b *BuildError) Error() string {
 	o, err := json.Marshal(b)
 	if err != nil {
@@ -46,6 +50,10 @@ func (g *Generator) init() error {
 		g.vm = defaultVM(g.sys)
 	}
 	g.vm.Set("sys", g.sys)
+	_, err := g.vm.Eval(entryScript())
+	if err != nil {
+		return buildErr("init", err.Error())
+	}
 	return nil
 }
 
