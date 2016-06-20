@@ -1,6 +1,6 @@
 package gen
 
-func netryScript() string {
+func entryScript() string {
 	return `
 var system=sys;
 `
