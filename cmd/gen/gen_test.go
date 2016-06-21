@@ -50,5 +50,7 @@ func sampleProjectFs() afero.Fs {
 
 var readmeFile = `
 # v
-Project v is a moderm static content generator for building anything static. It is fast, modular and flexible, combining the power of Go and the easy of use of Javascript.
+Project v is a moderm static content generator for building anything static. It 
+is fast, modular and flexible, combining the power of Go and the easy of use of 
+Javascript.
 `
