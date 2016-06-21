@@ -2,9 +2,18 @@ package gen
 
 import (
 	"os"
+	"testing"
 
 	"github.com/spf13/afero"
 )
+
+func TestGenerator_init(t *testing.T) {
+	g:=&Generator{}
+	err:=g.init()
+	if err!=nil{
+		t.Error(err)
+	}
+}
 
 func sampleProjectFs() afero.Fs {
 	data := []struct {

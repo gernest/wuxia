@@ -6,6 +6,7 @@ import (
 
 	"github.com/gernest/valeria/gen"
 	"github.com/gernest/valeria/vm"
+	"github.com/robertkrimen/otto"
 	"github.com/spf13/afero"
 )
 
@@ -72,7 +73,7 @@ func defalutSystem() *gen.System {
 }
 
 func defaultVM(sys *gen.System) *vm.VM {
-	return &vm.VM{}
+	return &vm.VM{otto.New()}
 }
 func (g *Generator) config() error {
 	return nil
