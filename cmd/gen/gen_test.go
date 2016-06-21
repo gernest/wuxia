@@ -4,14 +4,26 @@ import (
 	"os"
 	"testing"
 
+	"github.com/gernest/valeria/gen"
 	"github.com/spf13/afero"
 )
 
 func TestGenerator_init(t *testing.T) {
-	g:=&Generator{}
-	err:=g.init()
-	if err!=nil{
+	g := &Generator{}
+	err := g.init()
+	if err != nil {
 		t.Error(err)
+	}
+	val, err := g.vm.Get("system")
+	if err != nil {
+		t.Error(err)
+	}
+	v, err := val.Export()
+	if err != nil {
+		t.Error(err)
+	}
+	if _, ok := v.(*gen.System); !ok {
+		t.Error("expected system object")
 	}
 }
 
