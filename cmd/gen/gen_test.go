@@ -1,9 +1,11 @@
 package gen
 
 import (
+	"encoding/json"
 	"os"
 	"testing"
 
+	"github.com/gernest/valeria/gen"
 	"github.com/spf13/afero"
 )
 
@@ -30,6 +32,7 @@ func sampleProjectFs() afero.Fs {
 		contents []byte
 	}{
 		{"README.md", 0600, []byte(readmeFile)},
+		{"config.json", 0600, sampleConfigFile()},
 	}
 	fs := afero.NewMemMapFs()
 	for i := 0; i < len(data); i++ {
@@ -54,3 +57,22 @@ Project v is a moderm static content generator for building anything static. It
 is fast, modular and flexible, combining the power of Go and the easy of use of 
 Javascript.
 `
+
+func sampleConfigFile() []byte {
+	cfg := gen.Config{
+		Source:      "src",
+		Destination: "dest",
+		Safe:        true,
+		Excluede: []string{
+			"tmp/", "bin",
+		},
+		KeepFiles: []string{
+			"LICENCE",
+		},
+		Encoding: "utf-8",
+		Port:     1900,
+		Host:     "localhost",
+	}
+	data, _ := json.Marshal(cfg)
+	return data
+}
