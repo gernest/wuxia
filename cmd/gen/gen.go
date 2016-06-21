@@ -50,7 +50,17 @@ func (g *Generator) init() error {
 	if g.vm == nil {
 		g.vm = defaultVM(g.sys)
 	}
-	g.vm.Set("sys", g.sys)
+	g.vm.Set("sys", func(call otto.FunctionCall) otto.Value {
+		data, err := json.Marshal(g.sys)
+		if err != nil {
+			vm.Panic(err)
+		}
+		val, err := call.Otto.Call("JSON.parse", nil, string(data))
+		if err != nil {
+			vm.Panic(err)
+		}
+		return val
+	})
 	_, err := g.vm.Eval(entryScript())
 	if err != nil {
 		return buildErr("init", err.Error())

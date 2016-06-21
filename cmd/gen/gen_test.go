@@ -4,7 +4,6 @@ import (
 	"os"
 	"testing"
 
-	"github.com/gernest/valeria/gen"
 	"github.com/spf13/afero"
 )
 
@@ -14,16 +13,13 @@ func TestGenerator_init(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	val, err := g.vm.Get("system")
+	_, err = g.vm.Eval(`
+	if (system.boot.config_file!="config.json"){
+		throw Error("failed to set init system object");
+	}
+`)
 	if err != nil {
 		t.Error(err)
-	}
-	v, err := val.Export()
-	if err != nil {
-		t.Error(err)
-	}
-	if _, ok := v.(*gen.System); !ok {
-		t.Error("expected system object")
 	}
 }
 
