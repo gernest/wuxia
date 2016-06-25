@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"os"
 
-	"github.com/gernest/valeria/gen"
 	"github.com/gernest/valeria/vm"
 	"github.com/robertkrimen/otto"
 	"github.com/spf13/afero"
@@ -38,7 +37,7 @@ func (b *BuildError) Error() string {
 
 type Generator struct {
 	vm  *vm.VM
-	sys *gen.System
+	sys *System
 	fs  afero.Fs
 }
 
@@ -70,13 +69,13 @@ func (g *Generator) init() error {
 	return nil
 }
 
-func defaultSystem() *gen.System {
+func defaultSystem() *System {
 	pwd, err := os.Getwd()
 	if err != nil {
 		panic(err)
 	}
-	return &gen.System{
-		Boot: &gen.Boot{
+	return &System{
+		Boot: &Boot{
 			ConfigiFile: configFile,
 			PlanFile:    "index.js",
 		},
@@ -84,7 +83,7 @@ func defaultSystem() *gen.System {
 	}
 }
 
-func defaultVM(sys *gen.System) *vm.VM {
+func defaultVM(sys *System) *vm.VM {
 	return &vm.VM{otto.New()}
 }
 func (g *Generator) config() error {
