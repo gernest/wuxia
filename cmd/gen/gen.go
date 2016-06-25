@@ -45,7 +45,7 @@ func (g *Generator) Build() error {
 }
 func (g *Generator) init() error {
 	if g.sys == nil {
-		g.sys = defalutSystem()
+		g.sys = defaultSystem()
 	}
 	if g.vm == nil {
 		g.vm = defaultVM(g.sys)
@@ -68,7 +68,7 @@ func (g *Generator) init() error {
 	return nil
 }
 
-func defalutSystem() *gen.System {
+func defaultSystem() *gen.System {
 	pwd, err := os.Getwd()
 	if err != nil {
 		panic(err)
