@@ -17,6 +17,8 @@ const (
 	configFile = "config.json"
 )
 
+//BuildError error returned when building the static website. The error string
+//returned is a json string that encodes the build stage and the message.
 type BuildError struct {
 	Stage   string `json:"stage"`
 	Message string `json:"msg"`
