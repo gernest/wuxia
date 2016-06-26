@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"os"
 
-	"github.com/gernest/valeria/vm"
 	"github.com/robertkrimen/otto"
 	"github.com/spf13/afero"
 )
@@ -36,7 +35,7 @@ func (b *BuildError) Error() string {
 }
 
 type Generator struct {
-	vm  *vm.VM
+	vm  *VM
 	sys *System
 	fs  afero.Fs
 }
@@ -54,11 +53,11 @@ func (g *Generator) init() error {
 	g.vm.Set("sys", func(call otto.FunctionCall) otto.Value {
 		data, err := json.Marshal(g.sys)
 		if err != nil {
-			vm.Panic(err)
+			Panic(err)
 		}
 		val, err := call.Otto.Call("JSON.parse", nil, string(data))
 		if err != nil {
-			vm.Panic(err)
+			Panic(err)
 		}
 		return val
 	})
@@ -83,8 +82,8 @@ func defaultSystem() *System {
 	}
 }
 
-func defaultVM(sys *System) *vm.VM {
-	return &vm.VM{otto.New()}
+func defaultVM(sys *System) *VM {
+	return &VM{otto.New()}
 }
 func (g *Generator) config() error {
 	return nil

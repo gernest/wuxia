@@ -1,9 +1,9 @@
-package vm
+package gen
 
 import "github.com/robertkrimen/otto"
 
-func NewExport() Export {
-	return make(Export)
+type VM struct {
+	*otto.Otto
 }
 
 type Export map[string]interface{}
@@ -21,4 +21,17 @@ func (e Export) ToValue(vm *otto.Otto) otto.Value {
 		o.Set(key, value)
 	}
 	return o.Value()
+}
+func Panic(o interface{}) {
+	v, err := otto.ToValue(o)
+	if err != nil {
+		errV, _ := otto.ToValue(err)
+		panic(errV)
+	}
+	panic(v)
+}
+
+func ToValue(o interface{}) otto.Value {
+	v, _ := otto.ToValue(o)
+	return v
 }
