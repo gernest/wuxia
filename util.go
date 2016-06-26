@@ -26,3 +26,16 @@ func getToJSON(o interface{}, vm *otto.Otto, src string) error {
 	}
 	return nil
 }
+func Panic(o interface{}) {
+	v, err := otto.ToValue(o)
+	if err != nil {
+		errV, _ := otto.ToValue(err)
+		panic(errV)
+	}
+	panic(v)
+}
+
+func ToValue(o interface{}) otto.Value {
+	v, _ := otto.ToValue(o)
+	return v
+}
