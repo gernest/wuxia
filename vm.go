@@ -141,3 +141,15 @@ func (f *file) read(call otto.FunctionCall) otto.Value {
 	}
 	return ToValue(string(b))
 }
+
+func (f *file) write(call otto.FunctionCall) otto.Value {
+	c, err := call.Argument(0).ToString()
+	if err != nil {
+		Panic(err)
+	}
+	n, err := f.o.WriteString(c)
+	if err != nil {
+		Panic(err)
+	}
+	return ToValue(n)
+}
