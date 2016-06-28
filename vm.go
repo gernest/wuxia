@@ -29,8 +29,12 @@ func (e Export) ToValue(vm *otto.Otto) otto.Value {
 }
 
 const (
-	modeRead  = "r"
-	modeWrite = "w"
+	modeRead     = "r"
+	modeWrite    = "w"
+	modCreate    = "c"
+	modReqaWrite = "r+w"
+	modAppend    = "a"
+	modTrucc     = "t"
 )
 
 type fileSys struct {
