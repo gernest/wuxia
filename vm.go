@@ -1,7 +1,11 @@
 package gen
 
 import (
+	"errors"
 	"io/ioutil"
+	"os"
+	"strconv"
+	"strings"
 
 	"github.com/robertkrimen/otto"
 	"github.com/spf13/afero"
@@ -29,12 +33,11 @@ func (e Export) ToValue(vm *otto.Otto) otto.Value {
 }
 
 const (
-	modeRead     = "r"
-	modeWrite    = "w"
-	modCreate    = "c"
-	modReqaWrite = "r+w"
-	modAppend    = "a"
-	modTrucc     = "t"
+	modeRead  = "r"
+	modeWrite = "w"
+	modCreate = "c"
+	modAppend = "a"
+	modTrucc  = "t"
 )
 
 type fileSys struct {
@@ -54,6 +57,57 @@ func (fs fileSys) open(call otto.FunctionCall) otto.Value {
 		Panic(err)
 	}
 	f, err := fs.Open(name)
+	if err != nil {
+		Panic(err)
+	}
+	af := &file{o: f}
+	return af.export().ToValue(call.Otto)
+}
+
+func buildFlags(src string) (int, error) {
+	parts := strings.Split(src, "+")
+	if len(parts) > 0 {
+		var f int
+		for i := 0; i < len(parts); i++ {
+			switch parts[i] {
+			case modeRead:
+				f = f | os.O_RDONLY
+			case modeWrite:
+				f = f | os.O_WRONLY
+			case modCreate:
+				f = f | os.O_CREATE
+			case modTrucc:
+				f = f | os.O_TRUNC
+			default:
+				return f, errors.New("unknown flag " + parts[i])
+			}
+		}
+	}
+	return 0, errors.New("no flags found")
+}
+
+func (fs fileSys) openFile(call otto.FunctionCall) otto.Value {
+	name, err := call.Argument(0).ToString()
+	if err != nil {
+		Panic(err)
+	}
+	flag, err := call.Argument(1).ToString()
+	if err != nil {
+		Panic(err)
+	}
+	uflag, err := buildFlags(flag)
+	if err != nil {
+		Panic(err)
+	}
+	mode, err := call.Argument(2).ToString()
+	if err != nil {
+		Panic(err)
+	}
+	umode, err := strconv.ParseUint(mode, 10, 32)
+	if err != nil {
+		Panic(err)
+	}
+	f, err := fs.OpenFile(name, uflag, os.FileMode(umode))
 	if err != nil {
 		Panic(err)
 	}
