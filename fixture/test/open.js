@@ -4,6 +4,7 @@ var fs=newFS();
 var fileName="hello.txt";
 var content="hello";
 function testOpen(){
+  console.log("-- Testing fs.open");
 	try{
 		f=fs.open(fileName);
 		message=f.read();
