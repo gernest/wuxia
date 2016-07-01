@@ -33,11 +33,11 @@ func (e Export) ToValue(vm *otto.Otto) otto.Value {
 }
 
 const (
-	modeRead  = "r"
-	modeWrite = "w"
-	modCreate = "c"
-	modAppend = "a"
-	modTrucc  = "t"
+	fileFlageRead  = "r"
+	fileFlageWrite = "w"
+	fileFlagCreate = "c"
+	fileFlagAppend = "a"
+	fileFlagTrucc  = "t"
 )
 
 type fileSys struct {
@@ -71,13 +71,13 @@ func buildFlags(src string) (int, error) {
 		var f int
 		for i := 0; i < len(parts); i++ {
 			switch parts[i] {
-			case modeRead:
+			case fileFlageRead:
 				f = f | os.O_RDONLY
-			case modeWrite:
+			case fileFlageWrite:
 				f = f | os.O_WRONLY
-			case modCreate:
+			case fileFlagCreate:
 				f = f | os.O_CREATE
-			case modTrucc:
+			case fileFlagTrucc:
 				f = f | os.O_TRUNC
 			default:
 				return f, errors.New("unknown flag " + parts[i])
