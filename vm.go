@@ -33,8 +33,8 @@ func (e Export) ToValue(vm *otto.Otto) otto.Value {
 }
 
 const (
-	fileFlageRead  = "r"
-	fileFlageWrite = "w"
+	fileFlagRead   = "r"
+	fileFlagWrite  = "w"
 	fileFlagCreate = "c"
 	fileFlagAppend = "a"
 	fileFlagTrucc  = "t"
@@ -71,9 +71,9 @@ func buildFlags(src string) (int, error) {
 		var f int
 		for i := 0; i < len(parts); i++ {
 			switch parts[i] {
-			case fileFlageRead:
+			case fileFlagRead:
 				f = f | os.O_RDONLY
-			case fileFlageWrite:
+			case fileFlagWrite:
 				f = f | os.O_WRONLY
 			case fileFlagCreate:
 				f = f | os.O_CREATE
