@@ -16,13 +16,17 @@ func TestFs(t *testing.T) {
 		f.vm = vm
 		return f.export().ToValue(call.Otto)
 	})
+	ff, _ := fs.Create("hello.txt")
+	ff.WriteString("hello")
+	ff.Close()
 
 	var script = `
 var fs=newFS();
 function testOpen(){
 	try{
 		f=fs.open("hello.txt");
-		f.write("hello");
+		h=f.read();
+		console.log(h);
 		f.close();
 	}catch(e){
 		throw e;

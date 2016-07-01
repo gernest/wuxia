@@ -123,6 +123,7 @@ func (f *file) export() Export {
 	e := make(Export)
 	e.Set("close", f.close)
 	e.Set("read", f.read)
+	e.Set("write", f.write)
 	return e
 }
 
