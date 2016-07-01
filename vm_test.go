@@ -14,7 +14,6 @@ func TestFs(t *testing.T) {
 	vm.Set("newFS", func(call otto.FunctionCall) otto.Value {
 		f := &fileSys{}
 		f.Fs = fs
-		f.vm = vm
 		return f.export().ToValue(call.Otto)
 	})
 	ff, _ := fs.Create("hello.txt")

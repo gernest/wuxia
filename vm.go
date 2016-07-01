@@ -42,7 +42,6 @@ const (
 
 type fileSys struct {
 	afero.Fs
-	vm *otto.Otto
 }
 
 func (fs fileSys) export() Export {
