@@ -48,6 +48,7 @@ type fileSys struct {
 func (fs fileSys) export() Export {
 	e := make(Export)
 	e.Set("open", fs.open)
+	e.Set("openFile", fs.openFile)
 	return e
 }
 
@@ -82,6 +83,7 @@ func buildFlags(src string) (int, error) {
 				return f, errors.New("unknown flag " + parts[i])
 			}
 		}
+		return f, nil
 	}
 	return 0, errors.New("no flags found")
 }

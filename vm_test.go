@@ -21,13 +21,22 @@ func TestFs(t *testing.T) {
 	ff.WriteString("hello")
 	ff.Close()
 
-	script, err := ioutil.ReadFile("fixture/test/open.js")
-	if err != nil {
-		t.Fatal(err)
-	}
-	_, err = vm.Run(script)
-	if err != nil {
-		t.Error(err)
+	scrippts := []struct {
+		name string
+		path string
+	}{
+		{"open", "fixture/test/open.js"},
+		{"open_file", "fixture/test/open_file.js"},
 	}
 
+	for i := 0; i < len(scrippts); i++ {
+		script, err := ioutil.ReadFile(scrippts[i].path)
+		if err != nil {
+			t.Fatal(err)
+		}
+		_, err = vm.Run(script)
+		if err != nil {
+			t.Errorf("%s : %v", scrippts[i].name, err)
+		}
+	}
 }
