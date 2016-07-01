@@ -1,6 +1,7 @@
 package gen
 
 import (
+	"io/ioutil"
 	"testing"
 
 	"github.com/robertkrimen/otto"
@@ -20,22 +21,11 @@ func TestFs(t *testing.T) {
 	ff.WriteString("hello")
 	ff.Close()
 
-	var script = `
-var fs=newFS();
-function testOpen(){
-	try{
-		f=fs.open("hello.txt");
-		h=f.read();
-		console.log(h);
-		f.close();
-	}catch(e){
-		throw e;
+	script, err := ioutil.ReadFile("fixture/test/open.js")
+	if err != nil {
+		t.Fatal(err)
 	}
-}
-testOpen();
-
-`
-	_, err := vm.Run(script)
+	_, err = vm.Run(script)
 	if err != nil {
 		t.Error(err)
 	}
