@@ -3,11 +3,11 @@ package gen
 import (
 	"errors"
 	"fmt"
-	"os"
 	"path/filepath"
 	"strings"
 
 	"github.com/robertkrimen/otto"
+	"github.com/spf13/afero"
 )
 
 const (
@@ -17,6 +17,7 @@ const (
 type require struct {
 	cache map[string]otto.Value
 	paths []string
+	fs    afero.Fs
 }
 
 type moduleInfo struct {
@@ -43,7 +44,7 @@ func (r *require) resolve(id string) (string, error) {
 		return id, nil
 	}
 	if strings.HasPrefix(id, ".") {
-		_, err := os.Stat(id)
+		_, err := r.fs.Stat(id)
 		if err != nil {
 			return "", err
 		}
@@ -53,7 +54,7 @@ func (r *require) resolve(id string) (string, error) {
 	for i := 0; i < len(r.paths); i++ {
 		fullPath := filepath.Join(r.paths[i], id)
 		if ext != "" {
-			_, err := os.Stat(fullPath)
+			_, err := r.fs.Stat(fullPath)
 			if err != nil {
 				return "", err
 			}
@@ -61,7 +62,7 @@ func (r *require) resolve(id string) (string, error) {
 		}
 
 		for _, e := range opts {
-			_, err := os.Stat(fullPath + e)
+			_, err := r.fs.Stat(fullPath + e)
 			if err != nil {
 				return "", err
 			}
