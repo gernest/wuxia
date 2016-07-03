@@ -66,7 +66,7 @@ func (r *require) resolve(id string) (string, error) {
 			if err != nil {
 				return "", err
 			}
-			return fullPath, nil
+			return fullPath + e, nil
 		}
 	}
 	return "", fmt.Errorf(msgModduleNotFound, id)
