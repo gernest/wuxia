@@ -48,6 +48,9 @@ func (r *require) load(call otto.FunctionCall) otto.Value {
 	if err != nil {
 		Panic(err.Error())
 	}
+	if cached, ok := r.checkCache(newID); ok {
+		return cached
+	}
 	return r.loadFromFile(newID, call.Otto)
 }
 
