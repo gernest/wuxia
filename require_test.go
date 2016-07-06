@@ -34,13 +34,8 @@ exports.echo=echo;
 		}
 		f.Close()
 	}
-	req := &require{
-		fs: fs,
-		paths: []string{
-			"/project",
-			"/project/modules",
-		},
-	}
+
+	req := newRequire(fs, "/project", "/project/modules")
 	expectation := []struct {
 		path, expect string
 	}{
