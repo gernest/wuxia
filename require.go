@@ -128,10 +128,10 @@ func (r *require) loadFromFile(path string, vm *otto.Otto) otto.Value {
 		}
 		return v
 	}
-	return r.loadFromSource(string(data), vm)
+	return r.loadFromSource(string(data), path, vm)
 }
 
-func (r *require) loadFromSource(source string, vm *otto.Otto) otto.Value {
+func (r *require) loadFromSource(source string, path string, vm *otto.Otto) otto.Value {
 	source = "(function(module) {var require = module.require;var exports = module.exports;\n" + source + "\n})"
 
 	jsModule, _ := vm.Object(`({exports: {}})`)
