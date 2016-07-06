@@ -31,6 +31,14 @@ type require struct {
 	fs    afero.Fs
 }
 
+func newRequire(fs afero.Fs, paths ...string) *require {
+	return &require{
+		cache: cache2go.Cache("require"),
+		paths: paths,
+		fs:    fs,
+	}
+}
+
 func (r *require) load(call otto.FunctionCall) otto.Value {
 	id, err := call.Argument(0).ToString()
 	if err != nil {
