@@ -15,6 +15,14 @@ const (
 	msgModduleNotFound = "module %s not found"
 )
 
+// implements a simple node.js like require mechanism. It loads jsavascript
+// files from the source and exposes them as modules in the runtime.
+//
+// This follows node.js convention by using the exports object to attach the
+// functions or objects exposed by the module.
+//
+// NOTE: cyclic dependencies are not taken care yet, so this will break in case
+// of cyclic dependency.
 type require struct {
 	cache map[string]otto.Value
 	paths []string
