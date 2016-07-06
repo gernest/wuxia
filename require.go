@@ -149,5 +149,6 @@ func (r *require) loadFromSource(source string, path string, vm *otto.Otto) otto
 	} else {
 		moduleValue, _ = jsModule.Get("exports")
 	}
+	r.addToCache(path, moduleValue)
 	return moduleValue
 }
