@@ -6,7 +6,9 @@ import (
 	"io/ioutil"
 	"path/filepath"
 	"strings"
+	"time"
 
+	"github.com/muesli/cache2go"
 	"github.com/robertkrimen/otto"
 	"github.com/spf13/afero"
 )
@@ -24,7 +26,7 @@ const (
 // NOTE: cyclic dependencies are not taken care yet, so this will break in case
 // of cyclic dependency.
 type require struct {
-	cache map[string]otto.Value
+	cache *cache2go.CacheTable
 	paths []string
 	fs    afero.Fs
 }
@@ -39,6 +41,21 @@ func (r *require) load(call otto.FunctionCall) otto.Value {
 		Panic(err.Error())
 	}
 	return r.loadFromFile(newID, call.Otto)
+}
+
+func (r *require) checkCache(id string) (otto.Value, bool) {
+	if !r.cache.Exists(id) {
+		return otto.Value{}, false
+	}
+	res, err := r.cache.Value(id)
+	if err != nil {
+		return otto.Value{}, false
+	}
+	return res.Data().(otto.Value), true
+}
+
+func (r *require) addToCache(id string, v otto.Value) {
+	_ = r.cache.Add(id, time.Minute, v)
 }
 
 func (r *require) resolve(id string) (string, error) {
