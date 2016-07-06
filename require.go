@@ -32,7 +32,7 @@ func (r *require) load(call otto.FunctionCall) otto.Value {
 	}
 	newID, err := r.resolve(id)
 	if err != nil {
-		Panic(err)
+		Panic(err.Error())
 	}
 	return r.loadFromFile(newID, call.Otto)
 }
@@ -57,6 +57,9 @@ func (r *require) resolve(id string) (string, error) {
 		if ext != "" {
 			_, err := r.fs.Stat(fullPath)
 			if err != nil {
+				if i != len(r.paths)-1 {
+					continue
+				}
 				return "", err
 			}
 			return fullPath, nil
@@ -65,6 +68,9 @@ func (r *require) resolve(id string) (string, error) {
 		for _, e := range opts {
 			_, err := r.fs.Stat(fullPath + e)
 			if err != nil {
+				if i != len(r.paths)-1 {
+					continue
+				}
 				return "", err
 			}
 			return fullPath + e, nil
