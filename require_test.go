@@ -1,7 +1,6 @@
 package gen
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/robertkrimen/otto"
@@ -17,10 +16,11 @@ func TestRequire_resolve(t *testing.T) {
 function echo(msg){
 	return msg;
 }
+exports.echo=echo;
 	`},
 		{"/project/index.js", `
 		var echo= require("echo.js");
-		echo("index.js")
+		echo.echo("index.js");
 `},
 	}
 	for _, v := range sample {
@@ -68,5 +68,11 @@ function echo(msg){
 	if err != nil {
 		t.Fatal(err)
 	}
-	fmt.Println(val)
+	if vs, ok := val.(string); ok {
+		if vs != "index.js" {
+			t.Errorf("expected index.js got %s", vs)
+		}
+	} else {
+		t.Error("expected string")
+	}
 }
