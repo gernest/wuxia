@@ -25,7 +25,7 @@ type moduleInfo struct {
 	id string
 }
 
-func (r *require) load(call *otto.FunctionCall) otto.Value {
+func (r *require) load(call otto.FunctionCall) otto.Value {
 	id, err := call.Argument(0).ToString()
 	if err != nil {
 		Panic(err)

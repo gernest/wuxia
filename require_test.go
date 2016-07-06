@@ -1,8 +1,10 @@
 package gen
 
 import (
+	"fmt"
 	"testing"
 
+	"github.com/robertkrimen/otto"
 	"github.com/spf13/afero"
 )
 
@@ -12,14 +14,13 @@ func TestRequire_resolve(t *testing.T) {
 		path, script string
 	}{
 		{"/project/modules/echo.js", `
-		function echo(msg){
-			return msg
-		}
-		exports.echo=echo;
+function echo(msg){
+	return msg;
+}
 	`},
 		{"/project/index.js", `
-	var echo=require{'echo");
-	echo("index.js");
+		var echo= require("echo.js");
+		echo("index.js")
 `},
 	}
 	for _, v := range sample {
@@ -51,8 +52,21 @@ func TestRequire_resolve(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+
 		if result != e.expect {
 			t.Errorf("expected %s got %s", e.expect, result)
 		}
 	}
+	// LoadModules
+	vm := otto.New()
+	vm.Set("require", req.load)
+	v, err := vm.Run(sample[1].script)
+	if err != nil {
+		t.Fatal(err)
+	}
+	val, err := v.Export()
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Println(val)
 }
