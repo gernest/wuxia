@@ -11,7 +11,7 @@ type Template struct {
 	vm      *otto.Otto
 	jsFuncs []string
 	funcs   template.FuncMap
-	tpl     *template.Template
+	*template.Template
 }
 
 func (t *Template) funcMap() template.FuncMap {
@@ -43,9 +43,9 @@ func (t *Template) jsTplFunc(name string) func(interface{}) string {
 func (t *Template) New() *Template {
 	tpl := template.New("base").Funcs(t.funcMap())
 	return &Template{
-		jsFuncs: t.jsFuncs,
-		vm:      t.vm,
-		funcs:   t.funcs,
-		tpl:     tpl,
+		jsFuncs:  t.jsFuncs,
+		vm:       t.vm,
+		funcs:    t.funcs,
+		Template: tpl,
 	}
 }
