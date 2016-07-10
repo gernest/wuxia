@@ -39,3 +39,13 @@ func (t *Template) jsTplFunc(name string) func(interface{}) string {
 		return s
 	}
 }
+
+func (t *Template) New() *Template {
+	tpl := template.New("base").Funcs(t.funcMap())
+	return &Template{
+		jsFuncs: t.jsFuncs,
+		vm:      t.vm,
+		funcs:   t.funcs,
+		tpl:     tpl,
+	}
+}
