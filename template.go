@@ -41,6 +41,16 @@ func (t *Template) jsTplFunc(name string) func(interface{}) string {
 }
 
 func (t *Template) New() *Template {
+	if t.jsFuncs == nil || len(t.jsFuncs) == 0 {
+		fmt.Println("HERE")
+		rst, err := t.vm.Call("Tpl.getTplFuncs", nil)
+		if err == nil {
+			v, _ := rst.Export()
+			if va, ok := v.([]string); ok {
+				t.jsFuncs = va
+			}
+		}
+	}
 	tpl := template.New("base").Funcs(t.funcMap())
 	return &Template{
 		jsFuncs:  t.jsFuncs,
