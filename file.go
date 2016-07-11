@@ -1,4 +1,4 @@
-package gen
+package wuxia
 
 type File struct {
 	Name     string                 `json:"name"`

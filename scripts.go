@@ -1,4 +1,4 @@
-package gen
+package wuxia
 
 func entryScript() string {
 	return `

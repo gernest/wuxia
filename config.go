@@ -1,4 +1,4 @@
-package gen
+package wuxia
 
 type Config struct {
 	Source      string   `json:"source"`

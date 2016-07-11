@@ -1,4 +1,4 @@
-package gen
+package wuxia
 
 // Plan is the execution planner object. It states the steps and stages on which
 // the execution process should take.
