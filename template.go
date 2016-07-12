@@ -29,7 +29,7 @@ func (t *Template) funcMap() template.FuncMap {
 	return rst
 }
 
-// retruns a function that can be executed withing Go template. The defined
+// returns a function that can be executed within Go template. The defined
 // javascript function should accept one argument and return a string. No error
 // is taken care of, so maybe the javascript function should return an empty
 // string in case of wrong input.
