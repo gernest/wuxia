@@ -7,6 +7,10 @@ import (
 	"github.com/robertkrimen/otto"
 )
 
+//Template extends the *template.Template struct by supporting template
+//functions defined in the javascript programming language. This depends heavily
+//on the otto VM , and the functions are extracted from the otto Virtual
+//Machine.
 type Template struct {
 	vm      *otto.Otto
 	jsFuncs []string
