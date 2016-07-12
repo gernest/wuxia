@@ -30,7 +30,7 @@ func (t *Template) funcMap() template.FuncMap {
 	return rst
 }
 
-// returns a function that can be executed within Go template. The defined
+// returns a JS function that can be executed within Go template. The defined
 // javascript function should accept one argument and return a string. Any
 // exceptions raised by the javascript function will we returned when the
 // templates are executed( Effectively halting rendering process).
