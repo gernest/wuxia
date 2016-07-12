@@ -64,6 +64,8 @@ func (t *Template) jsTplFunc(name string) func(interface{}) (string, error) {
 	}
 }
 
+//New created a new *Template. The returned *Template supports template fuctions
+//defined in javascript.
 func (t *Template) New() *Template {
 	if t.jsFuncs == nil || len(t.jsFuncs) == 0 {
 		if t.vm != nil {
