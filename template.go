@@ -66,11 +66,13 @@ func (t *Template) jsTplFunc(name string) func(interface{}) (string, error) {
 
 func (t *Template) New() *Template {
 	if t.jsFuncs == nil || len(t.jsFuncs) == 0 {
-		rst, err := t.vm.Call("Tpl.getTplFuncs", nil)
-		if err == nil {
-			v, _ := rst.Export()
-			if va, ok := v.([]string); ok {
-				t.jsFuncs = va
+		if t.vm != nil {
+			rst, err := t.vm.Call("Tpl.getTplFuncs", nil)
+			if err == nil {
+				v, _ := rst.Export()
+				if va, ok := v.([]string); ok {
+					t.jsFuncs = va
+				}
 			}
 		}
 	}
