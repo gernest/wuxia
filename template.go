@@ -29,6 +29,25 @@ func (t *Template) funcMap() template.FuncMap {
 	return rst
 }
 
+// retruns a function that can be executed withing Go template. The defined
+// javascript function should accept one argument and return a string. No error
+// is taken care of, so maybe the javascript function should return an empty
+// string in case of wrong input.
+//
+// The functions are the one registered on the Tpl global pbject exposed in the
+// Javascript runtine.
+//
+// You can register a function by attaching it to  Tpl.funcs
+//   // Example
+//   Tpl.funcs.world=function(hello){return hello+",world"}
+// The xample function adds ",world" string to the passed argument. The above
+// function can then be used like any other Go template functions like this
+//   {{"hello"|world}}
+//
+// The type of the argument is not enforced so the template function
+// implementations should be careful on what type of objects they are operating
+// on and also great care should be taken on the conext object passed to these
+// functions within the templates.
 func (t *Template) jsTplFunc(name string) func(interface{}) string {
 	return func(arg interface{}) string {
 		call := fmt.Sprintf("Tpl.funcs.%s", name)
