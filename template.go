@@ -1,6 +1,7 @@
 package wuxia
 
 import (
+	"errors"
 	"fmt"
 	"html/template"
 
@@ -30,9 +31,9 @@ func (t *Template) funcMap() template.FuncMap {
 }
 
 // returns a function that can be executed within Go template. The defined
-// javascript function should accept one argument and return a string. No error
-// is taken care of, so maybe the javascript function should return an empty
-// string in case of wrong input.
+// javascript function should accept one argument and return a string. Any
+// exceptions raised by the javascript function will we returned when the
+// templates are executed( Effectively halting rendering process).
 //
 // The functions are the one registered on the Tpl global pbject exposed in the
 // Javascript runtine.
@@ -48,18 +49,18 @@ func (t *Template) funcMap() template.FuncMap {
 // implementations should be careful on what type of objects they are operating
 // on and also great care should be taken on the conext object passed to these
 // functions within the templates.
-func (t *Template) jsTplFunc(name string) func(interface{}) string {
-	return func(arg interface{}) string {
+func (t *Template) jsTplFunc(name string) func(interface{}) (string, error) {
+	return func(arg interface{}) (string, error) {
 		call := fmt.Sprintf("Tpl.funcs.%s", name)
 		rst, err := t.vm.Call(call, nil, arg)
 		if err != nil {
-			Panic(err.Error())
+			return "", err
 		}
 		if !rst.IsString() {
-			Panic("non string retrun value from " + name + " template func")
+			return "", errors.New("non string retrun value from " + name + " template func")
 		}
 		s, _ := rst.ToString()
-		return s
+		return s, nil
 	}
 }
 
