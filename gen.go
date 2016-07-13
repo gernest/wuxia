@@ -66,6 +66,10 @@ func (g *Generator) init() error {
 	if err != nil {
 		return buildErr("init", err.Error())
 	}
+
+	// evaluate project provided entry script if provided. We ignore if the file
+	// is not provided but any errors arsing from evaluating a provided script is
+	// a built error.
 	return nil
 }
 
