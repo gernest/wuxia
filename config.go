@@ -55,3 +55,8 @@ type Plan struct {
 	Exec           []string `json:"exec"`
 	After          []string `json:"after"`
 }
+type File struct {
+	Name     string                 `json:"name"`
+	Meta     map[string]interface{} `json:'meta"`
+	Contents string                 `json:"contents"`
+}
