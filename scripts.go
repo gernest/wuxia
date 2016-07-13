@@ -2,7 +2,7 @@ package wuxia
 
 func entryScript() string {
 	return `
-var system=sys();
+var System=sys();
 var Tpl={};
 Tpl.funcs={};
 Tpl.getTplFuncs=function(){
