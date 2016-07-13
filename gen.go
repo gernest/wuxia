@@ -52,7 +52,7 @@ func (g *Generator) Build() error {
 // It is possible to bootstrap the generator from the project( User's side) by
 // providing an entry javascript file in the default path of
 // scripts/init/index.js which will be executed and you can overide the default
-// entry excript which is evaluated internally
+// entry script which is evaluated internally
 //
 // Initialzation is offloaded to the javascript runtine of the generator..Any
 // error returned is a build error.
