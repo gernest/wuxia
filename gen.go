@@ -2,6 +2,7 @@ package wuxia
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"os"
 
@@ -70,6 +71,13 @@ func (g *Generator) init() error {
 	// evaluate project provided entry script if provided. We ignore if the file
 	// is not provided but any errors arsing from evaluating a provided script is
 	// a built error.
+	entryFile := fmt.Sprintf("%s/%s/index.js", scriptsDir, initDri)
+	err = g.evaluateFile(entryFile)
+	if err != nil {
+		if !os.IsNotExist(err) {
+			return buildErr("init", err.Error())
+		}
+	}
 	return nil
 }
 
