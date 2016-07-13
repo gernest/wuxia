@@ -45,6 +45,17 @@ type Generator struct {
 func (g *Generator) Build() error {
 	return evaluate(g.init, g.config, g.plan, g.exec, g.down)
 }
+
+//initializes the build process. Any stages after this will have the generator
+//already bootstraped.
+//
+// It is possible to bootstrap the generator from the project( User's side) by
+// providing an entry javascript file in the default path of
+// scripts/init/index.js which will be executed and you can overide the default
+// entry excript which is evaluated internally
+//
+// Initialzation is offloaded to the javascript runtine of the generator..Any
+// error returned is a build error.
 func (g *Generator) init() error {
 	if g.sys == nil {
 		g.sys = defaultSystem()
