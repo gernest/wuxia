@@ -12,7 +12,7 @@ import (
 
 const (
 	scriptsDir = "_scripts"
-	initDri    = "init"
+	initDir    = "init"
 	planDir    = "plan"
 	configFile = "config.json"
 )
@@ -71,7 +71,7 @@ func (g *Generator) init() error {
 	// evaluate project provided entry script if provided. We ignore if the file
 	// is not provided but any errors arsing from evaluating a provided script is
 	// a built error.
-	entryFile := fmt.Sprintf("%s/%s/index.js", scriptsDir, initDri)
+	entryFile := fmt.Sprintf("%s/%s/index.js", scriptsDir, initDir)
 	err = g.evaluateFile(entryFile)
 	if err != nil {
 		if !os.IsNotExist(err) {
