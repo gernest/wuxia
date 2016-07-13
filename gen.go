@@ -15,18 +15,18 @@ const (
 	configFile = "config.json"
 )
 
-//BuildError error returned when building the static website. The error string
+//buildError error returned when building the static website. The error string
 //returned is a json string that encodes the build stage and the message.
-type BuildError struct {
+type buildError struct {
 	Stage   string `json:"stage"`
 	Message string `json:"msg"`
 }
 
 func buildErr(stage, msg string) error {
-	return &BuildError{Stage: stage, Message: msg}
+	return &buildError{Stage: stage, Message: msg}
 }
 
-func (b *BuildError) Error() string {
+func (b *buildError) Error() string {
 	o, err := json.Marshal(b)
 	if err != nil {
 		return err.Error()
