@@ -55,6 +55,11 @@ type Plan struct {
 	Exec           []string `json:"exec"`
 	After          []string `json:"after"`
 }
+
+//File is a representation of a file unit as it is passed arouund for
+//processing.
+// File content is passed as a string so as to allow easy trasition between Go
+// and javascript boundary.
 type File struct {
 	Name     string                 `json:"name"`
 	Meta     map[string]interface{} `json:'meta"`
