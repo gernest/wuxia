@@ -2,6 +2,7 @@ package wuxia
 
 import (
 	"encoding/json"
+	"io/ioutil"
 	"os"
 
 	"github.com/robertkrimen/otto"
@@ -80,6 +81,31 @@ func defaultSystem() *System {
 		},
 		WorkDir: pwd,
 	}
+}
+
+// opens the file in the specified path and evaluates it withing the context of
+// the javascript runtine.
+//
+// The evaluated javascript code can mutate the global state. Use execFile to
+// execute the javascript without mutating the state of the generato'r
+// javascript runtime.
+//
+// TODO: (gernest) implement callFile if necessary
+func (g *Generator) evaluateFile(path string) error {
+	f, err := g.fs.Open(path)
+	if err != nil {
+		return err
+	}
+	defer func() { _ = f.Close() }()
+	data, err := ioutil.ReadAll(f)
+	if err != nil {
+		return err
+	}
+	_, err = g.vm.Eval(data)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func defaultVM(sys *System) *VM {
