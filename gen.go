@@ -134,9 +134,45 @@ func (g *Generator) evaluateFile(path string) error {
 func defaultVM(sys *System) *VM {
 	return &VM{otto.New()}
 }
+
 func (g *Generator) config() error {
+	v, err := g.vm.Call("getCurrentSys", nil)
+	if err != nil {
+		return buildErr("config", err.Error())
+	}
+	cSys := &System{}
+	str, _ := v.ToString()
+	err = json.Unmarshal([]byte(str), cSys)
+	if err != nil {
+		return buildErr("config", err.Error())
+	}
+	cfgFile := cSys.Boot.ConfigiFile
+	cf, err := g.fs.Open(cfgFile)
+	if err != nil {
+		return buildErr("config", err.Error())
+	}
+	defer func() { _ = cf.Close() }()
+	data, err := ioutil.ReadAll(cf)
+	if err != nil {
+		return buildErr("config", err.Error())
+	}
+	c := &Config{}
+	err = json.Unmarshal(data, c)
+	if err != nil {
+		return buildErr("config", err.Error())
+	}
+	if cSys.Config == nil {
+		cSys.Config = c
+	} else {
+		updateConfig(cSys.Config, c)
+	}
+	g.sys = cSys
 	return nil
 }
+
+func updateConfig(old, new *Config) {
+}
+
 func (g *Generator) plan() error {
 	return nil
 }
