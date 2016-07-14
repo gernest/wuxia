@@ -14,5 +14,9 @@ Tpl.getTplFuncs=function(){
 	}
 	return rst;
 }
+
+function getCurrentSys(){
+	return System;
+}
 `
 }
