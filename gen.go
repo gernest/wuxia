@@ -17,6 +17,32 @@ const (
 	configFile = "config.json"
 )
 
+type buildStage int
+
+const (
+	stageInit buildStage = iota
+	stageConfig
+	stagePlan
+	stageExec
+)
+
+func (s buildStage) String() string {
+	var rst string
+	switch s {
+	case stageInit:
+		rst = "init"
+	case stageConfig:
+		rst = "config"
+	case stagePlan:
+		rst = "plan"
+	case stageExec:
+		rst = "exec"
+	default:
+		rst = "unkown stage"
+	}
+	return rst
+}
+
 //buildError error returned when building the static website. The error string
 //returned is a json string that encodes the build stage and the message.
 type buildError struct {
