@@ -185,8 +185,8 @@ func (g *Generator) down() error {
 
 func evaluate(fn ...func() error) error {
 	var err error
-	for _, f := range fn {
-		err = f()
+	for i := 0; i < len(fn); i++ {
+		err = fn[i]()
 		if err != nil {
 			return err
 		}
