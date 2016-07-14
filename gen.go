@@ -50,8 +50,8 @@ type buildError struct {
 	Message string `json:"msg"`
 }
 
-func buildErr(stage, msg string) error {
-	return &buildError{Stage: stage, Message: msg}
+func buildErr(stage buildStage, msg string) error {
+	return &buildError{Stage: stage.String(), Message: msg}
 }
 
 func (b *buildError) Error() string {
@@ -102,7 +102,7 @@ func (g *Generator) init() error {
 	})
 	_, err := g.vm.Eval(entryScript())
 	if err != nil {
-		return buildErr("init", err.Error())
+		return buildErr(stageInit, err.Error())
 	}
 
 	// evaluate project provided entry script if provided. We ignore if the file
@@ -112,7 +112,7 @@ func (g *Generator) init() error {
 	err = g.evaluateFile(entryFile)
 	if err != nil {
 		if !os.IsNotExist(err) {
-			return buildErr("init", err.Error())
+			return buildErr(stageInit, err.Error())
 		}
 	}
 	return nil
@@ -164,28 +164,28 @@ func defaultVM(sys *System) *VM {
 func (g *Generator) config() error {
 	v, err := g.vm.Call("getCurrentSys", nil)
 	if err != nil {
-		return buildErr("config", err.Error())
+		return buildErr(stageConfig, err.Error())
 	}
 	cSys := &System{}
 	str, _ := v.ToString()
 	err = json.Unmarshal([]byte(str), cSys)
 	if err != nil {
-		return buildErr("config", err.Error())
+		return buildErr(stageConfig, err.Error())
 	}
 	cfgFile := cSys.Boot.ConfigiFile
 	cf, err := g.fs.Open(cfgFile)
 	if err != nil {
-		return buildErr("config", err.Error())
+		return buildErr(stageConfig, err.Error())
 	}
 	defer func() { _ = cf.Close() }()
 	data, err := ioutil.ReadAll(cf)
 	if err != nil {
-		return buildErr("config", err.Error())
+		return buildErr(stageConfig, err.Error())
 	}
 	c := &Config{}
 	err = json.Unmarshal(data, c)
 	if err != nil {
-		return buildErr("config", err.Error())
+		return buildErr(stageConfig, err.Error())
 	}
 	if cSys.Config == nil {
 		cSys.Config = c
