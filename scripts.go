@@ -16,7 +16,7 @@ Tpl.getTplFuncs=function(){
 }
 
 function getCurrentSys(){
-	return System;
+	return JSON.stringify(System);
 }
 `
 }
