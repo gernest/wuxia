@@ -62,12 +62,24 @@ func (b *buildError) Error() string {
 	return string(o)
 }
 
+//Generator provides the static website generation capabilities.This is heavily
+//integrated with the otto javascript runtime.
 type Generator struct {
-	vm  *VM
+	vm  *otto.Otto
 	sys *System
 	fs  afero.Fs
 }
 
+//NewGenerator retrunes a new  Generator.
+func NewGenerator(vm *otto.Otto, sys *System, fs afero.Fs) *Generator {
+	return &Generator{
+		vm:  vm,
+		sys: sys,
+		fs:  fs,
+	}
+}
+
+//Build builds a project.
 func (g *Generator) Build() error {
 	return evaluate(g.init, g.config, g.plan, g.exec, g.down)
 }
@@ -89,7 +101,7 @@ func (g *Generator) init() error {
 	if g.vm == nil {
 		g.vm = defaultVM(g.sys)
 	}
-	g.vm.Set("sys", func(call otto.FunctionCall) otto.Value {
+	_ = g.vm.Set("sys", func(call otto.FunctionCall) otto.Value {
 		data, err := json.Marshal(g.sys)
 		if err != nil {
 			Panic(err)
@@ -157,8 +169,8 @@ func (g *Generator) evaluateFile(path string) error {
 	return nil
 }
 
-func defaultVM(sys *System) *VM {
-	return &VM{otto.New()}
+func defaultVM(sys *System) *otto.Otto {
+	return otto.New()
 }
 
 func (g *Generator) config() error {

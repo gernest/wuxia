@@ -11,23 +11,22 @@ import (
 	"github.com/spf13/afero"
 )
 
-type VM struct {
-	*otto.Otto
-}
-
+//Export helper for building javascript objects from Go objects.
 type Export map[string]interface{}
 
+//Set add a new key key, to the export object with value value.
 func (e Export) Set(key string, value interface{}) {
 	e[key] = value
 }
 
+//ToValue converts the export object to otto.Value
 func (e Export) ToValue(vm *otto.Otto) otto.Value {
 	o, err := vm.Object(`({})`)
 	if err != nil {
 		Panic(err.Error())
 	}
 	for key, value := range e {
-		o.Set(key, value)
+		_ = o.Set(key, value)
 	}
 	return o.Value()
 }

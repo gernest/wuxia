@@ -1,11 +1,16 @@
 package wuxia
 
+//Config is the settings needed by the static generatot. It is inspired by the
+//jekyll configuration options.
+//
+// The format can either be json, yaml or toml
+// TODO: add yaml and toml support.
 type Config struct {
 	Source      string   `json:"source"`
-	Destination string   `json:'destination"`
+	Destination string   `json:"destination"`
 	Safe        bool     `json:"safe"`
 	Excluede    []string `json:"exclude"`
-	Include     []string `json""include"`
+	Include     []string `json:"include"`
 	KeepFiles   []string `json:"keep_files"`
 	TimeZone    string   `json:"timezone"`
 	Encoding    string   `json:"encoding"`
@@ -14,6 +19,7 @@ type Config struct {
 	BaseURL     string   `json:"base_url"`
 }
 
+//System configuration for the whole static generator system.
 type System struct {
 	Boot    *Boot   `json:"boot"`
 	Config  *Config `json:"config"`
@@ -21,17 +27,20 @@ type System struct {
 	WorkDir string  `json:"work_dir"`
 }
 
+//Boot necessary info to bootstrap the Generator.
 type Boot struct {
 	ConfigiFile string            `json:"config_file"`
 	PlanFile    string            `json:"plan_file"`
 	ENV         map[string]string `json:"env"`
 }
 
+//Theme discreption of a theme.
 type Theme struct {
 	Name   string   `json:"name"`
 	Author []Author `json:"author"`
 }
 
+//Author description of the author of the project being built.
 type Author struct {
 	Name     string `json:"name"`
 	Github   string `json:"github"`
@@ -62,6 +71,6 @@ type Plan struct {
 // and javascript boundary.
 type File struct {
 	Name     string                 `json:"name"`
-	Meta     map[string]interface{} `json:'meta"`
+	Meta     map[string]interface{} `json:"meta"`
 	Contents string                 `json:"contents"`
 }

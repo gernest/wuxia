@@ -26,6 +26,8 @@ func getToJSON(o interface{}, vm *otto.Otto, src string) error {
 	}
 	return nil
 }
+
+//Panic helper for raising execptions in the otto javascript runtime.
 func Panic(o interface{}) {
 	v, err := otto.ToValue(o)
 	if err != nil {
@@ -35,6 +37,8 @@ func Panic(o interface{}) {
 	panic(v)
 }
 
+//ToValue helper which convers o into otto.Value, ignoring any kind of error
+//arising from the process.
 func ToValue(o interface{}) otto.Value {
 	v, _ := otto.ToValue(o)
 	return v

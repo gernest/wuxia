@@ -135,7 +135,7 @@ func (r *require) loadFromSource(source string, path string, vm *otto.Otto) otto
 	source = "(function(module) {var require = module.require;var exports = module.exports;\n" + source + "\n})"
 
 	jsModule, _ := vm.Object(`({exports: {}})`)
-	jsModule.Set("require", r.load)
+	_ = jsModule.Set("require", r.load)
 	jsExports, _ := jsModule.Get("exports")
 
 	moduleReturn, err := vm.Call(source, jsExports, jsModule)
@@ -145,7 +145,7 @@ func (r *require) loadFromSource(source string, path string, vm *otto.Otto) otto
 	var moduleValue otto.Value
 	if !moduleReturn.IsUndefined() {
 		moduleValue = moduleReturn
-		jsModule.Set("exports", moduleValue)
+		_ = jsModule.Set("exports", moduleValue)
 	} else {
 		moduleValue, _ = jsModule.Get("exports")
 	}

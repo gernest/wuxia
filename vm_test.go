@@ -11,14 +11,14 @@ import (
 func TestFs(t *testing.T) {
 	vm := otto.New()
 	fs := afero.NewMemMapFs()
-	vm.Set("newFS", func(call otto.FunctionCall) otto.Value {
+	_ = vm.Set("newFS", func(call otto.FunctionCall) otto.Value {
 		f := &fileSys{}
 		f.Fs = fs
 		return f.export().ToValue(call.Otto)
 	})
 	ff, _ := fs.Create("hello.txt")
-	ff.WriteString("hello")
-	ff.Close()
+	_, _ = ff.WriteString("hello")
+	_ = ff.Close()
 
 	scrippts := []struct {
 		name string

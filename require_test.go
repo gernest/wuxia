@@ -32,7 +32,7 @@ exports.echo=echo;
 		if err != nil {
 			t.Fatal(err)
 		}
-		f.Close()
+		_ = f.Close()
 	}
 
 	req := newRequire(fs, "/project", "/project/modules")
@@ -54,7 +54,7 @@ exports.echo=echo;
 	}
 	// LoadModules
 	vm := otto.New()
-	vm.Set("require", req.load)
+	_ = vm.Set("require", req.load)
 	v, err := vm.Run(sample[1].script)
 	if err != nil {
 		t.Fatal(err)
