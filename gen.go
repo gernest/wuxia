@@ -220,14 +220,9 @@ func (g *Generator) config() error {
 	}
 	if cSys.Config == nil {
 		cSys.Config = c
-	} else {
-		updateConfig(cSys.Config, c)
 	}
 	g.sys = cSys
 	return nil
-}
-
-func updateConfig(old, new *Config) {
 }
 
 func (g *Generator) plan() error {
