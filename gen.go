@@ -65,9 +65,12 @@ func (b *buildError) Error() string {
 //Generator provides the static website generation capabilities.This is heavily
 //integrated with the otto javascript runtime.
 type Generator struct {
-	vm      *otto.Otto
-	sys     *System
-	fs      afero.Fs
+	vm  *otto.Otto
+	sys *System
+	fs  afero.Fs
+
+	// This is the absolute path to the root of the project from which the
+	// Generator will be operating.
 	workDir string
 }
 
