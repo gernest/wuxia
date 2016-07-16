@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 
 	"github.com/robertkrimen/otto"
 	"github.com/spf13/afero"
@@ -124,7 +125,7 @@ func (g *Generator) init() error {
 	// evaluate project provided entry script if provided. We ignore if the file
 	// is not provided but any errors arsing from evaluating a provided script is
 	// a built error.
-	entryFile := fmt.Sprintf("%s/%s/index.js", scriptsDir, initDir)
+	entryFile := filepath.Join(g.workDir, scriptsDir, initDir, "index.js")
 	err = g.evaluateFile(entryFile)
 	if err != nil {
 		if !os.IsNotExist(err) {
