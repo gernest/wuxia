@@ -15,6 +15,7 @@ const (
 	initDir    = "init"
 	planDir    = "plan"
 	configFile = "config.json"
+	indexFile  = "index.js"
 )
 
 type buildStage int
@@ -134,7 +135,7 @@ func (g *Generator) init() error {
 	// evaluate project provided entry script if provided. We ignore if the file
 	// is not provided but any errors arsing from evaluating a provided script is
 	// a built error.
-	entryFile := filepath.Join(g.workDir, scriptsDir, initDir, "index.js")
+	entryFile := filepath.Join(g.workDir, scriptsDir, initDir, indexFile)
 	err = g.evaluateFile(entryFile)
 	if err != nil {
 		if !os.IsNotExist(err) {
