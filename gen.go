@@ -143,11 +143,13 @@ func (g *Generator) init() error {
 	}
 
 	// Properly set working directory/
-	wd, err := os.Getwd()
-	if err != nil {
-		return buildErr(stageInit, err.Error())
+	if g.workDir == "" {
+		wd, err := os.Getwd()
+		if err != nil {
+			return buildErr(stageInit, err.Error())
+		}
+		g.workDir = wd
 	}
-	g.workDir = wd
 	return nil
 }
 
