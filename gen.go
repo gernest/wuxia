@@ -2,7 +2,6 @@ package wuxia
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -189,7 +188,7 @@ func (g *Generator) config() error {
 	if err != nil {
 		return buildErr(stageConfig, err.Error())
 	}
-	cfgFile := cSys.Boot.ConfigiFile
+	cfgFile := filepath.Join(g.workDir, cSys.Boot.ConfigiFile)
 	cf, err := g.fs.Open(cfgFile)
 	if err != nil {
 		return buildErr(stageConfig, err.Error())
