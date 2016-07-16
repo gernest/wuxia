@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	scriptsDir = "_scripts"
+	scriptsDir = "scripts"
 	initDir    = "init"
 	planDir    = "plan"
 	configFile = "config.json"
