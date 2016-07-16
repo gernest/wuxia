@@ -21,10 +21,9 @@ type Config struct {
 
 //System configuration for the whole static generator system.
 type System struct {
-	Boot    *Boot   `json:"boot"`
-	Config  *Config `json:"config"`
-	Plan    *Plan   `json:"plan"`
-	WorkDir string  `json:"work_dir"`
+	Boot   *Boot   `json:"boot"`
+	Config *Config `json:"config"`
+	Plan   *Plan   `json:"plan"`
 }
 
 //Boot necessary info to bootstrap the Generator.
