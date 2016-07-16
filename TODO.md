@@ -1,15 +1,14 @@
 - static site generator
  - [ ] JavaScript plugins
  - [ ] clean log system
- - [ ] front matter
- - [ ] tags
- - [ ] library + commandline app
  - [ ] concurrent file processing
  - [ ] themes
- - [ ] documantation
+ - [ ] documentation
 
 - server
  - [ ] https
  - [ ] RPC
- - [ ] go-micro support
  - [ ] metrics
+
+- Docker
+
