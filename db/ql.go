@@ -1,3 +1,5 @@
+//Package db provides abstractions that makes it easy to interact with the ql
+//database.
 package db
 
 import (

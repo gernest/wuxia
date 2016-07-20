@@ -83,7 +83,7 @@ func scriptsUpQl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "scripts/up.ql", size: 167, mode: os.FileMode(420), modTime: time.Unix(1469013519, 0)}
+	info := bindataFileInfo{name: "scripts/up.ql", size: 167, mode: os.FileMode(420), modTime: time.Unix(1469013823, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
