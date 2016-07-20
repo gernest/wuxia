@@ -10,8 +10,8 @@ type DB struct {
 	*sql.DB
 }
 
-func Open(path string) (*DB, error) {
-	db, err := sql.Open("ql", path)
+func Open(dbName, path string) (*DB, error) {
+	db, err := sql.Open(dbName, path)
 	if err != nil {
 		return nil, err
 	}
