@@ -10,4 +10,8 @@ migration/data.go:$(shell find migration/scripts -type f)
 	@echo "Generating migration scripts bindata"
 	@go generate ./migration
 
-generate: migration/data.go
+themes/data.go:$(shell find themes/theme -type f)
+	@echo "Generating themes bindata"
+	@go generate ./themes
+
+generate: migration/data.go themes/data.go
