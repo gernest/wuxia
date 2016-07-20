@@ -15,3 +15,4 @@ themes/data.go:$(shell find themes/theme -type f)
 	@go generate ./themes
 
 generate: migration/data.go themes/data.go
+	@echo "Done generate bindata"
