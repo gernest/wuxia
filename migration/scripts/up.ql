@@ -3,7 +3,8 @@
 BEGIN TRANSACTION;
   CREATE TABLE sessions(
     id int,
-    data string,
+    key string,
+    data blob,
     created_on time,
     updated_on time,
     expires_on time);

@@ -1,7 +1,10 @@
 
 test:generate
-	@go test -v ./wuxia
-	@go test -v ./api
+	@go test  ./wuxia
+	@go test  ./db
+	@go test  ./migration
+	@go test  ./models
+	@go test  ./api
 
 setup:
 	@go get -v github.com/jteeuwen/go-bindata/...
