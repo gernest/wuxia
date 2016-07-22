@@ -91,8 +91,7 @@ func (db *QLStore) Save(r *http.Request, w http.ResponseWriter, session *session
 
 //load fetches a session by ID from the database and decodes its content into session.Values
 func (db *QLStore) load(session *sessions.Session) error {
-	s := &models.Session{}
-	err := s.FindByKey(db.store, session.ID)
+	s, err := models.FindSessionByKey(db.store, session.ID)
 	if err != nil {
 		return err
 	}
@@ -122,9 +121,9 @@ func (db *QLStore) save(session *sessions.Session) error {
 		ExpiresOn: expiresOn,
 	}
 	if session.IsNew {
-		return s.Create(db.store)
+		return models.CreateSession(db.store, s)
 	}
-	return s.Update(db.store, s.Key, s.Data)
+	return models.UpdateSession(db.store, s.Key, s.Data)
 }
 
 func (db *QLStore) destroy(r *http.Request, w http.ResponseWriter, session *sessions.Session) error {
@@ -134,8 +133,7 @@ func (db *QLStore) destroy(r *http.Request, w http.ResponseWriter, session *sess
 	for k := range session.Values {
 		delete(session.Values, k)
 	}
-	s := &models.Session{}
-	return s.Delete(db.store, session.ID)
+	return models.DeleteSession(db.store, session.ID)
 }
 
 // Delete deletes session.

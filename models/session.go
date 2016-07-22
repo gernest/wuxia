@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/gernest/wuxia/db"
@@ -15,8 +16,7 @@ type Session struct {
 	ExpiresOn time.Time
 }
 
-//Create creates a new session entry into the database
-func (s *Session) Create(store *db.DB) error {
+func CreateSession(store *db.DB, s *Session) error {
 	var query = `
 	BEGIN TRANSACTION;
 	  INSERT INTO sessions VALUES ($1,$2,$3,$4,$5);
@@ -34,41 +34,33 @@ func (s *Session) Create(store *db.DB) error {
 	return tx.Commit()
 }
 
-// FindByKey  queries the database and returns the Sesion with the given key.The
-// result is scanned to the Session object receiver.
-//
-// It is a good idea to call this on Session object with zero values like this
-//  s:&Session{}
-//  err:=s.FindByKey(1)
-//  if err!=nil{
-//    // do something
-//  }
-//  // now you have s populated with the values returned from the database.
-func (s *Session) FindByKey(store *db.DB, key string) error {
+func FindSessionByKey(store *db.DB, key string) (*Session, error) {
 	var query = `
 	SELECT * from sessions WHERE key LIKE $1 LIMIT 1;
 	`
-	return store.QueryRow(query, key).Scan(
+	s := &Session{}
+	err := store.QueryRow(query, key).Scan(
 		&s.Key,
 		&s.Data,
 		&s.CreatedOn,
 		&s.UpdatedOn,
 		&s.ExpiresOn,
 	)
+	if err != nil {
+		return nil, err
+	}
+	return s, nil
 }
 
-//Count counts the number of rows in the sessions table
-func (s *Session) Count(store *db.DB) (int, error) {
-	var query = `
-	SELECT count() FROM sessions;
-	`
+func Count(store *db.DB, table string) (int, error) {
+	query := "SELECT count() FROM %s;"
+	query = fmt.Sprintf(query, table)
 	var rst int
 	err := store.QueryRow(query).Scan(&rst)
 	return rst, err
 }
 
-//Update updates a session with a given key with the given data.
-func (s *Session) Update(store *db.DB, key string, data []byte) error {
+func UpdateSession(store *db.DB, key string, data []byte) error {
 	var query = `
 BEGIN TRANSACTION;
   UPDATE sessions
@@ -88,8 +80,7 @@ COMMIT;
 	return tx.Commit()
 }
 
-//Delete deletes a row in session table with the given key
-func (s *Session) Delete(store *db.DB, key string) error {
+func DeleteSession(store *db.DB, key string) error {
 	var query = `
 BEGIN TRANSACTION;
    DELETE FROM sessions

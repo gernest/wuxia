@@ -24,11 +24,11 @@ func TestSessions(t *testing.T) {
 		Key:  "hello",
 		Data: []byte("world"),
 	}
-	err := sess.Create(store)
+	err := CreateSession(store, sess)
 	if err != nil {
 		t.Error(err)
 	}
-	n, err := sess.Count(store)
+	n, err := Count(store, "sessions")
 	if err != nil {
 		t.Error(err)
 	}
@@ -36,8 +36,7 @@ func TestSessions(t *testing.T) {
 		t.Errorf("expected 1 got %d", n)
 	}
 
-	ns := &Session{}
-	err = ns.FindByKey(store, sess.Key)
+	ns, err := FindSessionByKey(store, sess.Key)
 	if err != nil {
 		t.Error(err)
 	}
