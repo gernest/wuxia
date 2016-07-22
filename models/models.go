@@ -70,12 +70,12 @@ func (s *Session) Count(store *db.DB) (int, error) {
 //Update updates a session with a given key with the given data.
 func (s *Session) Update(store *db.DB, key string, data []byte) error {
 	var query = `
-	BEGIN TRANSACTION;
-	  UPDATE sessions
-		  data = $2,
-			updated_on = now(),
-    WHERE key==$1;
-	COMMIT;
+BEGIN TRANSACTION;
+  UPDATE sessions
+    data = $2,
+    updated_on = now(),
+  WHERE key==$1;
+COMMIT;
 	`
 	tx, err := store.Begin()
 	if err != nil {
@@ -91,10 +91,10 @@ func (s *Session) Update(store *db.DB, key string, data []byte) error {
 //Delete deletes a row in session table with the given key
 func (s *Session) Delete(store *db.DB, key string) error {
 	var query = `
-	BEGIN TRANSACTION;
-	  DELETE FROM sessions
-    WHERE key==$1;
-	COMMIT;
+BEGIN TRANSACTION;
+   DELETE FROM sessions
+  WHERE key==$1;
+COMMIT;
 	`
 	tx, err := store.Begin()
 	if err != nil {
