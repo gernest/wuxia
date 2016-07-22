@@ -105,16 +105,6 @@ func (g *Generator) Build() error {
 	return nil
 }
 
-//SetWorkDir sets dir as wth working directory for the generator
-func (g *Generator) SetWorkDir(dir string) error {
-	_, err := g.fs.Stat(dir)
-	if err != nil {
-		return err
-	}
-	g.workDir = dir
-	return nil
-}
-
 //initializes the build process. Any stages after this will have the generator
 //already bootstraped.
 //

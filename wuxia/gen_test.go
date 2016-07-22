@@ -8,11 +8,9 @@ import (
 
 func TestGenerator_Build(t *testing.T) {
 	g := NewGenerator(nil, nil, afero.NewOsFs())
-	err := g.SetWorkDir("fixture/site")
-	if err != nil {
-		t.Error(err)
-	}
-	err = g.Build()
+	p := "fixture/site"
+	g.workDir = p
+	err := g.Build()
 	if err != nil {
 		t.Error(err)
 	}
