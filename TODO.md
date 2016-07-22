@@ -1,5 +1,5 @@
 - static site generator
- - [ ] JavaScript plugins
+ - [x] JavaScript plugins
  - [ ] clean log system
  - [ ] concurrent file processing
  - [ ] themes
