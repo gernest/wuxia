@@ -4,6 +4,7 @@ test:generate
 	@go test  ./db
 	@go test  ./migration
 	@go test  ./models
+	@go test  ./session
 	@go test  ./api
 
 setup:

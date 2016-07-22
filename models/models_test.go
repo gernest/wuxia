@@ -28,4 +28,19 @@ func TestSessions(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
+	n, err := sess.Count(store)
+	if err != nil {
+		t.Error(err)
+	}
+	if n != 1 {
+		t.Errorf("expected 1 got %d", n)
+	}
+
+	ns := &Session{}
+	err = ns.FindByKey(store, sess.Key)
+	if err != nil {
+		t.Error(err)
+	}
+	if ns.Key != sess.Key {
+	}
 }

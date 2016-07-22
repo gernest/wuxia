@@ -2,7 +2,6 @@
 
 BEGIN TRANSACTION;
   CREATE TABLE sessions(
-    id int,
     key string,
     data blob,
     created_on time,
