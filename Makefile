@@ -20,3 +20,6 @@ themes/data.go:$(shell find themes/theme -type f)
 
 generate: migration/data.go themes/data.go
 	@echo "Done generate bindata"
+
+cover:
+	./coverage.sh
