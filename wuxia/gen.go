@@ -86,7 +86,23 @@ func NewGenerator(vm *otto.Otto, sys *System, fs afero.Fs) *Generator {
 
 //Build builds a project.
 func (g *Generator) Build() error {
-	return evaluate(g.init, g.config, g.plan, g.exec, g.down)
+	steps := []struct {
+		stage buildStage
+		exec  func() error
+	}{
+		{stageInit, g.init},
+		{stageConfig, g.init},
+		{stagePlan, g.plan},
+		{stageExec, g.exec},
+	}
+	var err error
+	for _, buildStep := range steps {
+		err = buildStep.exec()
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 //SetWorkDir sets dir as wth working directory for the generator
@@ -236,15 +252,4 @@ func (g *Generator) exec() error {
 }
 func (g *Generator) down() error {
 	return nil
-}
-
-func evaluate(fn ...func() error) error {
-	var err error
-	for i := 0; i < len(fn); i++ {
-		err = fn[i]()
-		if err != nil {
-			return err
-		}
-	}
-	return err
 }
