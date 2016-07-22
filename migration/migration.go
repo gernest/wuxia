@@ -1,6 +1,6 @@
-//go:generate go-bindata -o data.go -pkg migration  scripts/...
 package migration
 
+//go:generate go-bindata -o data.go -pkg migration  scripts/...
 import "github.com/gernest/wuxia/db"
 
 func Up(store *db.DB) error {
