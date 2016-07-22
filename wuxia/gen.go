@@ -132,17 +132,6 @@ func (g *Generator) init() error {
 		return buildErr(stageInit, err.Error())
 	}
 
-	// evaluate project provided entry script if provided. We ignore if the file
-	// is not provided but any errors arsing from evaluating a provided script is
-	// a built error.
-	entryFile := filepath.Join(g.workDir, scriptsDir, initDir, indexFile)
-	err = g.evaluateFile(entryFile)
-	if err != nil {
-		if !os.IsNotExist(err) {
-			return buildErr(stageInit, err.Error())
-		}
-	}
-
 	// Properly set working directory/
 	if g.workDir == "" {
 		wd, err := os.Getwd()
@@ -150,6 +139,20 @@ func (g *Generator) init() error {
 			return buildErr(stageInit, err.Error())
 		}
 		g.workDir = wd
+	}
+
+	// ensure everything is relative to the working directory
+	g.fs = afero.NewBasePathFs(g.fs, g.workDir)
+
+	// evaluate project provided entry script if provided. We ignore if the file
+	// is not provided but any errors arsing from evaluating a provided script is
+	// a built error.
+	entryFile := filepath.Join(scriptsDir, initDir, indexFile)
+	err = g.evaluateFile(entryFile)
+	if err != nil {
+		if !os.IsNotExist(err) {
+			return buildErr(stageInit, err.Error())
+		}
 	}
 	return nil
 }
@@ -203,7 +206,7 @@ func (g *Generator) config() error {
 	if err != nil {
 		return buildErr(stageConfig, err.Error())
 	}
-	cfgFile := filepath.Join(g.workDir, cSys.Boot.ConfigiFile)
+	cfgFile := filepath.Join(cSys.Boot.ConfigiFile)
 	cf, err := g.fs.Open(cfgFile)
 	if err != nil {
 		return buildErr(stageConfig, err.Error())
