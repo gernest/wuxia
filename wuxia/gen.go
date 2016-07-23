@@ -150,6 +150,8 @@ func (g *Generator) init() error {
 	// ensure everything is relative to the working directory
 	g.fs = afero.NewBasePathFs(g.fs, g.workDir)
 
+	_ = g.vm.Set("fileTree", fileTree(g.fs, g.workDir))
+
 	// evaluate project provided entry script if provided. We ignore if the file
 	// is not provided but any errors arsing from evaluating a provided script is
 	// a built error.
@@ -160,7 +162,38 @@ func (g *Generator) init() error {
 			return buildErr(stageInit, err.Error())
 		}
 	}
+
 	return nil
+}
+
+//fileTree provides an array of all files found in the root( which is suppose to
+//be the working directory.
+//
+//The file index is built only once and evaluated once too, then it is cached.
+//This operates in the otto runtime.
+func fileTree(fs afero.Fs, root string) func(otto.FunctionCall) otto.Value {
+	var tree []string
+	var v otto.Value
+	return func(call otto.FunctionCall) otto.Value {
+		if tree != nil {
+			return v
+		}
+		ferr := afero.Walk(fs, root, func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return err
+			}
+			if !info.IsDir() {
+				tree = append(tree, path)
+			}
+			return nil
+		})
+		if ferr != nil {
+			tree = nil
+			Panic(ferr.Error())
+		}
+		v, _ = call.Otto.ToValue(tree)
+		return v
+	}
 }
 
 func defaultSystem() *System {
