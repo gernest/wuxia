@@ -1,1 +1,16 @@
-{"source": "src"}
+{
+  "source": "src",
+  "destination": "dest",
+  "statc_dir": "static",
+  "templates_dir": "templates",
+  "theme_dir": "themes",
+  "default_theme": "doxsey",
+  "plugin_dir": "plugins",
+  "safe": true,
+  "exclude": [
+    "CONTRIBUTING.md"
+  ],
+  "include": [
+    "LICENCE.md"
+  ]
+}

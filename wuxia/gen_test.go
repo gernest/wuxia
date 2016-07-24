@@ -14,4 +14,6 @@ func TestGenerator_Build(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
+	//data, _ := json.MarshalIndent(DefaultConfig(), "", "  ")
+	//ioutil.WriteFile(p+"/config.json", data, 066)
 }
