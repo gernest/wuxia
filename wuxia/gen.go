@@ -91,7 +91,7 @@ func (g *Generator) Build() error {
 		exec  func() error
 	}{
 		{stageInit, g.init},
-		{stageConfig, g.init},
+		{stageConfig, g.config},
 		{stagePlan, g.plan},
 		{stageExec, g.exec},
 	}
