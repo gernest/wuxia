@@ -28,7 +28,7 @@ func DefaultConfig() *Config {
 		DefaultTheme: "doxsey",
 		Safe:         true,
 		Excluede: []string{
-			"CONTRITUTING", "CONTRIBUTING.md",
+			".git/*", "CONTRIBUTING.md",
 		},
 		Include: []string{
 			"LICENCE.md",
