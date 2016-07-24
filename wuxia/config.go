@@ -19,6 +19,21 @@ type Config struct {
 	BaseURL     string   `json:"base_url"`
 }
 
+//DefaultConfig retruns *Config with default settings
+func DefaultConfig() *Config {
+	return &Config{
+		Source:      "src",
+		Destination: "dest",
+		Safe:        true,
+		Excluede: []string{
+			"CONTRITUTING", "CONTRIBUTING.md",
+		},
+		Include: []string{
+			"LICENCE.md",
+		},
+	}
+}
+
 //System configuration for the whole static generator system.
 type System struct {
 	Boot   *Boot   `json:"boot"`
