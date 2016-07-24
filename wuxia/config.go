@@ -11,12 +11,6 @@ type Config struct {
 	Safe        bool     `json:"safe"`
 	Excluede    []string `json:"exclude"`
 	Include     []string `json:"include"`
-	KeepFiles   []string `json:"keep_files"`
-	TimeZone    string   `json:"timezone"`
-	Encoding    string   `json:"encoding"`
-	Port        int      `json:"port"`
-	Host        string   `json:"host"`
-	BaseURL     string   `json:"base_url"`
 }
 
 //DefaultConfig retruns *Config with default settings
