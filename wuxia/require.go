@@ -42,11 +42,11 @@ func newRequire(fs afero.Fs, paths ...string) *require {
 func (r *require) load(call otto.FunctionCall) otto.Value {
 	id, err := call.Argument(0).ToString()
 	if err != nil {
-		Panic(err)
+		panicOtto(err)
 	}
 	newID, err := r.resolve(id)
 	if err != nil {
-		Panic(err.Error())
+		panicOtto(err.Error())
 	}
 	if cached, ok := r.checkCache(newID); ok {
 		return cached
@@ -114,17 +114,17 @@ func (r *require) resolve(id string) (string, error) {
 func (r *require) loadFromFile(path string, vm *otto.Otto) otto.Value {
 	f, err := r.fs.Open(path)
 	if err != nil {
-		Panic(err.Error())
+		panicOtto(err.Error())
 	}
 	defer func() { _ = f.Close() }()
 	data, err := ioutil.ReadAll(f)
 	if err != nil {
-		Panic(err.Error())
+		panicOtto(err.Error())
 	}
 	if filepath.Ext(path) == ".json" {
 		v, err := vm.Call("JSON.parse", nil, string(data))
 		if err != nil {
-			Panic(err.Error())
+			panicOtto(err.Error())
 		}
 		return v
 	}
@@ -140,7 +140,7 @@ func (r *require) loadFromSource(source string, path string, vm *otto.Otto) otto
 
 	moduleReturn, err := vm.Call(source, jsExports, jsModule)
 	if err != nil {
-		Panic(err.Error())
+		panicOtto(err.Error())
 	}
 	var moduleValue otto.Value
 	if !moduleReturn.IsUndefined() {

@@ -23,7 +23,7 @@ func (e Export) Set(key string, value interface{}) {
 func (e Export) ToValue(vm *otto.Otto) otto.Value {
 	o, err := vm.Object(`({})`)
 	if err != nil {
-		Panic(err.Error())
+		panicOtto(err.Error())
 	}
 	for key, value := range e {
 		_ = o.Set(key, value)
@@ -53,11 +53,11 @@ func (fs fileSys) export() Export {
 func (fs fileSys) open(call otto.FunctionCall) otto.Value {
 	name, err := call.Argument(0).ToString()
 	if err != nil {
-		Panic(err.Error())
+		panicOtto(err.Error())
 	}
 	f, err := fs.Open(name)
 	if err != nil {
-		Panic(err.Error())
+		panicOtto(err.Error())
 	}
 	af := &file{o: f}
 	return af.export().ToValue(call.Otto)
@@ -89,27 +89,27 @@ func buildFlags(src string) (int, error) {
 func (fs fileSys) openFile(call otto.FunctionCall) otto.Value {
 	name, err := call.Argument(0).ToString()
 	if err != nil {
-		Panic(err.Error())
+		panicOtto(err.Error())
 	}
 	flag, err := call.Argument(1).ToString()
 	if err != nil {
-		Panic(err.Error())
+		panicOtto(err.Error())
 	}
 	uflag, err := buildFlags(flag)
 	if err != nil {
-		Panic(err.Error())
+		panicOtto(err.Error())
 	}
 	mode, err := call.Argument(2).ToString()
 	if err != nil {
-		Panic(err.Error())
+		panicOtto(err.Error())
 	}
 	umode, err := strconv.ParseUint(mode, 10, 32)
 	if err != nil {
-		Panic(err.Error())
+		panicOtto(err.Error())
 	}
 	f, err := fs.OpenFile(name, uflag, os.FileMode(umode))
 	if err != nil {
-		Panic(err.Error())
+		panicOtto(err.Error())
 	}
 	af := &file{o: f}
 	return af.export().ToValue(call.Otto)
@@ -130,7 +130,7 @@ func (f *file) export() Export {
 func (f *file) close(call otto.FunctionCall) otto.Value {
 	err := f.o.Close()
 	if err != nil {
-		Panic(err.Error())
+		panicOtto(err.Error())
 	}
 	return otto.Value{}
 }
@@ -138,7 +138,7 @@ func (f *file) close(call otto.FunctionCall) otto.Value {
 func (f *file) read(call otto.FunctionCall) otto.Value {
 	b, err := ioutil.ReadAll(f.o)
 	if err != nil {
-		Panic(err.Error())
+		panicOtto(err.Error())
 	}
 	return ToValue(string(b))
 }
@@ -146,11 +146,11 @@ func (f *file) read(call otto.FunctionCall) otto.Value {
 func (f *file) write(call otto.FunctionCall) otto.Value {
 	c, err := call.Argument(0).ToString()
 	if err != nil {
-		Panic(err.Error())
+		panicOtto(err.Error())
 	}
 	n, err := f.o.WriteString(c)
 	if err != nil {
-		Panic(err.Error())
+		panicOtto(err.Error())
 	}
 	return ToValue(n)
 }

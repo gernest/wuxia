@@ -125,11 +125,11 @@ func (g *Generator) init() error {
 	_ = g.vm.Set("sys", func(call otto.FunctionCall) otto.Value {
 		data, err := json.Marshal(g.sys)
 		if err != nil {
-			Panic(err)
+			panicOtto(err)
 		}
 		val, err := call.Otto.Call("JSON.parse", nil, string(data))
 		if err != nil {
-			Panic(err)
+			panicOtto(err)
 		}
 		return val
 	})
@@ -189,7 +189,7 @@ func fileTree(fs afero.Fs, root string) func(otto.FunctionCall) otto.Value {
 		})
 		if ferr != nil {
 			tree = nil
-			Panic(ferr.Error())
+			panicOtto(ferr.Error())
 		}
 		v, _ = call.Otto.ToValue(tree)
 		return v
