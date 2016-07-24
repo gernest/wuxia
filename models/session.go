@@ -16,6 +16,8 @@ type Session struct {
 	ExpiresOn time.Time
 }
 
+//CreateSession creates a new database record for the session s object. This
+//sets CreatedOn and UpdatedOn fieds to time.Now().
 func CreateSession(store *db.DB, s *Session) error {
 	var query = `
 	BEGIN TRANSACTION;
@@ -34,6 +36,7 @@ func CreateSession(store *db.DB, s *Session) error {
 	return tx.Commit()
 }
 
+//FindSessionByKey queries the databse for session with key field key.
 func FindSessionByKey(store *db.DB, key string) (*Session, error) {
 	var query = `
 	SELECT * from sessions WHERE key LIKE $1 LIMIT 1;
@@ -52,6 +55,7 @@ func FindSessionByKey(store *db.DB, key string) (*Session, error) {
 	return s, nil
 }
 
+//Count counts the number of rows in a table named table.
 func Count(store *db.DB, table string) (int, error) {
 	query := "SELECT count() FROM %s;"
 	query = fmt.Sprintf(query, table)
@@ -60,6 +64,8 @@ func Count(store *db.DB, table string) (int, error) {
 	return rst, err
 }
 
+//UpdateSession updates a ratabase record for session whose key matches key.
+//Only two fields are updated, the data and updated_on field.
 func UpdateSession(store *db.DB, key string, data []byte) error {
 	var query = `
 BEGIN TRANSACTION;
@@ -80,6 +86,7 @@ COMMIT;
 	return tx.Commit()
 }
 
+//DeleteSession deletes a session record which matches key.
 func DeleteSession(store *db.DB, key string) error {
 	var query = `
 BEGIN TRANSACTION;
