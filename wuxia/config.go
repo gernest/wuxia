@@ -6,19 +6,27 @@ package wuxia
 // The format can either be json, yaml or toml
 // TODO: add yaml and toml support.
 type Config struct {
-	Source      string   `json:"source"`
-	Destination string   `json:"destination"`
-	Safe        bool     `json:"safe"`
-	Excluede    []string `json:"exclude"`
-	Include     []string `json:"include"`
+	Source       string   `json:"source"`
+	Destination  string   `json:"destination"`
+	StaticDir    string   `json:'statc_dir"`
+	TemplatesDir string   `json:"templates_dir"`
+	ThemeDir     string   `json:"theme_dir"`
+	DefaultTheme string   `json:"default_theme"`
+	Safe         bool     `json:"safe"`
+	Excluede     []string `json:"exclude"`
+	Include      []string `json:"include"`
 }
 
 //DefaultConfig retruns *Config with default settings
 func DefaultConfig() *Config {
 	return &Config{
-		Source:      "src",
-		Destination: "dest",
-		Safe:        true,
+		Source:       "src",
+		Destination:  "dest",
+		StaticDir:    "static",
+		ThemeDir:     "themes",
+		TemplatesDir: "templates",
+		DefaultTheme: "doxsey",
+		Safe:         true,
 		Excluede: []string{
 			"CONTRITUTING", "CONTRIBUTING.md",
 		},
