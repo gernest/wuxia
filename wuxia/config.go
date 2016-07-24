@@ -12,6 +12,7 @@ type Config struct {
 	TemplatesDir string   `json:"templates_dir"`
 	ThemeDir     string   `json:"theme_dir"`
 	DefaultTheme string   `json:"default_theme"`
+	PluginDir    string   `json:"plugin_dir"`
 	Safe         bool     `json:"safe"`
 	Excluede     []string `json:"exclude"`
 	Include      []string `json:"include"`
@@ -26,9 +27,10 @@ func DefaultConfig() *Config {
 		ThemeDir:     "themes",
 		TemplatesDir: "templates",
 		DefaultTheme: "doxsey",
+		PluginDir:    "plugins",
 		Safe:         true,
 		Excluede: []string{
-			".git/*", "CONTRIBUTING.md",
+			"CONTRIBUTING.md",
 		},
 		Include: []string{
 			"LICENCE.md",
