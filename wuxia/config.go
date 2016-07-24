@@ -8,7 +8,7 @@ package wuxia
 type Config struct {
 	Source       string   `json:"source"`
 	Destination  string   `json:"destination"`
-	StaticDir    string   `json:'statc_dir"`
+	StaticDir    string   `json:"statc_dir"`
 	TemplatesDir string   `json:"templates_dir"`
 	ThemeDir     string   `json:"theme_dir"`
 	DefaultTheme string   `json:"default_theme"`
