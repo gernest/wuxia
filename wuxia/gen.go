@@ -90,8 +90,8 @@ func (g *Generator) Build() error {
 		stage buildStage
 		exec  func() error
 	}{
-		{stageInit, g.init},
 		{stageConfig, g.config},
+		{stageInit, g.init},
 		{stagePlan, g.plan},
 		{stageExec, g.exec},
 	}
@@ -116,12 +116,7 @@ func (g *Generator) Build() error {
 // Initialzation is offloaded to the javascript runtine of the generator..Any
 // error returned is a build error.
 func (g *Generator) init() error {
-	if g.sys == nil {
-		g.sys = defaultSystem()
-	}
-	if g.vm == nil {
-		g.vm = defaultVM(g.sys)
-	}
+
 	_ = g.vm.Set("sys", func(call otto.FunctionCall) otto.Value {
 		data, err := json.Marshal(g.sys)
 		if err != nil {
@@ -137,18 +132,6 @@ func (g *Generator) init() error {
 	if err != nil {
 		return buildErr(stageInit, err.Error())
 	}
-
-	// Properly set working directory/
-	if g.workDir == "" {
-		wd, err := os.Getwd()
-		if err != nil {
-			return buildErr(stageInit, err.Error())
-		}
-		g.workDir = wd
-	}
-
-	// ensure everything is relative to the working directory
-	g.fs = afero.NewBasePathFs(g.fs, g.workDir)
 
 	_ = g.vm.Set("fileTree", fileTree(g.fs, g.workDir))
 
@@ -235,35 +218,34 @@ func defaultVM(sys *System) *otto.Otto {
 }
 
 func (g *Generator) config() error {
-	v, err := g.vm.Call("getCurrentSys", nil)
+	if g.sys == nil {
+		g.sys = defaultSystem()
+	}
+	if g.vm == nil {
+		g.vm = defaultVM(g.sys)
+	}
+	// Properly set working directory/
+	if g.workDir == "" {
+		wd, err := os.Getwd()
+		if err != nil {
+			return buildErr(stageInit, err.Error())
+		}
+		g.workDir = wd
+	}
+
+	// ensure everything is relative to the working directory
+	g.fs = afero.NewBasePathFs(g.fs, g.workDir)
+	af := afero.Afero{g.fs}
+	data, err := af.ReadFile(configFile)
 	if err != nil {
-		return buildErr(stageConfig, err.Error())
+		return buildErr(stageInit, err.Error())
 	}
-	cSys := &System{}
-	str, _ := v.ToString()
-	err = json.Unmarshal([]byte(str), cSys)
+	cfg := &Config{}
+	err = json.Unmarshal(data, cfg)
 	if err != nil {
-		return buildErr(stageConfig, err.Error())
+		return buildErr(stageInit, err.Error())
 	}
-	cfgFile := filepath.Join(cSys.Boot.ConfigiFile)
-	cf, err := g.fs.Open(cfgFile)
-	if err != nil {
-		return buildErr(stageConfig, err.Error())
-	}
-	defer func() { _ = cf.Close() }()
-	data, err := ioutil.ReadAll(cf)
-	if err != nil {
-		return buildErr(stageConfig, err.Error())
-	}
-	c := &Config{}
-	err = json.Unmarshal(data, c)
-	if err != nil {
-		return buildErr(stageConfig, err.Error())
-	}
-	if cSys.Config == nil {
-		cSys.Config = c
-	}
-	g.sys = cSys
+	g.sys.Config = cfg
 	return nil
 }
 
