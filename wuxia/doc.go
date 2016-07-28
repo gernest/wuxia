@@ -1,4 +1,4 @@
-//package wuxia is the modern day static site generator that focus on
+//Package wuxia is the modern day static site generator that focus on
 //practical usage , performance , maintainability, and ability to extend.
 //
 // Features
