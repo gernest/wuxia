@@ -1,9 +1,17 @@
 package api
 
-import "net/http"
+import (
+	"net/http"
 
-func build(w http.ResponseWriter, r http.Request) {
+	"github.com/gernest/wuxia/models"
+)
+
+type Api struct {
+	Ctx *models.Context
 }
 
-func progress(w http.ResponseWriter, r http.Request) {
+func (a *Api) Build(w http.ResponseWriter, r http.Request) {
+}
+
+func (a *Api) Brogress(w http.ResponseWriter, r http.Request) {
 }
