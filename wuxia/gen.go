@@ -18,25 +18,27 @@ const (
 	indexFile  = "index.js"
 )
 
-type buildStage int
+//BuildStage the step in the generation process life cycle.
+type BuildStage int
 
+// available stages offered by the generator
 const (
-	stageInit buildStage = iota
-	stageConfig
-	stagePlan
-	stageExec
+	StageInit BuildStage = iota
+	StageConfig
+	StagePlan
+	StageExec
 )
 
-func (s buildStage) String() string {
+func (s BuildStage) String() string {
 	var rst string
 	switch s {
-	case stageInit:
+	case StageInit:
 		rst = "init"
-	case stageConfig:
+	case StageConfig:
 		rst = "config"
-	case stagePlan:
+	case StagePlan:
 		rst = "plan"
-	case stageExec:
+	case StageExec:
 		rst = "exec"
 	default:
 		rst = "unkown stage"
@@ -51,7 +53,7 @@ type buildError struct {
 	Message string `json:"msg"`
 }
 
-func buildErr(stage buildStage, msg string) error {
+func buildErr(stage BuildStage, msg string) error {
 	return &buildError{Stage: stage.String(), Message: msg}
 }
 
@@ -87,13 +89,13 @@ func NewGenerator(vm *otto.Otto, sys *System, fs afero.Fs) *Generator {
 //Build builds a project.
 func (g *Generator) Build() error {
 	steps := []struct {
-		stage buildStage
+		stage BuildStage
 		exec  func() error
 	}{
-		{stageConfig, g.Config},
-		{stageInit, g.Init},
-		{stagePlan, g.plan},
-		{stageExec, g.exec},
+		{StageConfig, g.Config},
+		{StageInit, g.Init},
+		{StagePlan, g.plan},
+		{StageExec, g.exec},
 	}
 	var err error
 	for _, buildStep := range steps {
@@ -130,7 +132,7 @@ func (g *Generator) Init() error {
 	})
 	_, err := g.vm.Eval(entryScript())
 	if err != nil {
-		return buildErr(stageInit, err.Error())
+		return buildErr(StageInit, err.Error())
 	}
 
 	_ = g.vm.Set("fileTree", fileTree(g.fs, g.workDir))
@@ -142,7 +144,7 @@ func (g *Generator) Init() error {
 	err = g.evaluateFile(entryFile)
 	if err != nil {
 		if !os.IsNotExist(err) {
-			return buildErr(stageInit, err.Error())
+			return buildErr(StageInit, err.Error())
 		}
 	}
 
@@ -229,7 +231,7 @@ func (g *Generator) Config() error {
 	if g.workDir == "" {
 		wd, err := os.Getwd()
 		if err != nil {
-			return buildErr(stageInit, err.Error())
+			return buildErr(StageInit, err.Error())
 		}
 		g.workDir = wd
 	}
@@ -239,12 +241,12 @@ func (g *Generator) Config() error {
 	af := afero.Afero{Fs: g.fs}
 	data, err := af.ReadFile(configFile)
 	if err != nil {
-		return buildErr(stageInit, err.Error())
+		return buildErr(StageInit, err.Error())
 	}
 	cfg := &Config{}
 	err = json.Unmarshal(data, cfg)
 	if err != nil {
-		return buildErr(stageInit, err.Error())
+		return buildErr(StageInit, err.Error())
 	}
 	g.sys.Config = cfg
 	return nil
