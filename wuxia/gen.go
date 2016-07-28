@@ -90,8 +90,8 @@ func (g *Generator) Build() error {
 		stage buildStage
 		exec  func() error
 	}{
-		{stageConfig, g.config},
-		{stageInit, g.init},
+		{stageConfig, g.Config},
+		{stageInit, g.Init},
 		{stagePlan, g.plan},
 		{stageExec, g.exec},
 	}
@@ -105,7 +105,7 @@ func (g *Generator) Build() error {
 	return nil
 }
 
-//initializes the build process. Any stages after this will have the generator
+//Init initializes the build process. Any stages after this will have the generator
 //already bootstraped.
 //
 // It is possible to bootstrap the generator from the project( User's side) by
@@ -115,7 +115,7 @@ func (g *Generator) Build() error {
 //
 // Initialzation is offloaded to the javascript runtine of the generator..Any
 // error returned is a build error.
-func (g *Generator) init() error {
+func (g *Generator) Init() error {
 
 	_ = g.vm.Set("sys", func(call otto.FunctionCall) otto.Value {
 		data, err := json.Marshal(g.sys)
@@ -217,7 +217,8 @@ func defaultVM(sys *System) *otto.Otto {
 	return otto.New()
 }
 
-func (g *Generator) config() error {
+//Config configures the generator.
+func (g *Generator) Config() error {
 	if g.sys == nil {
 		g.sys = defaultSystem()
 	}
@@ -235,7 +236,7 @@ func (g *Generator) config() error {
 
 	// ensure everything is relative to the working directory
 	g.fs = afero.NewBasePathFs(g.fs, g.workDir)
-	af := afero.Afero{g.fs}
+	af := afero.Afero{Fs: g.fs}
 	data, err := af.ReadFile(configFile)
 	if err != nil {
 		return buildErr(stageInit, err.Error())
