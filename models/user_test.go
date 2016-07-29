@@ -14,4 +14,8 @@ func TestUser(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
+	err = VerifyPass(usr.Password, []byte(pass))
+	if err != nil {
+		t.Error(err)
+	}
 }

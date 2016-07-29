@@ -45,3 +45,7 @@ func CreateUser(store *db.DB, u *User) error {
 func HashPassword(pass []byte) ([]byte, error) {
 	return bcrypt.GenerateFromPassword(pass, bcrypt.DefaultCost)
 }
+
+func VerifyPass(hash, pass []byte) error {
+	return bcrypt.CompareHashAndPassword(hash, pass)
+}
