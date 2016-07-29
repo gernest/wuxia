@@ -24,6 +24,21 @@ func CreateUser(store *db.DB, u *User) error {
 		return err
 	}
 	u.Password = p
+	var query = `
+	BEGIN TRANSACTION;
+	  INSERT INTO users (username,password,email,created_at)
+		VALUES ($1,$2,$3,now());
+	COMMIT;
+	`
+	tx, err := store.Begin()
+	if err != nil {
+		return err
+	}
+	_, err = tx.Exec(query, u.Name, u.Password, u.Email)
+	if err != nil {
+		return err
+	}
+	return tx.Commit()
 	return nil
 }
 
