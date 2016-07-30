@@ -8,6 +8,11 @@ import (
 	"github.com/gernest/wuxia/db"
 )
 
+//User represent the application user. It stores important information about the
+//user.
+//
+// The Name, Email and ID fields are all unique. Password is a hashed password,
+// hashed using bcrypt algorithm.
 type User struct {
 	ID        int
 	Name      string
@@ -17,6 +22,9 @@ type User struct {
 	UpdatedAt time.Time
 }
 
+//CreateUser creates a new record in the userstable. The Password field is
+//hashed before being stored. The Username is sanitized before storing it to the
+//database( Don't trust abybody).
 func CreateUser(store *db.DB, u *User) error {
 	u.Name = Sanitize(u.Name)
 	p, err := HashPassword(u.Password)
@@ -39,17 +47,19 @@ func CreateUser(store *db.DB, u *User) error {
 		return err
 	}
 	return tx.Commit()
-	return nil
 }
 
+//HashPassword hash pass using bcrypt.
 func HashPassword(pass []byte) ([]byte, error) {
 	return bcrypt.GenerateFromPassword(pass, bcrypt.DefaultCost)
 }
 
+//VerifyPass verifies that the hash is the hash of pass using bcrypt.
 func VerifyPass(hash, pass []byte) error {
 	return bcrypt.CompareHashAndPassword(hash, pass)
 }
 
+//FindUserByEmail retrieves the user record with the matching email address.
 func FindUserByEmail(store *db.DB, email string) (*User, error) {
 	var query = `
 	SELECT id(),username,password,email,created_at,updated_at FROM users 

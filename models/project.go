@@ -2,6 +2,7 @@ package models
 
 import "time"
 
+//Project represent a project.
 type Project struct {
 	ID        int
 	Name      string

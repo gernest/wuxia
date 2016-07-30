@@ -12,7 +12,10 @@ import (
 )
 
 const (
-	CtxBuild  = "buildCtx"
+	//CtxBuild is the key that stores Context in all the requests.
+	CtxBuild = "buildCtx"
+
+	//TaskTable is the name of the database table for tasks.
 	TaskTable = "tasks"
 )
 
@@ -22,24 +25,29 @@ func init() {
 	strict = bluemonday.StrictPolicy()
 }
 
+//Context holda important information that can be used by diffenet components of
+//the application.
 type Context struct {
 	Log    zap.Logger
 	Metric metric.Metric
 	Cfg    *Config
 }
 
+//Config configuration object.
 type Config struct {
 	Port       int
 	WorkDir    string
 	PublishDir string
 }
 
+//BuildArtifact is an interface which defines a buildable command.
 type BuildArtifact interface {
 	User() string
 	Project() string
 	Source() string
 }
 
+//BuildTask is a task for building a project.
 type BuildTask struct {
 	ID        int64
 	UUID      string
@@ -51,6 +59,7 @@ type BuildTask struct {
 	UpdateAt  time.Time
 }
 
+//CreateBuildTask creates a new task record and stores it into the database.
 func CreateBuildTask(store *db.DB, t *BuildTask) (*BuildTask, error) {
 	var query = `
 	BEGIN TRANSACTION;
@@ -84,6 +93,7 @@ func CreateBuildTask(store *db.DB, t *BuildTask) (*BuildTask, error) {
 	return t, nil
 }
 
+//Sanitize sanitizes src to avoid SQL injections.
 func Sanitize(src string) string {
 	return strict.Sanitize(src)
 }
