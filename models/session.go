@@ -21,9 +21,10 @@ type Session struct {
 func CreateSession(store *db.DB, s *Session) error {
 	var query = `
 	BEGIN TRANSACTION;
-	  INSERT INTO sessions VALUES ($1,$2,$3,$4,$5);
+	  INSERT INTO %s VALUES ($1,$2,$3,$4,$5);
 	COMMIT;
 	`
+	query = fmt.Sprintf(query, SessionTable)
 	tx, err := store.Begin()
 	if err != nil {
 		return err
@@ -39,8 +40,9 @@ func CreateSession(store *db.DB, s *Session) error {
 //FindSessionByKey queries the databse for session with key field key.
 func FindSessionByKey(store *db.DB, key string) (*Session, error) {
 	var query = `
-	SELECT * from sessions WHERE key LIKE $1 LIMIT 1;
+	SELECT * from %s WHERE key LIKE $1 LIMIT 1;
 	`
+	query = fmt.Sprintf(query, SessionTable)
 	s := &Session{}
 	err := store.QueryRow(query, key).Scan(
 		&s.Key,
@@ -69,12 +71,13 @@ func Count(store *db.DB, table string) (int, error) {
 func UpdateSession(store *db.DB, key string, data []byte) error {
 	var query = `
 BEGIN TRANSACTION;
-  UPDATE sessions
+  UPDATE %s
     data = $2,
     updated_on = now(),
   WHERE key==$1;
 COMMIT;
 	`
+	query = fmt.Sprintf(query, SessionTable)
 	tx, err := store.Begin()
 	if err != nil {
 		return err
@@ -90,10 +93,11 @@ COMMIT;
 func DeleteSession(store *db.DB, key string) error {
 	var query = `
 BEGIN TRANSACTION;
-   DELETE FROM sessions
+   DELETE FROM %s
   WHERE key==$1;
 COMMIT;
 	`
+	query = fmt.Sprintf(query, SessionTable)
 	tx, err := store.Begin()
 	if err != nil {
 		return err

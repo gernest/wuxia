@@ -17,6 +17,9 @@ const (
 
 	//TaskTable is the name of the database table for tasks.
 	TaskTable = "tasks"
+
+	//SessionTable is the name of  the database table for sessions
+	SessionTable = "sessions"
 )
 
 var strict *bluemonday.Policy
