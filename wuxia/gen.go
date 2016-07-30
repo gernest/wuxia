@@ -95,7 +95,7 @@ func (g *Generator) Build() error {
 	}{
 		{StageConfig, g.Config},
 		{StageInit, g.Init},
-		{StagePlan, g.plan},
+		{StagePlan, g.Plan},
 		{StageExec, g.Exec},
 	}
 	var err error
@@ -253,7 +253,7 @@ func (g *Generator) Config() error {
 	return nil
 }
 
-func (g *Generator) plan() error {
+func (g *Generator) Plan() error {
 	return nil
 }
 
