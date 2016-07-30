@@ -2,6 +2,7 @@ package wuxia
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -163,7 +164,7 @@ func fileTree(fs afero.Fs, root string) func(otto.FunctionCall) otto.Value {
 		if tree != nil {
 			return v
 		}
-		ferr := afero.Walk(fs, root, func(path string, info os.FileInfo, err error) error {
+		ferr := afero.Walk(fs, "/", func(path string, info os.FileInfo, err error) error {
 			if err != nil {
 				return err
 			}
@@ -255,7 +256,24 @@ func (g *Generator) Config() error {
 func (g *Generator) plan() error {
 	return nil
 }
+
 func (g *Generator) exec() error {
+	o, err := g.vm.Call("fileTree", nil)
+	if err != nil {
+		return buildErr(StageExec, err.Error())
+	}
+	ov, err := o.Export()
+	if err != nil {
+		return buildErr(StageExec, err.Error())
+	}
+	if ov == nil {
+		// No files to mess with
+	}
+	files, ok := ov.([]string)
+	if !ok {
+		// Some fish
+	}
+	fmt.Println(files)
 	return nil
 }
 func (g *Generator) down() error {
