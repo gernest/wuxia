@@ -96,7 +96,7 @@ func (g *Generator) Build() error {
 		{StageConfig, g.Config},
 		{StageInit, g.Init},
 		{StagePlan, g.plan},
-		{StageExec, g.exec},
+		{StageExec, g.Exec},
 	}
 	var err error
 	for _, buildStep := range steps {
@@ -257,7 +257,9 @@ func (g *Generator) plan() error {
 	return nil
 }
 
-func (g *Generator) exec() error {
+//Exec executes the plans that are outilend by the Plan method. The Plan method
+//should be called before this.
+func (g *Generator) Exec() error {
 	o, err := g.vm.Call("fileTree", nil)
 	if err != nil {
 		return buildErr(StageExec, err.Error())
