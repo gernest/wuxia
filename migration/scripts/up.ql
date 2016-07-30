@@ -19,7 +19,7 @@ BEGIN TRANSACTION;
     password blob,
     email string,
     created_at time,
-    upated_at time);
+    updated_at time);
   CREATE TABLE IF NOT EXISTS projects(
     user_id int,
     name string,
