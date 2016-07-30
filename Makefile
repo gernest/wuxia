@@ -18,7 +18,11 @@ themes/data.go:$(shell find themes/theme -type f)
 	@echo "Generating themes bindata"
 	@go generate ./themes
 
-generate: migration/data.go themes/data.go
+wuxia/data.go:$(shell find wuxia/js -type f)
+	@echo "Generating generator bindata"
+	@go generate ./wuxia
+
+generate: migration/data.go themes/data.go wuxia/data.go
 	@echo "Done generate bindata"
 
 cover:

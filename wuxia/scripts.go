@@ -1,22 +1,12 @@
 package wuxia
 
-func entryScript() string {
-	return `
-var System=sys();
-var Tpl={};
-Tpl.funcs={};
-Tpl.getTplFuncs=function(){
-	var rst=[];
-	for (var prop in Tpl.funcs){
-		if (Tpl.funcs.hasOwnProperty(prop)){
-			rst.push(prop);
-		}
-	}
-	return rst;
-}
+//go:generate go-bindata -o data.go -pkg wuxia js/...
 
-function getCurrentSys(){
-	return JSON.stringify(System);
-}
-`
+func entryScript() string {
+	d, err := Asset("js/init.js")
+	if err != nil {
+		//FIXME: retrun error instead
+		return ""
+	}
+	return string(d)
 }
