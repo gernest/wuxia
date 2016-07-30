@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
@@ -34,10 +35,11 @@ func CreateUser(store *db.DB, u *User) error {
 	u.Password = p
 	var query = `
 	BEGIN TRANSACTION;
-	  INSERT INTO users (username,password,email,created_at,updated_at)
+	  INSERT INTO %s (username,password,email,created_at,updated_at)
 		VALUES ($1,$2,$3,now(),now());
 	COMMIT;
 	`
+	query = fmt.Sprintf(query, UserTable)
 	tx, err := store.Begin()
 	if err != nil {
 		return err
@@ -62,9 +64,10 @@ func VerifyPass(hash, pass []byte) error {
 //FindUserByEmail retrieves the user record with the matching email address.
 func FindUserByEmail(store *db.DB, email string) (*User, error) {
 	var query = `
-	SELECT id(),username,password,email,created_at,updated_at FROM users 
+	SELECT id(),username,password,email,created_at,updated_at FROM %s
 	WHERE email==$1 ;
 	`
+	query = fmt.Sprintf(query, UserTable)
 	u := &User{}
 	err := store.QueryRow(query, email).Scan(
 		&u.ID,

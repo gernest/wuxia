@@ -20,6 +20,9 @@ const (
 
 	//SessionTable is the name of  the database table for sessions
 	SessionTable = "sessions"
+
+	//UserTable is the name of the databse table for users.
+	UserTable = "users"
 )
 
 var strict *bluemonday.Policy
