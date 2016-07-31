@@ -44,6 +44,9 @@ func (r *require) load(call otto.FunctionCall) otto.Value {
 	if err != nil {
 		panicOtto(err)
 	}
+	if cached, ok := r.checkCache(id); ok {
+		return cached
+	}
 	newID, err := r.resolve(id)
 	if err != nil {
 		panicOtto(err.Error())
