@@ -9,7 +9,7 @@
  - themes
 
 # Introduction
-wuxia is a prtable static web solution. Wuxia allows you to create, build and
+wuxia is a potable static web solution. Wuxia allows you to create, build and
 deploy static websites.
 
 Wuxia is made up of components that when combined together forms a powerful
