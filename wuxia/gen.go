@@ -250,6 +250,14 @@ func (g *Generator) Config() error {
 		return buildErr(StageInit, err.Error())
 	}
 	g.sys.Config = cfg
+
+	// Add reuire
+	req := newRequire(g.fs, scriptsDir)
+	err = g.registerBuiltin(req)
+	if err != nil {
+		return buildErr(StageInit, err.Error())
+	}
+	_ = g.vm.Set("require", req.load)
 	return nil
 }
 
@@ -279,5 +287,13 @@ func (g *Generator) Exec() error {
 	return nil
 }
 func (g *Generator) down() error {
+	return nil
+}
+
+func (g *Generator) registerBuiltin(r *require) error {
+	f := &fileSys{}
+	f.Fs = g.fs
+	v := f.export().ToValue(g.vm)
+	r.addToCache("fs", v)
 	return nil
 }
