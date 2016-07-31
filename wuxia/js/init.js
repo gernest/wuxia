@@ -24,7 +24,7 @@ function process(fileName){
     meta:{},
   };
   try{
-    var f=sf.open(fileName);
+    var f=fs.open(fileName);
     file.contents=f.read();
     f.close();
   }catch(e){
