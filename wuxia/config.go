@@ -92,3 +92,6 @@ type File struct {
 	Meta     map[string]interface{} `json:"meta"`
 	Contents string                 `json:"contents"`
 }
+
+//FileList is a list of files, which can be ordered based on various criterias
+type FileList []*File
