@@ -2,7 +2,6 @@ package wuxia
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -191,6 +190,10 @@ func defaultSystem() *System {
 	}
 }
 
+func defaultPlan() *Plan {
+	return &Plan{}
+}
+
 // opens the file in the specified path and evaluates it withing the context of
 // the javascript runtine.
 //
@@ -262,6 +265,9 @@ func (g *Generator) Config() error {
 }
 
 func (g *Generator) Plan() error {
+	if g.sys.Plan == nil {
+		g.sys.Plan = defaultPlan()
+	}
 	return nil
 }
 
@@ -283,9 +289,30 @@ func (g *Generator) Exec() error {
 	if !ok {
 		// Some fish
 	}
-	fmt.Println(files)
+	var list FileList
+	p := g.sys.Plan
+	for i := range files {
+		s, err := p.FindStrategy(files[i])
+		if err != nil {
+			continue
+		}
+		f, err := g.execStrategy(files[i], s)
+		if err != nil {
+			return buildErr(StageExec, err.Error())
+		}
+		list = append(list, f)
+	}
+	return g.execPlan(list, p)
+}
+
+func (g *Generator) execStrategy(filePath string, s *Strategy) (*File, error) {
+	return nil, nil
+}
+
+func (g *Generator) execPlan(a FileList, p *Plan) error {
 	return nil
 }
+
 func (g *Generator) down() error {
 	return nil
 }

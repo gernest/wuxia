@@ -1,5 +1,10 @@
 package wuxia
 
+import (
+	"errors"
+	"path/filepath"
+)
+
 //Config is the settings needed by the static generatot. It is inspired by the
 //jekyll configuration options.
 //
@@ -77,10 +82,29 @@ type Plan struct {
 	// execution process wont start if one of the dependencies is missing.
 	Dependency []string `json:"dependencies"`
 
-	TemplateEngine string   `json:"template_engine"`
-	Before         []string `json:"before"`
-	Exec           []string `json:"exec"`
-	After          []string `json:"after"`
+	TemplateEngine string      `json:"template_engine"`
+	Strategies     []*Strategy `json:"strategies"`
+}
+
+type Strategy struct {
+	Pattern string   `json:"pattern"`
+	Before  []string `json:"before"`
+	Exec    []string `json:"exec"`
+	After   []string `json:"after"`
+}
+
+func (p *Plan) FindStrategy(filePath string) (*Strategy, error) {
+	for i := range p.Strategies {
+		s := p.Strategies[i]
+		ok, err := filepath.Match(s.Pattern, filePath)
+		if err != nil {
+			return nil, err
+		}
+		if !ok {
+			continue
+		}
+	}
+	return nil, errors.New("can't find strategy for " + filePath)
 }
 
 //File is a representation of a file unit as it is passed arouund for
