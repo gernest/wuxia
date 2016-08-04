@@ -11,6 +11,7 @@ import (
 // The format can either be json, yaml or toml
 // TODO: add yaml and toml support.
 type Config struct {
+	ProjectName  string   `json:'name"`
 	Source       string   `json:"source"`
 	Destination  string   `json:"destination"`
 	StaticDir    string   `json:"statc_dir"`

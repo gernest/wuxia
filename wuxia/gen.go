@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/gocraft/health"
 	"github.com/robertkrimen/otto"
 	"github.com/spf13/afero"
 )
@@ -75,6 +76,8 @@ type Generator struct {
 	// This is the absolute path to the root of the project from which the
 	// Generator will be operating.
 	workDir string
+	job     *health.Job
+	verbose bool
 }
 
 //NewGenerator retrunes a new  Generator.
@@ -84,27 +87,6 @@ func NewGenerator(vm *otto.Otto, sys *System, fs afero.Fs) *Generator {
 		sys: sys,
 		fs:  fs,
 	}
-}
-
-//Build builds a project.
-func (g *Generator) Build() error {
-	steps := []struct {
-		stage BuildStage
-		exec  func() error
-	}{
-		{StageConfig, g.Config},
-		{StageInit, g.Init},
-		{StagePlan, g.Plan},
-		{StageExec, g.Exec},
-	}
-	var err error
-	for _, buildStep := range steps {
-		err = buildStep.exec()
-		if err != nil {
-			return err
-		}
-	}
-	return nil
 }
 
 //Init initializes the build process. Any stages after this will have the generator
@@ -118,7 +100,9 @@ func (g *Generator) Build() error {
 // Initialzation is offloaded to the javascript runtine of the generator..Any
 // error returned is a build error.
 func (g *Generator) Init() error {
-
+	if g.verbose {
+		g.job.Event("initializing_generator")
+	}
 	_ = g.vm.Set("sys", func(call otto.FunctionCall) otto.Value {
 		data, err := json.Marshal(g.sys)
 		if err != nil {
@@ -147,7 +131,12 @@ func (g *Generator) Init() error {
 			return buildErr(StageInit, err.Error())
 		}
 	}
-
+	if g.verbose {
+		g.job.EventKv("initializing_generator.complete",
+			health.Kvs{
+				"project": g.sys.Config.ProjectName,
+			})
+	}
 	return nil
 }
 
@@ -225,6 +214,9 @@ func defaultVM(sys *System) *otto.Otto {
 
 //Config configures the generator.
 func (g *Generator) Config() error {
+	if g.verbose {
+		g.job.Event("configuring_generator")
+	}
 	if g.sys == nil {
 		g.sys = defaultSystem()
 	}
@@ -261,6 +253,12 @@ func (g *Generator) Config() error {
 		return buildErr(StageInit, err.Error())
 	}
 	_ = g.vm.Set("require", req.load)
+	if g.verbose {
+		g.job.EventKv("configuring__generator.complete",
+			health.Kvs{
+				"project": g.sys.Config.ProjectName,
+			})
+	}
 	return nil
 }
 
@@ -322,5 +320,6 @@ func (g *Generator) registerBuiltin(r *require) error {
 	f.Fs = g.fs
 	v := f.export().ToValue(g.vm)
 	r.addToCache("fs", v)
+	r.addToCache("markdown", markdown().ToValue(g.vm))
 	return nil
 }

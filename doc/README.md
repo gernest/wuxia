@@ -14,6 +14,10 @@
 wuxia is a potable static web solution. Wuxia allows you to create, build and
 deploy static websites.
 
+The main motivation behind this is to open up ways for people in my country to
+write technical documents  i.e books, articles, etc and also have access to the
+documents. This can fit to different use cases depending on who is using it.
+
 Wuxia is made up of components that when combined together forms a powerful
 solution for the static web fans. It ships with a static site generator, static
 site server, a `git push` based static site builder and a multi domain static

@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/gernest/wuxia/db"
-	"github.com/gernest/wuxia/metric"
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/satori/go.uuid"
 	"github.com/uber-go/zap"
@@ -34,9 +33,8 @@ func init() {
 //Context holda important information that can be used by diffenet components of
 //the application.
 type Context struct {
-	Log    zap.Logger
-	Metric metric.Metric
-	Cfg    *Config
+	Log zap.Logger
+	Cfg *Config
 }
 
 //Config configuration object.
