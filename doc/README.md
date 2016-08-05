@@ -24,8 +24,8 @@ site server, a `git push` based static site builder and a multi domain static
 site host all in a single binary.
 
 I built this for personal use, but if you find it useful please do the
-followwing, [star the project]() , [fork the project](), [follow the author]()
-and in case you encounter any bugs then [open an issue]().
+followwing, [star the project](https://github.com/gernest/wuxia) , [fork the project](https://github.com/gernest/wuxia), [follow the author](https://github.com/gernest)
+and in case you encounter any bugs then [open an issue](https://github.com/gernest/wuxia/issues).
 
 # Generator
 Wuxia ships with a static site generator. The implementation of generator is as
