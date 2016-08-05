@@ -19,4 +19,8 @@ func TestGenerator_Build(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
+	err = g.Plan()
+	if err != nil {
+		t.Error(err)
+	}
 }

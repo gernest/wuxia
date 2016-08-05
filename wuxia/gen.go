@@ -263,6 +263,27 @@ func (g *Generator) Config() error {
 }
 
 func (g *Generator) Plan() error {
+	pFile := filepath.Join(scriptsDir, planDir, indexFile)
+	err := g.evaluateFile(pFile)
+	if err != nil {
+		if !os.IsNotExist(err) {
+			return buildErr(StagePlan, err.Error())
+		}
+	}
+	v, err := g.vm.Call("getCurrentSys", nil)
+	if err != nil {
+		return buildErr(StagePlan, err.Error())
+	}
+	str, err := v.ToString()
+	if err != nil {
+		return buildErr(StagePlan, err.Error())
+	}
+	sys := &System{}
+	err = json.Unmarshal([]byte(str), sys)
+	if err != nil {
+		return buildErr(StagePlan, err.Error())
+	}
+	g.sys = sys
 	if g.sys.Plan == nil {
 		g.sys.Plan = defaultPlan()
 	}
