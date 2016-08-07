@@ -268,6 +268,16 @@ func (g *Generator) Config() error {
 	return nil
 }
 
+//Plan is the planning phase of the generator. First a project specific plan
+//file is evaluated, the file is loacetd in /scripts_dir/plan_fir/index.js for
+//example /scripts/plan/index.js. Second the existing system plan is merged with
+//default plan.
+//
+//TODO: Use user defined plan only when it is set, and use default plan only
+//when there is no user defined plan.
+//
+// This is executed to prepare the Plan object, which is the blueprint on how
+// the whole execution is going to take place.
 func (g *Generator) Plan() error {
 	pFile := filepath.Join(scriptsDir, planDir, indexFile)
 	err := g.evaluateFile(pFile)
