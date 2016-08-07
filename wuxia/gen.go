@@ -12,6 +12,12 @@ import (
 	"github.com/spf13/afero"
 )
 
+var stream *health.Stream
+
+func init() {
+	stream = health.NewStream()
+}
+
 const (
 	scriptsDir = "scripts"
 	initDir    = "init"
@@ -220,15 +226,6 @@ func defaultVM(sys *System) *otto.Otto {
 
 //Config configures the generator.
 func (g *Generator) Config() error {
-	if g.Verbose {
-		g.job.Event("configuring_generator")
-	}
-	if g.sys == nil {
-		g.sys = defaultSystem()
-	}
-	if g.vm == nil {
-		g.vm = defaultVM(g.sys)
-	}
 	// Properly set working directory/
 	if g.workDir == "" {
 		wd, err := os.Getwd()
@@ -236,6 +233,23 @@ func (g *Generator) Config() error {
 			return buildErr(StageInit, err.Error())
 		}
 		g.workDir = wd
+	}
+
+	if g.Verbose {
+		if g.Out == nil {
+			g.Out = os.Stdout
+		}
+		if stream.Sinks == nil {
+			stream.AddSink(&health.WriterSink{g.Out})
+		}
+		g.job = stream.NewJob("generate:" + g.workDir)
+		g.job.Event("configuring_generator")
+	}
+	if g.sys == nil {
+		g.sys = defaultSystem()
+	}
+	if g.vm == nil {
+		g.vm = defaultVM(g.sys)
 	}
 
 	// ensure everything is relative to the working directory
