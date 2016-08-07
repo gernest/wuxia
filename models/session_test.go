@@ -16,7 +16,7 @@ func init() {
 		log.Fatal(err)
 	}
 	store = st
-	_ = migration.Up(store)
+	_ = migration.Up(store, migration.QL)
 }
 
 func TestSessions(t *testing.T) {
