@@ -2,6 +2,7 @@ package wuxia
 
 import (
 	"encoding/json"
+	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -77,7 +78,12 @@ type Generator struct {
 	// Generator will be operating.
 	workDir string
 	job     *health.Job
-	verbose bool
+
+	Verbose bool
+
+	// when the verbose option is set to true. Here is where the ;og information
+	// will be written to.
+	Out io.Writer
 }
 
 //NewGenerator retrunes a new  Generator.
@@ -100,7 +106,7 @@ func NewGenerator(vm *otto.Otto, sys *System, fs afero.Fs) *Generator {
 // Initialzation is offloaded to the javascript runtine of the generator..Any
 // error returned is a build error.
 func (g *Generator) Init() error {
-	if g.verbose {
+	if g.Verbose {
 		g.job.Event("initializing_generator")
 	}
 	_ = g.vm.Set("sys", func(call otto.FunctionCall) otto.Value {
@@ -131,7 +137,7 @@ func (g *Generator) Init() error {
 			return buildErr(StageInit, err.Error())
 		}
 	}
-	if g.verbose {
+	if g.Verbose {
 		g.job.EventKv("initializing_generator.complete",
 			health.Kvs{
 				"project": g.sys.Config.ProjectName,
@@ -214,7 +220,7 @@ func defaultVM(sys *System) *otto.Otto {
 
 //Config configures the generator.
 func (g *Generator) Config() error {
-	if g.verbose {
+	if g.Verbose {
 		g.job.Event("configuring_generator")
 	}
 	if g.sys == nil {
@@ -253,7 +259,7 @@ func (g *Generator) Config() error {
 		return buildErr(StageInit, err.Error())
 	}
 	_ = g.vm.Set("require", req.load)
-	if g.verbose {
+	if g.Verbose {
 		g.job.EventKv("configuring__generator.complete",
 			health.Kvs{
 				"project": g.sys.Config.ProjectName,
