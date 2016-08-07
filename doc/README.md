@@ -50,3 +50,27 @@ generators out there, so why did I decide we need a room for one more?
   window. The current implementation uses javascript as a scripting language.
   This opens up a wide array of good stuffs to the static web generation
   experience.
+
+The generator works by passing through three phases.
+
+- The Configuration phase. This is the first phase of the generator. The project
+  must have a configuration file. The name of the configuration file can either
+  be `config.json` which is in json format, `config.yml` which is in yaml format
+  and `config.toml` which is in the toml format. The configuration file must be
+  at the root of the project.
+
+  Something to note is, all operations occurs on the root of the project which
+  is to be generated. Since wuxia support scripting and allows reading and
+  writing of files at the code generation process, it is safe to guarantee that
+  access to any file outside of the project will not be allowed.
+
+- The initialization phase. Anything that is needed by the generator to work
+  properly for the project happens here. The user can define a custom script
+  which will have access to the Generator settings and other important stuffs.
+  The script on path `scripts/init/index.js` is evaluated.
+
+- The planning phase. Planning of the execution is done, and if there is any
+  custom made plan script in the path `scripts/plan/index.js` will be evaluated
+  and used.
+
+- The Execution phase. Executes the plan and exits the process.
