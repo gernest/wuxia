@@ -16,6 +16,19 @@ const (
 	MySQL
 )
 
+//Query is an interface for SQL query string.
+type Query interface {
+	String() string
+	IsTx() bool
+	Params() []string
+}
+
+type baseQuery struct {
+	s      string
+	isTx   bool
+	params []string
+}
+
 type DB struct {
 	*sql.DB
 	k Kind
