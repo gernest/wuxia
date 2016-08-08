@@ -1,9 +1,11 @@
 package models
 
 import (
+	"database/sql"
 	"fmt"
 	"time"
 
+	"github.com/fatih/structs"
 	"github.com/gernest/wuxia/db"
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/satori/go.uuid"
@@ -22,6 +24,8 @@ const (
 
 	//UserTable is the name of the databse table for users.
 	UserTable = "users"
+
+	DBTag = "store"
 )
 
 var strict *bluemonday.Policy
@@ -100,4 +104,59 @@ func CreateBuildTask(store *db.DB, t *BuildTask) (*BuildTask, error) {
 //Sanitize sanitizes src to avoid SQL injections.
 func Sanitize(src string) string {
 	return strict.Sanitize(src)
+}
+
+type fieldInfo struct {
+	tag   string
+	field *structs.Field
+}
+
+func getFieldInfo(model interface{}) []fieldInfo {
+	var mFields []fieldInfo
+	f := structs.Fields(model)
+	for _, v := range f {
+		mFields = append(mFields, fieldInfo{v.Tag(DBTag), v})
+	}
+	return mFields
+}
+
+func getArgs(q db.Query, info []fieldInfo) []interface{} {
+	var args []interface{}
+	params := q.Params()
+	for _, v := range params {
+		for i := range info {
+			if v == info[i].tag {
+				f := info[i].field
+				args = append(args, f.Value())
+			}
+		}
+	}
+	return args
+}
+
+func ExecModel(store *db.DB, model interface{}, query db.Query) (sql.Result, error) {
+	info := getFieldInfo(model)
+	if query.IsTx() {
+		return execTx(store, query, info)
+	}
+	return nil, nil
+}
+
+func execTx(store *db.DB, q db.Query, info []fieldInfo) (sql.Result, error) {
+	tx, err := store.Begin()
+	if err != nil {
+		return nil, err
+	}
+	args := getArgs(q, info)
+	rst, err := tx.Exec(q.String(), args...)
+	if err != nil {
+		tx.Rollback()
+		return rst, err
+	}
+	err = tx.Commit()
+	if err != nil {
+		tx.Rollback()
+		return rst, err
+	}
+	return rst, nil
 }
