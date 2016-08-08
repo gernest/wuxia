@@ -12,7 +12,7 @@ func TestUp(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	err = Up(store, QL)
+	err = Up(store)
 	if err != nil {
 		t.Error(err)
 	}

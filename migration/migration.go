@@ -3,16 +3,9 @@ package migration
 //go:generate go-bindata -o data.go -pkg migration  scripts/...
 import "github.com/gernest/wuxia/db"
 
-type Kind int
-
-const (
-	QL Kind = iota
-	Postgres
-	MySQL
-)
-
-func Up(store *db.DB, typ Kind) error {
-	d, err := Asset("scripts/up.ql")
+func Up(store *db.DB) error {
+	fname := migrationFile(store.Kind())
+	d, err := Asset(fname)
 	if err != nil {
 		return err
 	}
@@ -29,12 +22,12 @@ func Up(store *db.DB, typ Kind) error {
 	return nil
 }
 
-func migrationFile(typ Kind) string {
+func migrationFile(typ db.Kind) string {
 	var rst string
 	switch typ {
-	case QL:
-		rst = "script/up.ql"
-	case Postgres:
+	case db.QL:
+		rst = "scripts/up.ql"
+	case db.Postgres:
 		rst = "scripts/up_pq.sal"
 	}
 	return rst

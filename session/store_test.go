@@ -36,7 +36,7 @@ func TestPGStore(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	err = migration.Up(store, migration.QL)
+	err = migration.Up(store)
 	if err != nil {
 		t.Fatal(err)
 	}
