@@ -3,6 +3,7 @@ package models
 import (
 	"log"
 	"testing"
+	"time"
 
 	"github.com/gernest/wuxia/db"
 	"github.com/gernest/wuxia/migration"
@@ -21,8 +22,9 @@ func init() {
 
 func TestSessions(t *testing.T) {
 	sess := &Session{
-		Key:  "hello",
-		Data: []byte("world"),
+		Key:       "hello",
+		Data:      []byte("world"),
+		ExpiresOn: time.Now(),
 	}
 	err := CreateSession(store, sess)
 	if err != nil {

@@ -5,11 +5,14 @@ package db
 import (
 	"database/sql"
 
+	// load ql drier
 	_ "github.com/cznic/ql/driver"
 )
 
+//Kind represent the kind of sql database.
 type Kind int
 
+// supported databases
 const (
 	QL Kind = iota
 	Postgres
@@ -23,6 +26,9 @@ type Query interface {
 	Params() []string
 }
 
+//Queryer is an interface for alll Queries  executed by the Wuxia application.
+//The methods are few to make sure only important queries that are actually
+//needed are represented.
 type Queryer interface {
 	CreateSession(table string) Query
 }
@@ -33,6 +39,7 @@ type baseQuery struct {
 	params []string
 }
 
+//NewQuery retruns a Query interface satisfying object.
 func NewQuery(q string, tx bool, p ...string) Query {
 	return &baseQuery{s: q, isTx: tx, params: p}
 }
@@ -49,12 +56,15 @@ func (b *baseQuery) Params() []string {
 	return b.params
 }
 
+//DB extends sql.DB .
 type DB struct {
 	*sql.DB
 	k Kind
 	Queryer
 }
 
+//Open onens a database connection and returns a *DB instance which is safe for
+//concurrent use.
 func Open(dbName, path string) (*DB, error) {
 	db, err := sql.Open(dbName, path)
 	if err != nil {
@@ -74,6 +84,7 @@ func Open(dbName, path string) (*DB, error) {
 	}, nil
 }
 
+//Kind retruns what kind of the database the instance is connected to.
 func (db *DB) Kind() Kind {
 	return db.k
 }

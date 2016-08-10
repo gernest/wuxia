@@ -11,17 +11,17 @@ import (
 // The format can either be json, yaml or toml
 // TODO: add yaml and toml support.
 type Config struct {
-	ProjectName  string   `json:'name"`
-	Source       string   `json:"source"`
-	Destination  string   `json:"destination"`
-	StaticDir    string   `json:"statc_dir"`
-	TemplatesDir string   `json:"templates_dir"`
-	ThemeDir     string   `json:"theme_dir"`
-	DefaultTheme string   `json:"default_theme"`
-	PluginDir    string   `json:"plugin_dir"`
-	Safe         bool     `json:"safe"`
-	Excluede     []string `json:"exclude"`
-	Include      []string `json:"include"`
+	Name         string   `json:"name" yaml:"name"`
+	Source       string   `json:"source" yaml:"source"`
+	Destination  string   `json:"destination" yaml:"destination"`
+	StaticDir    string   `json:"statc_dir" yaml:"statc_dir"`
+	TemplatesDir string   `json:"templates_dir" yaml:"templates_dir"`
+	ThemeDir     string   `json:"theme_dir" yaml:"theme_dir"`
+	DefaultTheme string   `json:"default_theme" yaml:"default_theme"`
+	PluginDir    string   `json:"plugin_dir" yaml:"plugin_dir"`
+	Safe         bool     `json:"safe" yaml:"safe"`
+	Excluede     []string `json:"exclude" yaml:"exclude"`
+	Include      []string `json:"include" yaml:"include"`
 }
 
 //DefaultConfig retruns *Config with default settings
@@ -87,6 +87,8 @@ type Plan struct {
 	Strategies     []*Strategy `json:"strategies"`
 }
 
+//Strategy defines what should be done when a file matches a certain pattern.
+//the pattern is glob like and matches only on the filenames
 type Strategy struct {
 	Pattern string   `json:"pattern"`
 	Before  []string `json:"before"`
@@ -94,6 +96,11 @@ type Strategy struct {
 	After   []string `json:"after"`
 }
 
+//FindStrategy searches for a strategy matching the given filePath that is
+//defined in the Plan.
+//
+//TODO: Support multiple return strategies, since more than one strategy can be
+//defined for a given file path.
 func (p *Plan) FindStrategy(filePath string) (*Strategy, error) {
 	for i := range p.Strategies {
 		s := p.Strategies[i]

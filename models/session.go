@@ -9,32 +9,38 @@ import (
 
 //Session stores http session information.
 type Session struct {
-	Key       string
-	Data      []byte
+	Key       string `store:"key"`
+	Data      []byte `store:"data"`
 	CreatedOn time.Time
 	UpdatedOn time.Time
-	ExpiresOn time.Time
+	ExpiresOn time.Time `store:"expires_on"`
 }
 
 //CreateSession creates a new database record for the session s object. This
 //sets CreatedOn and UpdatedOn fieds to time.Now().
 func CreateSession(store *db.DB, s *Session) error {
-	var query = `
-	BEGIN TRANSACTION;
-	  INSERT INTO %s VALUES ($1,$2,$3,$4,$5);
-	COMMIT;
-	`
-	query = fmt.Sprintf(query, SessionTable)
-	tx, err := store.Begin()
+	//var query = `
+	//BEGIN TRANSACTION;
+	//INSERT INTO %s VALUES ($1,$2,$3,$4,$5);
+	//COMMIT;
+	//`
+	//query = fmt.Sprintf(query, SessionTable)
+	//tx, err := store.Begin()
+	//if err != nil {
+	//return err
+	//}
+	//now := time.Now()
+	//_, err = tx.Exec(query, s.Key, s.Data, now, now, s.ExpiresOn)
+	//if err != nil {
+	//return err
+	//}
+	//return tx.Commit()
+	q := store.CreateSession(SessionTable)
+	_, err := ExecModel(store, s, q)
 	if err != nil {
 		return err
 	}
-	now := time.Now()
-	_, err = tx.Exec(query, s.Key, s.Data, now, now, s.ExpiresOn)
-	if err != nil {
-		return err
-	}
-	return tx.Commit()
+	return nil
 }
 
 //FindSessionByKey queries the databse for session with key field key.

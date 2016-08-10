@@ -10,6 +10,9 @@ import (
 	"github.com/gocraft/health"
 	"github.com/robertkrimen/otto"
 	"github.com/spf13/afero"
+
+	// load underscore for otto runtime.
+	_ "github.com/robertkrimen/otto/underscore"
 )
 
 var stream *health.Stream
@@ -146,7 +149,7 @@ func (g *Generator) Init() error {
 	if g.Verbose {
 		g.job.EventKv("initializing_generator.complete",
 			health.Kvs{
-				"project": g.sys.Config.ProjectName,
+				"project": g.sys.Config.Name,
 			})
 	}
 	return nil
@@ -240,7 +243,7 @@ func (g *Generator) Config() error {
 			g.Out = os.Stdout
 		}
 		if stream.Sinks == nil {
-			stream.AddSink(&health.WriterSink{g.Out})
+			stream.AddSink(&health.WriterSink{Writer: g.Out})
 		}
 		g.job = stream.NewJob("generate:" + g.workDir)
 		g.job.Event("configuring_generator")
@@ -276,7 +279,7 @@ func (g *Generator) Config() error {
 	if g.Verbose {
 		g.job.EventKv("configuring__generator.complete",
 			health.Kvs{
-				"project": g.sys.Config.ProjectName,
+				"project": g.sys.Config.Name,
 			})
 	}
 	return nil

@@ -1,5 +1,6 @@
 {
   "source": "src",
+  "name": "sample",
   "destination": "dest",
   "statc_dir": "static",
   "templates_dir": "templates",

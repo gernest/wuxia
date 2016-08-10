@@ -25,6 +25,7 @@ const (
 	//UserTable is the name of the databse table for users.
 	UserTable = "users"
 
+	//DBTag is the name of the struct tag used by the store
 	DBTag = "store"
 )
 
@@ -134,6 +135,11 @@ func getArgs(q db.Query, info []fieldInfo) []interface{} {
 	return args
 }
 
+//ExecModel executes the given query. If the guery requires data from the model
+//then the data is also taken care of.
+//
+// This provides a simple abstraction for repetitive dababase query execution.
+// It supports transactions.
 func ExecModel(store *db.DB, model interface{}, query db.Query) (sql.Result, error) {
 	info := getFieldInfo(model)
 	if query.IsTx() {
@@ -150,12 +156,12 @@ func execTx(store *db.DB, q db.Query, info []fieldInfo) (sql.Result, error) {
 	args := getArgs(q, info)
 	rst, err := tx.Exec(q.String(), args...)
 	if err != nil {
-		tx.Rollback()
+		_ = tx.Rollback()
 		return rst, err
 	}
 	err = tx.Commit()
 	if err != nil {
-		tx.Rollback()
+		_ = tx.Rollback()
 		return rst, err
 	}
 	return rst, nil
