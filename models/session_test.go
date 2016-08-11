@@ -38,7 +38,7 @@ func TestSessions(t *testing.T) {
 		t.Errorf("expected 1 got %d", n)
 	}
 
-	ns, err := FindSessionByKey(store, sess.Key)
+	ns, err := FindSessionByKey(store, &Session{Key: sess.Key})
 	if err != nil {
 		t.Error(err)
 	}

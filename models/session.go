@@ -19,22 +19,6 @@ type Session struct {
 //CreateSession creates a new database record for the session s object. This
 //sets CreatedOn and UpdatedOn fieds to time.Now().
 func CreateSession(store *db.DB, s *Session) error {
-	//var query = `
-	//BEGIN TRANSACTION;
-	//INSERT INTO %s VALUES ($1,$2,$3,$4,$5);
-	//COMMIT;
-	//`
-	//query = fmt.Sprintf(query, SessionTable)
-	//tx, err := store.Begin()
-	//if err != nil {
-	//return err
-	//}
-	//now := time.Now()
-	//_, err = tx.Exec(query, s.Key, s.Data, now, now, s.ExpiresOn)
-	//if err != nil {
-	//return err
-	//}
-	//return tx.Commit()
 	q := store.CreateSession(SessionTable)
 	_, err := ExecModel(store, s, q)
 	if err != nil {
@@ -44,13 +28,9 @@ func CreateSession(store *db.DB, s *Session) error {
 }
 
 //FindSessionByKey queries the databse for session with key field key.
-func FindSessionByKey(store *db.DB, key string) (*Session, error) {
-	var query = `
-	SELECT * from %s WHERE key LIKE $1 LIMIT 1;
-	`
-	query = fmt.Sprintf(query, SessionTable)
-	s := &Session{}
-	err := store.QueryRow(query, key).Scan(
+func FindSessionByKey(store *db.DB, s *Session) (*Session, error) {
+	q := store.FindSessionByKey(SessionTable)
+	err := QueryRowModel(store, s, q).Scan(
 		&s.Key,
 		&s.Data,
 		&s.CreatedOn,
@@ -74,43 +54,21 @@ func Count(store *db.DB, table string) (int, error) {
 
 //UpdateSession updates a ratabase record for session whose key matches key.
 //Only two fields are updated, the data and updated_on field.
-func UpdateSession(store *db.DB, key string, data []byte) error {
-	var query = `
-BEGIN TRANSACTION;
-  UPDATE %s
-    data = $2,
-    updated_on = now(),
-  WHERE key==$1;
-COMMIT;
-	`
-	query = fmt.Sprintf(query, SessionTable)
-	tx, err := store.Begin()
+func UpdateSession(store *db.DB, s *Session) error {
+	q := store.UpdateSession(SessionTable)
+	_, err := ExecModel(store, s, q)
 	if err != nil {
 		return err
 	}
-	_, err = tx.Exec(query, key, data)
-	if err != nil {
-		return err
-	}
-	return tx.Commit()
+	return nil
 }
 
 //DeleteSession deletes a session record which matches key.
-func DeleteSession(store *db.DB, key string) error {
-	var query = `
-BEGIN TRANSACTION;
-   DELETE FROM %s
-  WHERE key==$1;
-COMMIT;
-	`
-	query = fmt.Sprintf(query, SessionTable)
-	tx, err := store.Begin()
+func DeleteSession(store *db.DB, s *Session) error {
+	q := store.DeleteSession(SessionTable)
+	_, err := ExecModel(store, s, q)
 	if err != nil {
 		return err
 	}
-	_, err = tx.Exec(query, key)
-	if err != nil {
-		return err
-	}
-	return tx.Commit()
+	return nil
 }

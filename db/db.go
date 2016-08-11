@@ -31,8 +31,13 @@ type Query interface {
 //needed are represented.
 type Queryer interface {
 	CreateSession(table string) Query
+	FindSessionByKey(table string) Query
+	UpdateSession(table string) Query
+	DeleteSession(table string) Query
 }
 
+// implements the Qery interface. It provides an easy way of constructing Query
+// compliant structs.
 type baseQuery struct {
 	s      string
 	isTx   bool

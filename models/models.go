@@ -145,7 +145,7 @@ func ExecModel(store *db.DB, model interface{}, query db.Query) (sql.Result, err
 	if query.IsTx() {
 		return execTx(store, query, info)
 	}
-	return nil, nil
+	return execNormal(store, query, info)
 }
 
 func execTx(store *db.DB, q db.Query, info []fieldInfo) (sql.Result, error) {
@@ -165,4 +165,15 @@ func execTx(store *db.DB, q db.Query, info []fieldInfo) (sql.Result, error) {
 		return rst, err
 	}
 	return rst, nil
+}
+
+func execNormal(store *db.DB, q db.Query, info []fieldInfo) (sql.Result, error) {
+	args := getArgs(q, info)
+	return store.Exec(q.String(), args...)
+}
+
+func QueryRowModel(store *db.DB, model interface{}, query db.Query) *sql.Row {
+	info := getFieldInfo(model)
+	args := getArgs(query, info)
+	return store.QueryRow(query.String(), args...)
 }

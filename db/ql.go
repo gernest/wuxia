@@ -17,3 +17,38 @@ func (ql QLQeryer) CreateSession(table string) Query {
 	query = fmt.Sprintf(query, table)
 	return NewQuery(query, true, "key", "data", "expires_on")
 }
+
+//FindSessionByKey returns a query for finding a session by key.
+func (ql QLQeryer) FindSessionByKey(table string) Query {
+	var query = `
+	SELECT * from %s WHERE key LIKE $1 LIMIT 1;
+	`
+	query = fmt.Sprintf(query, table)
+	return NewQuery(query, false, "key")
+}
+
+//UpdateSession updaates session data.
+func (ql QLQeryer) UpdateSession(table string) Query {
+	var query = `
+BEGIN TRANSACTION;
+  UPDATE %s
+    data = $2,
+    updated_on = now(),
+  WHERE key==$1;
+COMMIT;
+	`
+	query = fmt.Sprintf(query, table)
+	return NewQuery(query, true, "key", "data")
+}
+
+//DeleteSession deletes a session.
+func (ql QLQeryer) DeleteSession(table string) Query {
+	var query = `
+BEGIN TRANSACTION;
+   DELETE FROM %s
+  WHERE key==$1;
+COMMIT;
+	`
+	query = fmt.Sprintf(query, table)
+	return NewQuery(query, true, "key")
+}
