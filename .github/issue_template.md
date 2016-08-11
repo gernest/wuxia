@@ -1,6 +1,6 @@
 ### Directions
 _GitHub Issues are reserved for actionable bug reports and feature requests._
-_General questions should be sent to the [wuxia fitter chatroom]()._
+_General questions should be sent to the [wuxia gitter chatroom]()._
 
 _Before opening an issue, search for similar bug reports or feature requests on GitHub Issues._
 _If no similar issue can be found, fill out either the "Bug Report" or the "Feature Request" section below.
@@ -8,7 +8,7 @@ _Erase the other section and everything on and above this line._
 
 ### Bug report
 
-__System info:__ [Include InfluxDB version, operating system name, and other relevant details]
+__System info:__ [Include wuxia version, operating system name, and other relevant details]
 
 __Steps to reproduce:__
 
