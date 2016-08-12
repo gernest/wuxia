@@ -10,4 +10,6 @@ Please keep the list sorted.
 have authority to bind the entity named int this document (if applicable) to the terms and
 conditions of the Agreement Found at [CLA.md](CLA.md)**
 
+```
  - Geofrey Ernest <geofreyernest@live.com>
+ ```
