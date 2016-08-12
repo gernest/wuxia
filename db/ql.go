@@ -66,7 +66,7 @@ func (ql QLQeryer) CreateUser(table string) Query {
 
 func (ql QLQeryer) FindUserBy(table, field string) Query {
 	var query = `
-	SELECT id(),username,password,email,created_on,updated_on
+	SELECT id(),username,password,email,created_at,updated_at
 	from %s WHERE %s LIKE $1 LIMIT 1;
 	`
 	query = fmt.Sprintf(query, table, field)
