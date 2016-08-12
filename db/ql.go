@@ -34,7 +34,7 @@ BEGIN TRANSACTION;
   UPDATE %s
     data = $2,
     updated_on = now(),
-  WHERE key==$1;
+  WHERE key=$1;
 COMMIT;
 	`
 	query = fmt.Sprintf(query, table)
@@ -46,7 +46,7 @@ func (ql QLQeryer) DeleteSession(table string) Query {
 	var query = `
 BEGIN TRANSACTION;
    DELETE FROM %s
-  WHERE key==$1;
+  WHERE key=$1;
 COMMIT;
 	`
 	query = fmt.Sprintf(query, table)
@@ -69,7 +69,7 @@ func (ql QLQeryer) CreateUser(table string) Query {
 func (ql QLQeryer) FindUserBy(table, field string) Query {
 	var query = `
 	SELECT id(),username,password,email,created_at,updated_at
-	from %s WHERE %s LIKE $1 LIMIT 1;
+	from %s WHERE %s=$1 LIMIT 1;
 	`
 	query = fmt.Sprintf(query, table, field)
 	return NewQuery(query, false, field)
