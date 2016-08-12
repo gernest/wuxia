@@ -1,7 +1,5 @@
-The Contributors License Agreement
-==========================================
+# The Contributors License Agreement
 
------------
 
 ### Preface
 
