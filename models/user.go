@@ -15,12 +15,12 @@ import (
 // The Name, Email and ID fields are all unique. Password is a hashed password,
 // hashed using bcrypt algorithm.
 type User struct {
-	ID        int
-	Name      string
-	Email     string
-	Password  []byte
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID        int64     `store:"id"`
+	Name      string    `store:"username"`
+	Email     string    `store:"email"`
+	Password  []byte    `store:"password"`
+	CreatedAt time.Time `store:"created_on"`
+	UpdatedAt time.Time `store:"updated_on"`
 }
 
 //CreateUser creates a new record in the userstable. The Password field is
