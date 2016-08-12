@@ -52,3 +52,22 @@ COMMIT;
 	query = fmt.Sprintf(query, table)
 	return NewQuery(query, true, "key")
 }
+
+func (ql QLQeryer) CreateUser(table string) Query {
+	var query = `
+	BEGIN TRANSACTION;
+	  INSERT INTO %s (username,password,email,created_at,updated_at)
+		VALUES ($1,$2,$3,now(),now());
+	COMMIT;
+	`
+	query = fmt.Sprintf(query, table)
+	return NewQuery(query, true, "username", "password", "email")
+}
+
+func (ql QLQeryer) FindUserBy(table, field string) Query {
+	var query = `
+	SELECT * from %s WHERE %s LIKE $1 LIMIT 1;
+	`
+	query = fmt.Sprintf(query, table, field)
+	return NewQuery(query, false, field)
+}

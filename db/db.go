@@ -34,6 +34,11 @@ type Queryer interface {
 	FindSessionByKey(table string) Query
 	UpdateSession(table string) Query
 	DeleteSession(table string) Query
+
+	CreateUser(table string) Query
+	FindUserBy(table, field string) Query
+	//UpdateUser(table string) Query
+	//DeleteUser(table string) Query
 }
 
 // implements the Qery interface. It provides an easy way of constructing Query
