@@ -7,7 +7,7 @@
 Please keep the list sorted.
 
 **By adding the details and accepting [this Agreement](CLA.md), I represent and warrant that I 
-have authority to bind the entity named above (if applicable) to the terms and
+have authority to bind the entity named int this document (if applicable) to the terms and
 conditions of the Agreement Found at [CLA.md](CLA.md)**
 
- Geofrey Ernest <geofreyernest@live.com>
+ - Geofrey Ernest <geofreyernest@live.com>

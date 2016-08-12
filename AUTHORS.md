@@ -8,4 +8,4 @@ The email address is not required for organizations.
 
 Please keep the list sorted.
 
- Geofrey Ernest <geofreyernest@live.com>
+-  Geofrey Ernest <geofreyernest@live.com>
