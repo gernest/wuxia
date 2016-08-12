@@ -116,6 +116,7 @@ func execNormal(store *db.DB, q db.Query, info []fieldInfo) (sql.Result, error) 
 	return store.Exec(q.String(), args...)
 }
 
+//QueryRowModel use the model to query for one row.
 func QueryRowModel(store *db.DB, model interface{}, query db.Query) *sql.Row {
 	info := getFieldInfo(model)
 	args := getArgs(query, info)

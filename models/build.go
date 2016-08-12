@@ -17,14 +17,14 @@ type BuildArtifact interface {
 
 //BuildTask is a task for building a project.
 type BuildTask struct {
-	ID        int64
-	UUID      string
-	Done      bool
-	User      string
-	Project   string
-	Source    string
-	CreatedAt time.Time
-	UpdateAt  time.Time
+	ID        int64     `store:"id"`
+	UUID      string    `store:"uuid"`
+	Done      bool      `store:"done"`
+	User      string    `store:"user"`
+	Project   string    `store:"project"`
+	Source    string    `store:"source"`
+	CreatedAt time.Time `store:"created_on"`
+	UpdateAt  time.Time `store:"updated_on"`
 }
 
 //CreateBuildTask creates a new task record and stores it into the database.
