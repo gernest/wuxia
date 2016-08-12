@@ -53,6 +53,7 @@ COMMIT;
 	return NewQuery(query, true, "key")
 }
 
+//CreateUser creates a new user.
 func (ql QLQeryer) CreateUser(table string) Query {
 	var query = `
 	BEGIN TRANSACTION;
@@ -64,6 +65,7 @@ func (ql QLQeryer) CreateUser(table string) Query {
 	return NewQuery(query, true, "username", "password", "email")
 }
 
+//FindUserBy finds a user by the speicified field.
 func (ql QLQeryer) FindUserBy(table, field string) Query {
 	var query = `
 	SELECT id(),username,password,email,created_at,updated_at
