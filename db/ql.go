@@ -21,7 +21,7 @@ func (ql QLQeryer) CreateSession(table string) Query {
 //FindSessionByKey returns a query for finding a session by key.
 func (ql QLQeryer) FindSessionByKey(table string) Query {
 	var query = `
-	SELECT * from %s WHERE key LIKE $1 LIMIT 1;
+	SELECT * from %s WHERE key=$1 LIMIT 1;
 	`
 	query = fmt.Sprintf(query, table)
 	return NewQuery(query, false, "key")
@@ -66,7 +66,8 @@ func (ql QLQeryer) CreateUser(table string) Query {
 
 func (ql QLQeryer) FindUserBy(table, field string) Query {
 	var query = `
-	SELECT * from %s WHERE %s LIKE $1 LIMIT 1;
+	SELECT id(),username,password,email,created_on,updated_on
+	from %s WHERE %s LIKE $1 LIMIT 1;
 	`
 	query = fmt.Sprintf(query, table, field)
 	return NewQuery(query, false, field)
