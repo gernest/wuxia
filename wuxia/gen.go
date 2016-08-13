@@ -395,13 +395,14 @@ func (g *Generator) down() error {
 	return nil
 }
 
+// adds modules that are shipped with the Generator to require.
 func (g *Generator) registerBuiltin(r *require) error {
 	f := &fileSys{}
 	f.Fs = g.fs
 	v := f.export().ToValue(g.vm)
 	r.addToCache("fs", v)
 	r.addToCache("markdown", markdown().ToValue(g.vm))
-	v, err := otto.New().Run(underscore.Source())
+	v, err := g.vm.Run(underscore.Source())
 	if err != nil {
 		return err
 	}
