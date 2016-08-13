@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"sync"
 
 	"github.com/gocraft/health"
 	"github.com/robertkrimen/otto"
@@ -355,19 +356,30 @@ func (g *Generator) Exec() error {
 	if !ok {
 		// Some fish
 	}
+
+	var wg sync.WaitGroup
 	var list FileList
+	var errlist []error
 	p := g.sys.Plan
 	for i := range files {
-		s, err := p.FindStrategy(files[i])
-		if err != nil {
-			continue
-		}
-		f, err := g.execStrategy(files[i], s)
-		if err != nil {
-			return buildErr(StageExec, err.Error())
-		}
-		list = append(list, f)
+		wg.Add(1)
+		go func(fn string) {
+			defer wg.Done()
+			s, err := p.FindStrategy(fn)
+			if err != nil {
+				errlist = append(errlist, err)
+				return
+			}
+			f, err := g.execStrategy(fn, s)
+			if err != nil {
+				errlist = append(errlist, err)
+				return
+			}
+			list = append(list, f)
+		}(files[i])
+
 	}
+	wg.Wait()
 	return g.execPlan(list, p)
 }
 
