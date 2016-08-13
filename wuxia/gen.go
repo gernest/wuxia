@@ -255,6 +255,11 @@ func (g *Generator) Config() error {
 	}
 
 	// ensure everything is relative to the working directory
+	// The working directory is where the  directory in which the project to be
+	// built lives.
+	//
+	// All file operations, happens within the diretory. So to access the
+	// configuration file for example it is located in /config.json.
 	g.fs = afero.NewBasePathFs(g.fs, g.workDir)
 	af := afero.Afero{Fs: g.fs}
 	data, err := af.ReadFile(configFile)
