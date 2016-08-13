@@ -24,4 +24,9 @@ func TestGenerator_Build(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
+
+	err = g.Exec()
+	if err != nil {
+		t.Error(err)
+	}
 }
