@@ -9,10 +9,9 @@ import (
 
 	"github.com/gocraft/health"
 	"github.com/robertkrimen/otto"
+	"github.com/robertkrimen/otto/underscore"
 	"github.com/spf13/afero"
-
 	// load underscore for otto runtime.
-	_ "github.com/robertkrimen/otto/underscore"
 )
 
 var stream *health.Stream
@@ -375,5 +374,10 @@ func (g *Generator) registerBuiltin(r *require) error {
 	v := f.export().ToValue(g.vm)
 	r.addToCache("fs", v)
 	r.addToCache("markdown", markdown().ToValue(g.vm))
+	v, err := otto.New().Run(underscore.Source())
+	if err != nil {
+		return err
+	}
+	r.addToCache("underscore", v)
 	return nil
 }
