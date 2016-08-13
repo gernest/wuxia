@@ -360,6 +360,7 @@ func (g *Generator) Exec() error {
 	files, ok := ov.([]string)
 	if !ok {
 		// Some fish
+		return buildErr(StageExec, "no files to build")
 	}
 
 	var wg sync.WaitGroup
