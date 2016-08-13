@@ -329,6 +329,16 @@ func (g *Generator) Plan() error {
 
 //Exec executes the plans that are outilend by the Plan method. The Plan method
 //should be called before this.
+//
+// Execution is done in two phases. First the files are evaluated using the
+// matching plans. Plans are per file. Secondly the rendering of the site is
+// done.
+//
+// Evaluation of files is done concurrently, then the results are aggregated
+// back together.
+//
+// Rendering is done synchronously. As there is a lot of cross refences and
+// stuffs to be considered, the rendering function is provided by the plan.
 func (g *Generator) Exec() error {
 	o, err := g.vm.Call("fileTree", nil)
 	if err != nil {
