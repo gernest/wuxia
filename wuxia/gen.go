@@ -246,7 +246,7 @@ func (g *Generator) Config() error {
 			stream.AddSink(&health.WriterSink{Writer: g.Out})
 		}
 		g.job = stream.NewJob("generate:" + g.workDir)
-		g.job.Event("configuring_generator")
+		g.job.Event("configuring:start")
 	}
 	if g.sys == nil {
 		g.sys = defaultSystem()
@@ -282,7 +282,7 @@ func (g *Generator) Config() error {
 	}
 	_ = g.vm.Set("require", req.load)
 	if g.Verbose {
-		g.job.EventKv("configuring__generator.complete",
+		g.job.EventKv("configuring.complete",
 			health.Kvs{
 				"project": g.sys.Config.Name,
 			})
@@ -301,6 +301,7 @@ func (g *Generator) Config() error {
 // This is executed to prepare the Plan object, which is the blueprint on how
 // the whole execution is going to take place.
 func (g *Generator) Plan() error {
+	g.job.Event("planning:start")
 	pFile := filepath.Join(scriptsDir, planDir, indexFile)
 	err := g.evaluateFile(pFile)
 	if err != nil {
@@ -325,6 +326,7 @@ func (g *Generator) Plan() error {
 	if g.sys.Plan == nil {
 		g.sys.Plan = defaultPlan()
 	}
+	g.job.Event("planning: complete ")
 	return nil
 }
 
@@ -341,6 +343,9 @@ func (g *Generator) Plan() error {
 // Rendering is done synchronously. As there is a lot of cross refences and
 // stuffs to be considered, the rendering function is provided by the plan.
 func (g *Generator) Exec() error {
+	if g.Verbose {
+		g.job.Event("exec:  start")
+	}
 	o, err := g.vm.Call("fileTree", nil)
 	if err != nil {
 		return buildErr(StageExec, err.Error())
@@ -365,17 +370,29 @@ func (g *Generator) Exec() error {
 		wg.Add(1)
 		go func(fn string) {
 			defer wg.Done()
+			if g.Verbose {
+			}
+			g.job.Event("exe: evaluating " + fn)
 			s, err := p.FindStrategy(fn)
 			if err != nil {
 				errlist = append(errlist, err)
+				if g.Verbose {
+					g.job.EventErr("exec:evaluating "+fn, err)
+				}
 				return
 			}
 			f, err := g.execStrategy(fn, s)
 			if err != nil {
 				errlist = append(errlist, err)
+				if g.Verbose {
+					g.job.EventErr("exec:evaluating "+fn, err)
+				}
 				return
 			}
 			list = append(list, f)
+			if g.Verbose {
+				g.job.Event("exec:   complete evaluating " + fn)
+			}
 		}(files[i])
 
 	}
@@ -388,6 +405,12 @@ func (g *Generator) execStrategy(filePath string, s *Strategy) (*File, error) {
 }
 
 func (g *Generator) execPlan(a FileList, p *Plan) error {
+	if g.Verbose {
+		g.job.Event("exec: render")
+	}
+	if g.Verbose {
+		g.job.Event("exec: done")
+	}
 	return nil
 }
 
