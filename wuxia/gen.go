@@ -2,6 +2,7 @@ package wuxia
 
 import (
 	"encoding/json"
+	"errors"
 	"io"
 	"io/ioutil"
 	"os"
@@ -57,7 +58,7 @@ func (s BuildStage) String() string {
 	return rst
 }
 
-//buildError error returned when building the static website. The error string
+//g.buildError error returned when building the static website. The error string
 //returned is a json string that encodes the build stage and the message.
 type buildError struct {
 	Stage   string `json:"stage"`
@@ -131,7 +132,7 @@ func (g *Generator) Init() error {
 	})
 	_, err := g.vm.Eval(entryScript())
 	if err != nil {
-		return buildErr(StageInit, err.Error())
+		return g.buildErr(StageInit, err)
 	}
 
 	_ = g.vm.Set("fileTree", fileTree(g.fs, g.workDir))
@@ -143,7 +144,7 @@ func (g *Generator) Init() error {
 	err = g.evaluateFile(entryFile)
 	if err != nil {
 		if !os.IsNotExist(err) {
-			return buildErr(StageInit, err.Error())
+			return g.buildErr(StageInit, err)
 		}
 	}
 	if g.Verbose {
@@ -178,7 +179,7 @@ func fileTree(fs afero.Fs, root string) func(otto.FunctionCall) otto.Value {
 		})
 		if ferr != nil {
 			tree = nil
-			panicOtto(ferr.Error())
+			panicOtto(ferr)
 		}
 		v, _ = call.Otto.ToValue(tree)
 		return v
@@ -233,7 +234,7 @@ func (g *Generator) Config() error {
 	if g.workDir == "" {
 		wd, err := os.Getwd()
 		if err != nil {
-			return buildErr(StageInit, err.Error())
+			return g.buildErr(StageInit, err)
 		}
 		g.workDir = wd
 	}
@@ -265,12 +266,12 @@ func (g *Generator) Config() error {
 	af := afero.Afero{Fs: g.fs}
 	data, err := af.ReadFile(configFile)
 	if err != nil {
-		return buildErr(StageInit, err.Error())
+		return g.buildErr(StageInit, err)
 	}
 	cfg := &Config{}
 	err = json.Unmarshal(data, cfg)
 	if err != nil {
-		return buildErr(StageInit, err.Error())
+		return g.buildErr(StageInit, err)
 	}
 	g.sys.Config = cfg
 
@@ -278,7 +279,7 @@ func (g *Generator) Config() error {
 	req := newRequire(g.fs, scriptsDir)
 	err = g.registerBuiltin(req)
 	if err != nil {
-		return buildErr(StageInit, err.Error())
+		return g.buildErr(StageInit, err)
 	}
 	_ = g.vm.Set("require", req.load)
 	if g.Verbose {
@@ -306,21 +307,21 @@ func (g *Generator) Plan() error {
 	err := g.evaluateFile(pFile)
 	if err != nil {
 		if !os.IsNotExist(err) {
-			return buildErr(StagePlan, err.Error())
+			return g.buildErr(StagePlan, err)
 		}
 	}
 	v, err := g.vm.Call("getCurrentSys", nil)
 	if err != nil {
-		return buildErr(StagePlan, err.Error())
+		return g.buildErr(StagePlan, err)
 	}
 	str, err := v.ToString()
 	if err != nil {
-		return buildErr(StagePlan, err.Error())
+		return g.buildErr(StagePlan, err)
 	}
 	sys := &System{}
 	err = json.Unmarshal([]byte(str), sys)
 	if err != nil {
-		return buildErr(StagePlan, err.Error())
+		return g.buildErr(StagePlan, err)
 	}
 	g.sys = sys
 	if g.sys.Plan == nil {
@@ -348,11 +349,11 @@ func (g *Generator) Exec() error {
 	}
 	o, err := g.vm.Call("fileTree", nil)
 	if err != nil {
-		return buildErr(StageExec, err.Error())
+		return g.buildErr(StageExec, err)
 	}
 	ov, err := o.Export()
 	if err != nil {
-		return buildErr(StageExec, err.Error())
+		return g.buildErr(StageExec, err)
 	}
 	if ov == nil {
 		// No files to mess with
@@ -360,7 +361,7 @@ func (g *Generator) Exec() error {
 	files, ok := ov.([]string)
 	if !ok {
 		// Some fish
-		return buildErr(StageExec, "no files to build")
+		return g.buildErr(StageExec, errors.New("no files to build"))
 	}
 
 	var wg sync.WaitGroup
@@ -432,4 +433,11 @@ func (g *Generator) registerBuiltin(r *require) error {
 	}
 	r.addToCache("underscore", v)
 	return nil
+}
+
+func (g *Generator) buildErr(s BuildStage, err error) error {
+	if g.Verbose {
+		return g.job.EventErr(s.String(), err)
+	}
+	return buildErr(s, err.Error())
 }
