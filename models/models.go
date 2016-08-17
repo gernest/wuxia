@@ -6,7 +6,6 @@ import (
 	"github.com/fatih/structs"
 	"github.com/gernest/wuxia/db"
 	"github.com/microcosm-cc/bluemonday"
-	"github.com/uber-go/zap"
 )
 
 const (
@@ -35,8 +34,6 @@ func init() {
 //Context holda important information that can be used by diffenet components of
 //the application.
 type Context struct {
-	Log zap.Logger
-	Cfg *Config
 }
 
 //Config configuration object.
