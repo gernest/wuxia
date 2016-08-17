@@ -2,6 +2,7 @@ package models
 
 import (
 	"database/sql"
+	"net/http"
 
 	"github.com/fatih/structs"
 	"github.com/gernest/wuxia/db"
@@ -37,6 +38,17 @@ func init() {
 type Context struct {
 	Config *Config
 	View   views.View
+}
+
+func (ctx *Context) HTML(tpl string, data interface{}, w http.ResponseWriter,
+	status int) error {
+	err := ctx.View.Render(tpl, data, w)
+	if err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "text/html")
+	w.WriteHeader(status)
+	return nil
 }
 
 //Config configuration object.
