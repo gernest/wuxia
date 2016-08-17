@@ -5,6 +5,7 @@ import (
 
 	"github.com/fatih/structs"
 	"github.com/gernest/wuxia/db"
+	"github.com/gernest/wuxia/views"
 	"github.com/microcosm-cc/bluemonday"
 )
 
@@ -34,6 +35,8 @@ func init() {
 //Context holda important information that can be used by diffenet components of
 //the application.
 type Context struct {
+	Config *Config
+	View   views.View
 }
 
 //Config configuration object.
