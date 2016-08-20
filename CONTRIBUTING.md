@@ -139,3 +139,6 @@ This will result in `wuxia version` output that looks similar to:
 
 Alternatively, just run `make` &mdash; all the “magic” above is already in the `Makefile`.  :wink:
 
+# Aknowledgement
+
+This Guideline was  adopted from [Hugo](https://github.com/spf13/hugo)
