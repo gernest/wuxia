@@ -89,11 +89,17 @@ type Plan struct {
 
 //Strategy defines what should be done when a file matches a certain pattern.
 //the pattern is glob like and matches only on the filenames
+//
+// The FullMatch field specifies the pattern to be matchig the full file path.
+// if set to  false is means the pattern only matches the base of the file path(
+// ignoring the directories).
 type Strategy struct {
-	Pattern string   `json:"pattern"`
-	Before  []string `json:"before"`
-	Exec    []string `json:"exec"`
-	After   []string `json:"after"`
+	Title     string   `json:"title"`
+	Pattern   string   `json:"pattern"`
+	FullMatch bool     `json:fullMatch"`
+	Before    []string `json:"before"`
+	Exec      []string `json:"exec"`
+	After     []string `json:"after"`
 }
 
 //FindStrategy searches for a strategy matching the given filePath that is
@@ -104,13 +110,18 @@ type Strategy struct {
 func (p *Plan) FindStrategy(filePath string) (*Strategy, error) {
 	for i := range p.Strategies {
 		s := p.Strategies[i]
-		ok, err := filepath.Match(s.Pattern, filePath)
+		m := filePath
+		if !s.FullMatch {
+			m = filepath.Base(filePath)
+		}
+		ok, err := filepath.Match(s.Pattern, m)
 		if err != nil {
 			return nil, err
 		}
 		if !ok {
 			continue
 		}
+		return s, nil
 	}
 	return nil, errors.New("can't find strategy for " + filePath)
 }

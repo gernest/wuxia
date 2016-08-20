@@ -302,7 +302,9 @@ func (g *Generator) Config() error {
 // This is executed to prepare the Plan object, which is the blueprint on how
 // the whole execution is going to take place.
 func (g *Generator) Plan() error {
-	g.job.Event("planning:start")
+	if g.Verbose {
+		g.job.Event("planning:start")
+	}
 	pFile := filepath.Join(scriptsDir, planDir, indexFile)
 	err := g.evaluateFile(pFile)
 	if err != nil {
@@ -327,7 +329,9 @@ func (g *Generator) Plan() error {
 	if g.sys.Plan == nil {
 		g.sys.Plan = defaultPlan()
 	}
-	g.job.Event("planning: complete ")
+	if g.Verbose {
+		g.job.Event("planning: complete ")
+	}
 	return nil
 }
 
@@ -374,7 +378,9 @@ func (g *Generator) Exec() error {
 			defer wg.Done()
 			if g.Verbose {
 			}
-			g.job.Event("exe: evaluating " + fn)
+			if g.Verbose {
+				g.job.Event("exe: evaluating " + fn)
+			}
 			s, err := p.FindStrategy(fn)
 			if err != nil {
 				errlist = append(errlist, err)
