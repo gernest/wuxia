@@ -10,7 +10,7 @@ test:generate
 setup:
 	@go get -v github.com/jteeuwen/go-bindata/...
 
-migration/data.go:$(shell find migration/scripts -type f)
+migration/data.gen.go:$(shell find migration/scripts -type f)
 	@echo "Generating migration scripts bindata"
 	@go generate ./migration
 
@@ -22,7 +22,7 @@ wuxia/data.go:$(shell find wuxia/js -type f)
 	@echo "Generating generator bindata"
 	@go generate ./wuxia
 
-generate: migration/data.go themes/data.go wuxia/data.go
+generate: migration/data.gen.go themes/data.go wuxia/data.go
 	@echo "Done generate bindata"
 
 cover:
