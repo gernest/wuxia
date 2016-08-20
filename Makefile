@@ -22,7 +22,13 @@ wuxia/data.gen.go:$(shell find wuxia/js -type f)
 	@echo "Generating generator bindata"
 	@go generate ./wuxia
 
-generate: migration/data.gen.go themes/data.gen.go wuxia/data.gen.go
+
+views/data.gen.go:$(shell find templates/  -type f)
+	@echo "generating data for templates"
+	@go-bindata -o views/data.gen.go\
+		-pkg views -prefix templates/ templates/...
+generate: migration/data.gen.go themes/data.gen.go wuxia/data.gen.go views/data.gen.go
+
 	@echo "Done generate bindata"
 
 cover:
