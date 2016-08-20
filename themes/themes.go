@@ -1,3 +1,1 @@
 package themes
-
-//go:generate go-bindata -o data.gen.go -pkg themes theme/...
