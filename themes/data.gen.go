@@ -83,7 +83,7 @@ func themeDoxseyStaticCssStyleCss() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "theme/doxsey/static/css/style.css", size: 18869, mode: os.FileMode(420), modTime: time.Unix(1469042505, 0)}
+	info := bindataFileInfo{name: "theme/doxsey/static/css/style.css", size: 18869, mode: os.FileMode(420), modTime: time.Unix(1471005942, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }

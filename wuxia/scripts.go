@@ -1,6 +1,6 @@
 package wuxia
 
-//go:generate go-bindata -o data.go -pkg wuxia js/...
+//go:generate go-bindata -o data.gen.go -pkg wuxia js/...
 
 func entryScript() string {
 	d, err := Asset("js/init.js")
