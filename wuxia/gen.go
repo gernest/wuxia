@@ -3,6 +3,7 @@ package wuxia
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
@@ -116,9 +117,7 @@ func NewGenerator(vm *otto.Otto, sys *System, fs afero.Fs) *Generator {
 // Initialzation is offloaded to the javascript runtine of the generator..Any
 // error returned is a build error.
 func (g *Generator) Init() error {
-	if g.Verbose {
-		g.job.Event("initializing_generator")
-	}
+	g.log(StageInit)
 	_ = g.vm.Set("sys", func(call otto.FunctionCall) otto.Value {
 		data, err := json.Marshal(g.sys)
 		if err != nil {
@@ -147,13 +146,14 @@ func (g *Generator) Init() error {
 			return g.buildErr(StageInit, err)
 		}
 	}
-	if g.Verbose {
-		g.job.EventKv("initializing_generator.complete",
-			health.Kvs{
-				"project": g.sys.Config.Name,
-			})
-	}
+	g.log(StageInit, "complete")
 	return nil
+}
+
+func (g *Generator) log(s BuildStage, args ...interface{}) {
+	if g.Verbose {
+		g.job.Event(s.String() + ":" + fmt.Sprint(args...))
+	}
 }
 
 //fileTree provides an array of all files found in the root( which is suppose to
@@ -234,7 +234,7 @@ func (g *Generator) Config() error {
 	if g.workDir == "" {
 		wd, err := os.Getwd()
 		if err != nil {
-			return g.buildErr(StageInit, err)
+			return g.buildErr(StageConfig, err)
 		}
 		g.workDir = wd
 	}
@@ -247,8 +247,8 @@ func (g *Generator) Config() error {
 			stream.AddSink(&health.WriterSink{Writer: g.Out})
 		}
 		g.job = stream.NewJob("generate:" + g.workDir)
-		g.job.Event("configuring:start")
 	}
+	g.log(StageConfig)
 	if g.sys == nil {
 		g.sys = defaultSystem()
 	}
@@ -282,12 +282,7 @@ func (g *Generator) Config() error {
 		return g.buildErr(StageInit, err)
 	}
 	_ = g.vm.Set("require", req.load)
-	if g.Verbose {
-		g.job.EventKv("configuring.complete",
-			health.Kvs{
-				"project": g.sys.Config.Name,
-			})
-	}
+	g.log(StageConfig, "complete")
 	return nil
 }
 
@@ -302,9 +297,8 @@ func (g *Generator) Config() error {
 // This is executed to prepare the Plan object, which is the blueprint on how
 // the whole execution is going to take place.
 func (g *Generator) Plan() error {
-	if g.Verbose {
-		g.job.Event("planning:start")
-	}
+	g.log(StagePlan)
+
 	pFile := filepath.Join(scriptsDir, planDir, indexFile)
 	err := g.evaluateFile(pFile)
 	if err != nil {
@@ -329,9 +323,7 @@ func (g *Generator) Plan() error {
 	if g.sys.Plan == nil {
 		g.sys.Plan = defaultPlan()
 	}
-	if g.Verbose {
-		g.job.Event("planning: complete ")
-	}
+	g.log(StagePlan, "complete")
 	return nil
 }
 
@@ -348,9 +340,7 @@ func (g *Generator) Plan() error {
 // Rendering is done synchronously. As there is a lot of cross refences and
 // stuffs to be considered, the rendering function is provided by the plan.
 func (g *Generator) Exec() error {
-	if g.Verbose {
-		g.job.Event("exec:  start")
-	}
+	g.log(StageExec)
 	o, err := g.vm.Call("fileTree", nil)
 	if err != nil {
 		return g.buildErr(StageExec, err)
@@ -378,9 +368,7 @@ func (g *Generator) Exec() error {
 			defer wg.Done()
 			if g.Verbose {
 			}
-			if g.Verbose {
-				g.job.Event("exe: evaluating " + fn)
-			}
+			g.log(StageExec, " evaluating "+fn)
 			s, err := p.FindStrategy(fn)
 			if err != nil {
 				errlist = append(errlist, err)

@@ -29,7 +29,7 @@ Tpl.getTplFuncs=function(){
 	if err != nil {
 		t.Error(err)
 	}
-	tpl := &Template{vm: vm}
+	tpl := &Template{Otto: vm}
 	tpl = tpl.New()
 	sample := `{{"hello"|world}}`
 	tp, err := tpl.Parse(sample)

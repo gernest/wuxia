@@ -13,7 +13,7 @@ import (
 //on the otto VM , and the functions are extracted from the otto Virtual
 //Machine.
 type Template struct {
-	vm      *otto.Otto
+	*otto.Otto
 	jsFuncs []string
 	funcs   template.FuncMap
 	*template.Template
@@ -52,7 +52,7 @@ func (t *Template) funcMap() template.FuncMap {
 func (t *Template) jsTplFunc(name string) func(interface{}) (string, error) {
 	return func(arg interface{}) (string, error) {
 		call := fmt.Sprintf("Tpl.funcs.%s", name)
-		rst, err := t.vm.Call(call, nil, arg)
+		rst, err := t.Call(call, nil, arg)
 		if err != nil {
 			return "", err
 		}
@@ -68,8 +68,8 @@ func (t *Template) jsTplFunc(name string) func(interface{}) (string, error) {
 //defined in javascript.
 func (t *Template) New() *Template {
 	if t.jsFuncs == nil || len(t.jsFuncs) == 0 {
-		if t.vm != nil {
-			rst, err := t.vm.Call("Tpl.getTplFuncs", nil)
+		if t.Otto != nil {
+			rst, err := t.Call("Tpl.getTplFuncs", nil)
 			if err == nil {
 				v, _ := rst.Export()
 				if va, ok := v.([]string); ok {
@@ -81,7 +81,7 @@ func (t *Template) New() *Template {
 	tpl := template.New("base").Funcs(t.funcMap())
 	return &Template{
 		jsFuncs:  t.jsFuncs,
-		vm:       t.vm,
+		Otto:     t.Otto,
 		funcs:    t.funcs,
 		Template: tpl,
 	}
