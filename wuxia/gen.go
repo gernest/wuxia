@@ -228,6 +228,59 @@ func defaultVM(sys *System) *otto.Otto {
 	return otto.New()
 }
 
+func Configure(ctx *Context) error {
+	if ctx.WorkDir == "" {
+		wd, err := os.Getwd()
+		if err != nil {
+			return err
+		}
+		ctx.WorkDir = wd
+	}
+	if ctx.Out == nil {
+		ctx.Out = os.Stdout
+	}
+	if ctx.Job == nil {
+		if stream.Sinks == nil {
+			stream.AddSink(&health.WriterSink{Writer: ctx.Out})
+		}
+		ctx.Job = stream.NewJob("generate:" + ctx.WorkDir)
+	}
+	if ctx.FS == nil {
+		ctx.FS = afero.NewOsFs()
+	}
+
+	// ensure everything is relative to the working directory
+	// The working directory is where the  directory in which the project to be
+	// built lives.
+	//
+	// All file operations, happens within the diretory. So to access the
+	// configuration file for example it is located in /config.json.
+	ctx.FS = afero.NewBasePathFs(ctx.FS, ctx.WorkDir)
+	af := afero.Afero{Fs: ctx.FS}
+	data, err := af.ReadFile(configFile)
+	if err != nil {
+		return err
+	}
+	cfg := &Config{}
+	err = json.Unmarshal(data, cfg)
+	if err != nil {
+		return err
+	}
+	ctx.Sys.Config = cfg
+
+	if ctx.VM == nil {
+		ctx.VM = otto.New()
+	}
+	// Add reuire
+	req := newRequire(ctx.FS, scriptsDir)
+	err = RegisterBuiltins(ctx, req)
+	if err != nil {
+		return err
+	}
+	_ = ctx.VM.Set("require", req.load)
+	return nil
+}
+
 //Config configures the generator.
 func (g *Generator) Config() error {
 	// Properly set working directory/
@@ -411,6 +464,21 @@ func (g *Generator) execPlan(a FileList, p *Plan) error {
 }
 
 func (g *Generator) down() error {
+	return nil
+}
+
+//RegisterBuiltins adds important modules  like underscore and fs.
+func RegisterBuiltins(ctx *Context, r *require) error {
+	f := &fileSys{}
+	f.Fs = ctx.FS
+	v := f.export().ToValue(ctx.VM)
+	r.addToCache("fs", v)
+	r.addToCache("markdown", markdown().ToValue(ctx.VM))
+	v, err := ctx.VM.Run(underscore.Source())
+	if err != nil {
+		return err
+	}
+	r.addToCache("underscore", v)
 	return nil
 }
 
