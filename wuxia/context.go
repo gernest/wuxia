@@ -29,6 +29,10 @@ type baseStage struct {
 	execFunc func(*Context) error
 }
 
+func NewStage(name string, e func(*Context) error) Stage {
+	return &baseStage{name: name, execFunc: e}
+}
+
 func (b *baseStage) Name() string {
 	return b.name
 }
