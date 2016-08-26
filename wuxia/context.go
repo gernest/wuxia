@@ -19,6 +19,7 @@ type Context struct {
 	Out     io.Writer
 }
 
+//Stage is an interface representing a generation step
 type Stage interface {
 	Name() string
 	Exec(*Context) error

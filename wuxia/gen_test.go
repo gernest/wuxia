@@ -1,31 +1,28 @@
 package wuxia
 
-import (
-	"testing"
-
-	"github.com/spf13/afero"
-)
+import "testing"
 
 func TestGenerator_Build(t *testing.T) {
-	g := NewGenerator(nil, nil, afero.NewOsFs())
 	p := "fixture/site"
-	g.workDir = p
-	g.Verbose = true
-	err := g.Config()
+	ctx := &Context{
+		WorkDir: p,
+		Verbose: true,
+	}
+	err := Configure(ctx)
 	if err != nil {
 		t.Error(err)
 	}
 
-	err = g.Init()
+	err = Initilize(ctx)
 	if err != nil {
 		t.Error(err)
 	}
-	err = g.Plan()
+	err = PlanExecution(ctx)
 	if err != nil {
 		t.Error(err)
 	}
 
-	err = g.Exec()
+	err = Execute(ctx)
 	if err != nil {
 		t.Error(err)
 	}
