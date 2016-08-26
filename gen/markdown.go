@@ -1,4 +1,4 @@
-package wuxia
+package gen
 
 import (
 	"github.com/gernest/blackfriday"

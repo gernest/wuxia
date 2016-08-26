@@ -1,6 +1,6 @@
 
 test:generate
-	@go test  ./wuxia
+	@go test  ./gen
 	@go test  ./db
 	@go test  ./migration
 	@go test  ./models
@@ -15,9 +15,9 @@ migration/data.gen.go:$(shell find migration/scripts -type f)
 	@go generate ./migration
 
 
-wuxia/data.gen.go:$(shell find wuxia/js -type f)
+gen/data.gen.go:$(shell find gen/js -type f)
 	@echo "Generating generator bindata"
-	@go generate ./wuxia
+	@go generate ./gen
 
 data/data.gen.go:$(shell find public/  -type f)
 	@echo "generating data for public files"
@@ -28,7 +28,7 @@ views/data.gen.go:$(shell find templates/  -type f)
 	@echo "generating data for templates"
 	@go-bindata -o views/data.gen.go\
 		-pkg views -prefix templates/ templates/...
-generate: migration/data.gen.go  wuxia/data.gen.go views/data.gen.go data/data.gen.go
+generate: migration/data.gen.go  gen/data.gen.go views/data.gen.go data/data.gen.go
 
 	@echo "Done generate bindata"
 

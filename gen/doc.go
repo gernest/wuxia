@@ -12,4 +12,4 @@
 //
 // * Unparalled templating engine. Benefit with the power of go templates with
 // the flexibility of writing template functions in javascript.
-package wuxia
+package gen

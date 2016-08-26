@@ -3,7 +3,7 @@
 // js/init.js
 // DO NOT EDIT!
 
-package wuxia
+package gen
 
 import (
 	"bytes"
@@ -83,7 +83,7 @@ func jsInitJs() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "js/init.js", size: 505, mode: os.FileMode(420), modTime: time.Unix(1471005942, 0)}
+	info := bindataFileInfo{name: "js/init.js", size: 505, mode: os.FileMode(420), modTime: time.Unix(1472225002, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
