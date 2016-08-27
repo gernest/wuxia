@@ -25,21 +25,21 @@ const (
 //
 // NOTE: cyclic dependencies are not taken care yet, so this will break in case
 // of cyclic dependency.
-type require struct {
-	cache *cache2go.CacheTable
-	paths []string
-	fs    afero.Fs
+type Require struct {
+	Cache *cache2go.CacheTable
+	Paths []string
+	Fs    afero.Fs
 }
 
-func newRequire(fs afero.Fs, paths ...string) *require {
-	return &require{
-		cache: cache2go.Cache("require"),
-		paths: paths,
-		fs:    fs,
+func NewRequire(fs afero.Fs, paths ...string) *Require {
+	return &Require{
+		Cache: cache2go.Cache("require"),
+		Paths: paths,
+		Fs:    fs,
 	}
 }
 
-func (r *require) load(call otto.FunctionCall) otto.Value {
+func (r *Require) Load(call otto.FunctionCall) otto.Value {
 	id, err := call.Argument(0).ToString()
 	if err != nil {
 		panicOtto(err)
@@ -57,22 +57,22 @@ func (r *require) load(call otto.FunctionCall) otto.Value {
 	return r.loadFromFile(newID, call.Otto)
 }
 
-func (r *require) checkCache(id string) (otto.Value, bool) {
-	if !r.cache.Exists(id) {
+func (r *Require) checkCache(id string) (otto.Value, bool) {
+	if !r.Cache.Exists(id) {
 		return otto.Value{}, false
 	}
-	res, err := r.cache.Value(id)
+	res, err := r.Cache.Value(id)
 	if err != nil {
 		return otto.Value{}, false
 	}
 	return res.Data().(otto.Value), true
 }
 
-func (r *require) addToCache(id string, v otto.Value) {
-	_ = r.cache.Add(id, time.Minute, v)
+func (r *Require) addToCache(id string, v otto.Value) {
+	_ = r.Cache.Add(id, time.Minute, v)
 }
 
-func (r *require) resolve(id string) (string, error) {
+func (r *Require) resolve(id string) (string, error) {
 	if id == "" {
 		return "", errors.New("empty module name")
 	}
@@ -80,19 +80,19 @@ func (r *require) resolve(id string) (string, error) {
 		return id, nil
 	}
 	if strings.HasPrefix(id, ".") {
-		_, err := r.fs.Stat(id)
+		_, err := r.Fs.Stat(id)
 		if err != nil {
 			return "", err
 		}
 	}
 	ext := filepath.Ext(id)
 	opts := []string{".js", ".json"}
-	for i := 0; i < len(r.paths); i++ {
-		fullPath := filepath.Join(r.paths[i], id)
+	for i := 0; i < len(r.Paths); i++ {
+		fullPath := filepath.Join(r.Paths[i], id)
 		if ext != "" {
-			_, err := r.fs.Stat(fullPath)
+			_, err := r.Fs.Stat(fullPath)
 			if err != nil {
-				if i != len(r.paths)-1 {
+				if i != len(r.Paths)-1 {
 					continue
 				}
 				return "", err
@@ -101,9 +101,9 @@ func (r *require) resolve(id string) (string, error) {
 		}
 
 		for _, e := range opts {
-			_, err := r.fs.Stat(fullPath + e)
+			_, err := r.Fs.Stat(fullPath + e)
 			if err != nil {
-				if i != len(r.paths)-1 {
+				if i != len(r.Paths)-1 {
 					continue
 				}
 				return "", err
@@ -114,8 +114,8 @@ func (r *require) resolve(id string) (string, error) {
 	return "", fmt.Errorf(msgModduleNotFound, id)
 }
 
-func (r *require) loadFromFile(path string, vm *otto.Otto) otto.Value {
-	f, err := r.fs.Open(path)
+func (r *Require) loadFromFile(path string, vm *otto.Otto) otto.Value {
+	f, err := r.Fs.Open(path)
 	if err != nil {
 		panicOtto(err.Error())
 	}
@@ -134,11 +134,11 @@ func (r *require) loadFromFile(path string, vm *otto.Otto) otto.Value {
 	return r.loadFromSource(string(data), path, vm)
 }
 
-func (r *require) loadFromSource(source string, path string, vm *otto.Otto) otto.Value {
+func (r *Require) loadFromSource(source string, path string, vm *otto.Otto) otto.Value {
 	source = "(function(module) {var require = module.require;var exports = module.exports;\n" + source + "\n})"
 
 	jsModule, _ := vm.Object(`({exports: {}})`)
-	_ = jsModule.Set("require", r.load)
+	_ = jsModule.Set("require", r.Load)
 	jsExports, _ := jsModule.Get("exports")
 
 	moduleReturn, err := vm.Call(source, jsExports, jsModule)

@@ -35,7 +35,7 @@ exports.echo=echo;
 		_ = f.Close()
 	}
 
-	req := newRequire(fs, "/project", "/project/modules")
+	req := NewRequire(fs, "/project", "/project/modules")
 	expectation := []struct {
 		path, expect string
 	}{
@@ -54,7 +54,7 @@ exports.echo=echo;
 	}
 	// LoadModules
 	vm := otto.New()
-	_ = vm.Set("require", req.load)
+	_ = vm.Set("require", req.Load)
 	v, err := vm.Run(sample[1].script)
 	if err != nil {
 		t.Fatal(err)

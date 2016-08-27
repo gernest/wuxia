@@ -188,12 +188,12 @@ func Configure(ctx *Context) error {
 		ctx.VM = defaultVM(ctx.Sys)
 	}
 	// Add reuire
-	req := newRequire(ctx.FS, scriptsDir)
+	req := NewRequire(ctx.FS, scriptsDir)
 	err = RegisterBuiltins(ctx, req)
 	if err != nil {
 		return err
 	}
-	_ = ctx.VM.Set("require", req.load)
+	_ = ctx.VM.Set("require", req.Load)
 	return nil
 }
 
@@ -300,7 +300,7 @@ func ExecPlaan(ctx *Context, fl FileList, s *Plan) error {
 }
 
 //RegisterBuiltins adds important modules  like underscore and fs.
-func RegisterBuiltins(ctx *Context, r *require) error {
+func RegisterBuiltins(ctx *Context, r *Require) error {
 	f := &fileSys{}
 	f.Fs = ctx.FS
 	v := f.export().ToValue(ctx.VM)
