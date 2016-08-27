@@ -17,7 +17,7 @@ const (
 	msgModduleNotFound = "module %s not found"
 )
 
-// implements a simple node.js like require mechanism. It loads jsavascript
+//Require  implements a simple node.js like require mechanism. It loads jsavascript
 // files from the source and exposes them as modules in the runtime.
 //
 // This follows node.js convention by using the exports object to attach the
@@ -31,6 +31,7 @@ type Require struct {
 	Fs    afero.Fs
 }
 
+//NewRequire returns an initialized Require object
 func NewRequire(fs afero.Fs, paths ...string) *Require {
 	return &Require{
 		Cache: cache2go.Cache("require"),
@@ -39,6 +40,7 @@ func NewRequire(fs afero.Fs, paths ...string) *Require {
 	}
 }
 
+//Load  loads module into the otto runtime.
 func (r *Require) Load(call otto.FunctionCall) otto.Value {
 	id, err := call.Argument(0).ToString()
 	if err != nil {

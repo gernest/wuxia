@@ -44,7 +44,9 @@ func DefaultConfig() *Config {
 	}
 }
 
-//System configuration for the whole static generator system.
+//System configuration for the whole static generator system. The information
+//consost of things necessary to bootup, configure and plan the execution of the
+//static project..
 type System struct {
 	Boot   *Boot   `json:"boot"`
 	Config *Config `json:"config"`
@@ -96,7 +98,7 @@ type Plan struct {
 type Strategy struct {
 	Title     string   `json:"title"`
 	Pattern   string   `json:"pattern"`
-	FullMatch bool     `json:fullMatch"`
+	FullMatch bool     `json:"fullMatch"`
 	Before    []string `json:"before"`
 	Exec      []string `json:"exec"`
 	After     []string `json:"after"`

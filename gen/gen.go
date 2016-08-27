@@ -141,8 +141,22 @@ func defaultVM(sys *System) *otto.Otto {
 	return otto.New()
 }
 
+//Configure configures the ctx with default values. This make sure the ctx is in
+//good shape to be passed around to any other stages.
+//
+// It is safe to pass an eunintialized *Context, when you want to expect default
+// behaviour.
+//
+// passing unitialized *Context will make the current working directory as the
+// context WOrkDir. This can have unintended effect so be warned and just make
+// sure the context passed has WorkDir set if you inted to do something
+// otherwise.
 func Configure(ctx *Context) error {
 	if ctx.WorkDir == "" {
+
+		// we assing the current working directory as the context WOrkDir. This
+		// is ugly, and may result into bugs. But it is important for a WorkDir
+		// to be set that is why this is left here.
 		wd, err := os.Getwd()
 		if err != nil {
 			return err
@@ -288,14 +302,19 @@ func Execute(ctx *Context) error {
 
 	}
 	wg.Wait()
-	return ExecPlaan(ctx, list, p)
+	return ExecPlan(ctx, list, p)
 }
 
+//ExecStrategy executes the stratedy using the given ctx. The endgame is a *File
+//as we are only interested in processing the file  named filename.
+//
+// The strategy outlines how filename is processed.
 func ExecStrategy(ctx *Context, filename string, s *Strategy) (*File, error) {
 	return nil, nil
 }
 
-func ExecPlaan(ctx *Context, fl FileList, s *Plan) error {
+//ExecPlan executes plan s for processing the FileList fi using the conetx ctx.
+func ExecPlan(ctx *Context, fl FileList, s *Plan) error {
 	return nil
 }
 

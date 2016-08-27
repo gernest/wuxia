@@ -30,6 +30,12 @@ type baseStage struct {
 	execFunc func(*Context) error
 }
 
+//NewStage returns struct that satisfies the Stage interface. The deails are
+//hidden deilibarately as a way to quickly define stages based on functions of
+//struct methods.
+//
+// It is recommended to implement Stage interface explicity. Use this only when
+// it is necessary.
 func NewStage(name string, e func(*Context) error) Stage {
 	return &baseStage{name: name, execFunc: e}
 }

@@ -23,7 +23,7 @@ func TestPlan(t *testing.T) {
 		t.Fatal(err)
 	}
 	if s.Title != strategy1.Title {
-		t.Errorf("expected 5s got 5s", strategy1.Title, s.Title)
+		t.Errorf("expected %s got %s", strategy1.Title, s.Title)
 	}
 
 	s, err = p.FindStrategy("/root/css/style.css")
@@ -31,6 +31,6 @@ func TestPlan(t *testing.T) {
 		t.Fatal(err)
 	}
 	if s.Title != strategy2.Title {
-		t.Errorf("expected 5s got 5s", strategy2.Title, s.Title)
+		t.Errorf("expected %s got %s", strategy2.Title, s.Title)
 	}
 }
