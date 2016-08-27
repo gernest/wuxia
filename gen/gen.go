@@ -110,10 +110,6 @@ func defaultSystem() *System {
 	}
 }
 
-func defaultPlan() *Plan {
-	return &Plan{}
-}
-
 //EvaluateFile  opens the file in the specified path and evaluates it withing the context of
 // the javascript runtine.
 //
