@@ -14,6 +14,10 @@ import (
 	"github.com/spf13/afero"
 )
 
+//package specfic halth stream. This can be used to provide consistent
+//application wise health check stream.
+//
+// It is safe for concurrent usage.
 var stream *health.Stream
 
 func init() {
