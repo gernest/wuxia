@@ -12,7 +12,6 @@ import (
 	"github.com/robertkrimen/otto"
 	"github.com/robertkrimen/otto/underscore"
 	"github.com/spf13/afero"
-	// load underscore for otto runtime.
 )
 
 var stream *health.Stream
