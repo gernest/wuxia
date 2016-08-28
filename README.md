@@ -1,0 +1,1 @@
+[![Coverage Status](https://coveralls.io/repos/github/gernest/wuxia/badge.svg?branch=HEAD)](https://coveralls.io/github/gernest/wuxia?branch=HEAD) [![Build Status](https://travis-ci.org/gernest/wuxia.svg?branch=master)](https://travis-ci.org/gernest/wuxia)
