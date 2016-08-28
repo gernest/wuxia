@@ -32,10 +32,9 @@ function process(fileName){
   return file;
 }
 
-function prepare(){
-    var plan=sys().plan;
-    if (plan!==null){
-        _.each(plan.dependency, function(el){
+function prepare(plan){
+    if (plan){
+        _.each(plan.Dependency, function(el){
                 require(el);
         });
         return true;

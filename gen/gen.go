@@ -241,11 +241,13 @@ func PlanExecution(ctx *Context) error {
 	if err != nil {
 		return err
 	}
-	ctx.Sys = sys
-	if ctx.Sys.Plan == nil {
+	if ctx.Sys.Plan == nil && sys.Plan != nil {
+		ctx.Sys.Plan = sys.Plan
+	}
+	if ctx.Sys.Plan == nil && sys.Plan == nil {
 		ctx.Sys.Plan = defaultPlan()
 	}
-	o, err := ctx.VM.Call("prepare", nil)
+	o, err := ctx.VM.Call("prepare", nil, ctx.Sys.Plan)
 	if err != nil {
 		return err
 	}

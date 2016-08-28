@@ -47,3 +47,28 @@ func TestConfigure(t *testing.T) {
 		t.Error("expected %s got %s", wd, ctx.WorkDir)
 	}
 }
+
+func TestPlanExecution(t *testing.T) {
+	// check if we handle properly preparing of dependencies
+	p := &Plan{
+		Dependency: []string{"bogus"},
+	}
+	ctx := &Context{
+		WorkDir: "fixture/site",
+		Verbose: true,
+	}
+	err := Configure(ctx)
+	if err != nil {
+		t.Error(err)
+	}
+
+	err = Initilize(ctx)
+	if err != nil {
+		t.Error(err)
+	}
+	ctx.Sys.Plan = p
+	err = PlanExecution(ctx)
+	if err == nil {
+		t.Error("expected an error ", ctx.Sys.Plan.Dependency)
+	}
+}
