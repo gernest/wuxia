@@ -47,7 +47,6 @@ func (ctx *Context) HTML(tpl string, data interface{}, w http.ResponseWriter,
 		return err
 	}
 	w.Header().Set("Content-Type", "text/html")
-	w.WriteHeader(status)
 	return nil
 }
 
