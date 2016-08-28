@@ -7,12 +7,12 @@ func TestPlan(t *testing.T) {
 	strategy1 := &Strategy{
 		Title:     "full_path",
 		FullMatch: true,
-		Pattern:   "/root/*.md",
+		Patterns:  []string{"/root/*.md"},
 	}
 
 	strategy2 := &Strategy{
-		Title:   "base",
-		Pattern: "*.css",
+		Title:    "base",
+		Patterns: []string{"*.css"},
 	}
 	p := &Plan{
 		Strategies: []*Strategy{strategy1, strategy2},

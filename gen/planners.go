@@ -7,19 +7,19 @@ package gen
 // Matches for files with .md extension.
 func markdownStrategy() *Strategy {
 	return &Strategy{
-		Title:   "markdown",
-		Pattern: "*.md",
-		Before:  []string{"front"},
-		Exec:    []string{"markdown"},
+		Title:    "markdown",
+		Patterns: []string{"*.md"},
+		Before:   []string{"front"},
+		Exec:     []string{"markdown"},
 	}
 }
 
 // copies files.
 func copyStrategy() *Strategy {
 	return &Strategy{
-		Title:   "copy",
-		Pattern: "*.md",
-		Exec:    []string{"copy"},
+		Title:    "copy",
+		Patterns: []string{"*.md"},
+		Exec:     []string{"copy"},
 	}
 }
 

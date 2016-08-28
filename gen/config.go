@@ -97,7 +97,7 @@ type Plan struct {
 // ignoring the directories).
 type Strategy struct {
 	Title     string   `json:"title"`
-	Pattern   string   `json:"pattern"`
+	Patterns  []string `json:"patterns"`
 	FullMatch bool     `json:"fullMatch"`
 	Before    []string `json:"before"`
 	Exec      []string `json:"exec"`
@@ -116,14 +116,16 @@ func (p *Plan) FindStrategy(filePath string) (*Strategy, error) {
 		if !s.FullMatch {
 			m = filepath.Base(filePath)
 		}
-		ok, err := filepath.Match(s.Pattern, m)
-		if err != nil {
-			return nil, err
+		for _, patt := range s.Patterns {
+			ok, err := filepath.Match(patt, m)
+			if err != nil {
+				return nil, err
+			}
+			if !ok {
+				continue
+			}
+			return s, nil
 		}
-		if !ok {
-			continue
-		}
-		return s, nil
 	}
 	return nil, errors.New("can't find strategy for " + filePath)
 }
