@@ -30,6 +30,6 @@ func Handle(ctx *models.Context, h func(*models.Context, http.ResponseWriter,
 func App(ctx *models.Context) http.Handler {
 	r := mux.NewRouter()
 	r.HandleFunc("/", Handle(ctx, Home))
-	r.Handle("/static/", http.StripPrefix("/static/", http.FileServer(data.HTTPAsset())))
+	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(data.HTTPAsset())))
 	return r
 }
