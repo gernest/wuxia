@@ -1,4 +1,3 @@
-
 var System=sys();
 var Tpl={};
 var fs=require('fs');
@@ -11,7 +10,7 @@ Tpl.getTplFuncs=function(){
 		}
 	}
 	return rst;
-}
+};
 
 function getCurrentSys(){
 	return JSON.stringify(System);
@@ -32,4 +31,16 @@ function process(fileName){
   }
   return file;
 }
+
+function prepare(){
+    var plan=sys().plan;
+    if (plan!==null){
+        _.each(plan.dependency, function(el){
+                require(el);
+        });
+        return true;
+    }
+    return false;
+}
+
 

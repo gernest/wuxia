@@ -245,6 +245,17 @@ func PlanExecution(ctx *Context) error {
 	if ctx.Sys.Plan == nil {
 		ctx.Sys.Plan = defaultPlan()
 	}
+	o, err := ctx.VM.Call("prepare", nil)
+	if err != nil {
+		return err
+	}
+	ok, err := o.ToBoolean()
+	if err != nil {
+		return err
+	}
+	if !ok {
+		return errors.New("trouble preparing plan")
+	}
 	return nil
 }
 
@@ -324,10 +335,9 @@ func RegisterBuiltins(ctx *Context, r *Require) error {
 	v := f.export().ToValue(ctx.VM)
 	r.addToCache("fs", v)
 	r.addToCache("markdown", markdown().ToValue(ctx.VM))
-	v, err := ctx.VM.Run(underscore.Source())
+	_, err := ctx.VM.Run(underscore.Source())
 	if err != nil {
 		return err
 	}
-	r.addToCache("underscore", v)
 	return nil
 }
