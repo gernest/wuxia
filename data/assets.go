@@ -10,7 +10,8 @@ import (
 //sstatic assets.
 func HTTPAsset() http.FileSystem {
 	return &assetfs.AssetFS{
-		Asset:    Asset,
-		AssetDir: AssetDir,
+		Asset:     Asset,
+		AssetDir:  AssetDir,
+		AssetInfo: AssetInfo,
 	}
 }
