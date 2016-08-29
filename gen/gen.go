@@ -174,6 +174,12 @@ func Configure(ctx *Context) error {
 	if ctx.FS == nil {
 		ctx.FS = afero.NewOsFs()
 	}
+	if ctx.Sys == nil {
+		ctx.Sys = defaultSystem()
+	}
+	if ctx.VM == nil {
+		ctx.VM = defaultVM(ctx.Sys)
+	}
 
 	// ensure everything is relative to the working directory
 	// The working directory is where the  directory in which the project to be
@@ -192,14 +198,8 @@ func Configure(ctx *Context) error {
 	if err != nil {
 		return err
 	}
-	if ctx.Sys == nil {
-		ctx.Sys = defaultSystem()
-	}
 	ctx.Sys.Config = cfg
 
-	if ctx.VM == nil {
-		ctx.VM = defaultVM(ctx.Sys)
-	}
 	// Add reuire
 	req := NewRequire(ctx.FS, scriptsDir)
 	err = RegisterBuiltins(ctx, req)
