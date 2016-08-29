@@ -207,6 +207,9 @@ func Configure(ctx *Context) error {
 func AddRequire(ctx *Context) error {
 	// Add reuire
 	req := NewRequire(ctx.FS, scriptsDir)
+	if ctx.Sys.Config != nil {
+		req.Paths = append(req.Paths, ctx.Sys.Config.PluginDir)
+	}
 	err := RegisterBuiltins(ctx, req)
 	if err != nil {
 		return err
