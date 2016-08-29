@@ -199,7 +199,12 @@ func Configure(ctx *Context) error {
 		return err
 	}
 	ctx.Sys.Config = cfg
+	return AddRequire(ctx)
+}
 
+//AddRequire adds require function to the ctx VM. It also loads the modules that
+//are shipped with the package( a.k.a builtin modules).
+func AddRequire(ctx *Context) error {
 	// Add reuire
 	req := NewRequire(ctx.FS, scriptsDir)
 	err = RegisterBuiltins(ctx, req)
