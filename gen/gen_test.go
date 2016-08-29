@@ -3,6 +3,8 @@ package gen
 import (
 	"os"
 	"testing"
+
+	"github.com/spf13/afero"
 )
 
 func TestGenerator_Build(t *testing.T) {
@@ -70,5 +72,24 @@ func TestPlanExecution(t *testing.T) {
 	err = PlanExecution(ctx)
 	if err == nil {
 		t.Error("expected an error ", ctx.Sys.Plan.Dependency)
+	}
+
+	// check whether the default plan is correctly set
+	//TODO: find a better way, as the refenece error that comes from otto is a
+	//red flag
+	nctx := &Context{
+		WorkDir: "fixture/site",
+		Verbose: true,
+		FS:      afero.NewMemMapFs(),
+	}
+	_ = Configure(nctx)
+	_ = Initilize(nctx)
+	_ = PlanExecution(nctx)
+	np := nctx.Sys.Plan
+	if np == nil {
+		t.Fatal("expected default plan")
+	}
+	if np.Title != "default_plan" {
+		t.Errorf("expected default_plan got 5s", np.Title)
 	}
 }
