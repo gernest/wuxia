@@ -207,7 +207,7 @@ func Configure(ctx *Context) error {
 func AddRequire(ctx *Context) error {
 	// Add reuire
 	req := NewRequire(ctx.FS, scriptsDir)
-	err = RegisterBuiltins(ctx, req)
+	err := RegisterBuiltins(ctx, req)
 	if err != nil {
 		return err
 	}
