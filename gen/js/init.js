@@ -1,45 +1,25 @@
-var System=sys();
-var Tpl={};
-var fs=require('fs');
-Tpl.funcs={};
-Tpl.getTplFuncs=function(){
-	var rst=[];
-	for (var prop in Tpl.funcs){
-		if (Tpl.funcs.hasOwnProperty(prop)){
-			rst.push(prop);
-		}
-	}
-	return rst;
+var Wu ={
+    tplFuncs:{},
+    plugins:{},
+    files :fileTree(),
+    getTplFuncs:function(){
+        return _.map(this.tplFuncs, function(v){return v;});
+    },
+    prepare:function(plan){
+        if (plan){
+            _.each(plan.Dependency, function(el){
+               this.plugins[el]= require(el);
+            });
+            return true;
+        }
+        return false;
+    },
+    system: sys,
+    getSystem: function(){
+        return this.system;
+    },
+    setCustomPlan: function(plan){
+        addCustomPlan(JSON.stringify(plan));
+    },
 };
-
-function getCurrentSys(){
-	return JSON.stringify(System);
-}
-
-function process(fileName){
-  var file ={
-    name: fileName,
-    contents: "",
-    meta:{},
-  };
-  try{
-    var f=fs.open(fileName);
-    file.contents=f.read();
-    f.close();
-  }catch(e){
-    throw e;
-  }
-  return file;
-}
-
-function prepare(plan){
-    if (plan){
-        _.each(plan.Dependency, function(el){
-                require(el);
-        });
-        return true;
-    }
-    return false;
-}
-
 

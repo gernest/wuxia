@@ -51,29 +51,6 @@ func TestConfigure(t *testing.T) {
 }
 
 func TestPlanExecution(t *testing.T) {
-	// check if we handle properly preparing of dependencies
-	p := &Plan{
-		Dependency: []string{"bogus"},
-	}
-	ctx := &Context{
-		WorkDir: "fixture/site",
-		Verbose: true,
-	}
-	err := Configure(ctx)
-	if err != nil {
-		t.Error(err)
-	}
-
-	err = Initilize(ctx)
-	if err != nil {
-		t.Error(err)
-	}
-	ctx.Sys.Plan = p
-	err = PlanExecution(ctx)
-	if err == nil {
-		t.Error("expected an error ", ctx.Sys.Plan.Dependency)
-	}
-
 	// check whether the default plan is correctly set
 	//TODO: find a better way, as the refenece error that comes from otto is a
 	//red flag

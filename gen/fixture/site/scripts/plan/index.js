@@ -13,6 +13,5 @@ var _plan={
         },
     ]
 };
-// Register the plan
-System.plan=_plan; 
 
+Wu.setCustomPlan(_plan);

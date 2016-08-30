@@ -43,24 +43,39 @@ const (
 // Initialzation is offloaded to the javascript runtine of the generator..Any
 // error returned is a build error.
 func Initilize(ctx *Context) error {
-	_ = ctx.VM.Set("sys", func(call otto.FunctionCall) otto.Value {
-		data, err := json.Marshal(ctx.Sys)
+
+	// global values
+	_ = ctx.VM.Set("fileTree", fileTree(ctx.FS, ctx.WorkDir))
+	_ = ctx.VM.Set("sys", ctx.Sys)
+	_ = ctx.VM.Set("defaultPlan", defaultPlan())
+	_ = ctx.VM.Set("emptyPlan", &Plan{})
+	_ = ctx.VM.Set("addCustomPlan", func(call otto.FunctionCall) otto.Value {
+		arg, err := call.Argument(0).ToString()
 		if err != nil {
 			panicOtto(err)
 		}
-		val, err := call.Otto.Call("JSON.parse", nil, string(data))
+		p := &Plan{}
+		err = json.Unmarshal([]byte(arg), p)
 		if err != nil {
 			panicOtto(err)
 		}
-		return val
+		v, err := call.Otto.Get("Wu")
+		if err != nil {
+			panicOtto(err)
+		}
+		wu := v.Object()
+		err = wu.Set("customPlan", p)
+		if err != nil {
+			panicOtto(err)
+		}
+		ctx.Sys.Plan = p
+		return otto.UndefinedValue()
 	})
+
 	_, err := ctx.VM.Eval(entryScript())
 	if err != nil {
 		return err
 	}
-
-	_ = ctx.VM.Set("fileTree", fileTree(ctx.FS, ctx.WorkDir))
-
 	// evaluate project provided entry script if provided. We ignore if the file
 	// is not provided but any errors arsing from evaluating a provided script is
 	// a built error.
@@ -110,6 +125,7 @@ func defaultSystem() *System {
 			ConfigiFile: configFile,
 			PlanFile:    "index.js",
 		},
+		Plan: defaultPlan(),
 	}
 }
 
@@ -236,26 +252,7 @@ func PlanExecution(ctx *Context) error {
 			return err
 		}
 	}
-	v, err := ctx.VM.Call("getCurrentSys", nil)
-	if err != nil {
-		return err
-	}
-	str, err := v.ToString()
-	if err != nil {
-		return err
-	}
-	sys := &System{}
-	err = json.Unmarshal([]byte(str), sys)
-	if err != nil {
-		return err
-	}
-	if ctx.Sys.Plan == nil && sys.Plan != nil {
-		ctx.Sys.Plan = sys.Plan
-	}
-	if ctx.Sys.Plan == nil && sys.Plan == nil {
-		ctx.Sys.Plan = defaultPlan()
-	}
-	o, err := ctx.VM.Call("prepare", nil, ctx.Sys.Plan)
+	o, err := ctx.VM.Call("Wu.prepare", nil, ctx.Sys.Plan)
 	if err != nil {
 		return err
 	}
