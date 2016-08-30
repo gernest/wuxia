@@ -87,6 +87,7 @@ type Plan struct {
 
 	TemplateEngine string      `json:"template_engine"`
 	Strategies     []*Strategy `json:"strategies"`
+	After          []string    `json:"after"`
 }
 
 //Strategy defines what should be done when a file matches a certain pattern.
