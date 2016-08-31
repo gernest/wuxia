@@ -69,4 +69,25 @@ func TestPlanExecution(t *testing.T) {
 	if np.Title != "default_plan" {
 		t.Errorf("expected default_plan got 5s", np.Title)
 	}
+
+	// Testcase for missing modules
+	p := "fixture/site"
+	ctx := &Context{
+		WorkDir: p,
+		Verbose: true,
+	}
+	err := Configure(ctx)
+	if err != nil {
+		t.Error(err)
+	}
+
+	err = Initilize(ctx)
+	if err != nil {
+		t.Error(err)
+	}
+	ctx.Sys.Boot.PlanFile = "nothing.js"
+	err = PlanExecution(ctx)
+	if err == nil {
+		t.Error("expected an error")
+	}
 }

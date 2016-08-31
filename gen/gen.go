@@ -121,10 +121,7 @@ func fileTree(fs afero.Fs, root string) func(otto.FunctionCall) otto.Value {
 
 func defaultSystem() *System {
 	return &System{
-		Boot: &Boot{
-			ConfigiFile: configFile,
-			PlanFile:    "index.js",
-		},
+		Boot: &Boot{},
 		Plan: defaultPlan(),
 	}
 }
@@ -245,7 +242,10 @@ func AddRequire(ctx *Context) error {
 // This is executed to prepare the Plan object, which is the blueprint on how
 // the whole execution is going to take place.
 func PlanExecution(ctx *Context) error {
-	pFile := filepath.Join(scriptsDir, planDir, indexFile)
+	pFile := ctx.Sys.Boot.PlanFile
+	if pFile == "" {
+		pFile = filepath.Join(scriptsDir, planDir, indexFile)
+	}
 	err := EvaluateFile(ctx.FS, ctx.VM, pFile)
 	if err != nil {
 		if !os.IsNotExist(err) {

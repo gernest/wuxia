@@ -8,7 +8,7 @@ var Wu ={
     prepare:function(plan){
         if (plan){
             _.each(plan.Dependency, function(el){
-               this.plugins[el]= require(el);
+                require(el);
             });
             return true;
         }
