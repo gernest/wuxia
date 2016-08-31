@@ -1,5 +1,5 @@
 var _plan={
-    title:"simple plan}",
+    title:"simple plan",
     template_engine:"go",
     dependency:[
         "markdown",
