@@ -1,8 +1,5 @@
-ifeq "$(origin WUXIA_ENV)" "undefined"
-	WUXIA_ENV=dev
-endif
-ifeq "$(origin WUXIA_ENV)" "dev"
-	BUILD_FLAG= -debug
+ifeq "$(origin BUILD_FLAG)" "undefined"
+	BUILD_FLAG=-debug
 endif
 
 
@@ -19,7 +16,7 @@ setup:
 	@go get -v github.com/jteeuwen/go-bindata/...
 
 migration/data.gen.go:$(shell find migration/scripts -type f)
-	go:generate go-bindata  $(BUILD_FLAG) \
+	go-bindata  $(BUILD_FLAG) \
 		-o migration/data.gen.go \
 		-pkg migration  \
 		-prefix migration/ \
@@ -27,7 +24,7 @@ migration/data.gen.go:$(shell find migration/scripts -type f)
 
 
 gen/data.gen.go:$(shell find gen/js -type f)
-	go:generate go-bindata $(BUILD_FLAG) \
+	go-bindata $(BUILD_FLAG) \
 		-o gen/data.gen.go \
 		-pkg gen \
 		-prefix gen/ \
