@@ -16,6 +16,7 @@ setup:
 	@go get -v github.com/jteeuwen/go-bindata/...
 
 migration/data.gen.go:$(shell find migration/scripts -type f)
+	@echo "generating: migration/data.gen.go "
 	@go-bindata  $(BUILD_FLAG) \
 		-o migration/data.gen.go \
 		-pkg migration  \
@@ -24,6 +25,7 @@ migration/data.gen.go:$(shell find migration/scripts -type f)
 
 
 gen/data.gen.go:$(shell find gen/js -type f)
+	@echo "generating: geb/data.gen.go "
 	@go-bindata $(BUILD_FLAG) \
 		-o gen/data.gen.go \
 		-pkg gen \
@@ -31,6 +33,7 @@ gen/data.gen.go:$(shell find gen/js -type f)
 		gen/js/...
 
 data/data.gen.go:$(shell find public/  -type f)
+	@echo "generating: data/data.gen.go "
 	@go-bindata $(BUILD_FLAG) \
 		-o data/data.gen.go\
 		-pkg data -prefix public/ public/...
