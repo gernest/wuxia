@@ -3,6 +3,7 @@
 // templates/footer.html
 // templates/header.html
 // templates/home.html
+// templates/partial/h-menu.html
 // DO NOT EDIT!
 
 package views
@@ -83,6 +84,24 @@ func homeHtml() (*asset, error) {
 	return a, err
 }
 
+// partialHMenuHtml reads file data from disk. It returns an error on failure.
+func partialHMenuHtml() (*asset, error) {
+	path := "/Volumes/gernest/personal/gopath/src/github.com/gernest/wuxia/templates/partial/h-menu.html"
+	name := "partial/h-menu.html"
+	bytes, err := bindataRead(path, name)
+	if err != nil {
+		return nil, err
+	}
+
+	fi, err := os.Stat(path)
+	if err != nil {
+		err = fmt.Errorf("Error reading asset info %s at %s: %v", name, path, err)
+	}
+
+	a := &asset{bytes: bytes, info: fi}
+	return a, err
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -138,6 +157,7 @@ var _bindata = map[string]func() (*asset, error){
 	"footer.html": footerHtml,
 	"header.html": headerHtml,
 	"home.html": homeHtml,
+	"partial/h-menu.html": partialHMenuHtml,
 }
 
 // AssetDir returns the file names below a certain
@@ -183,6 +203,9 @@ var _bintree = &bintree{nil, map[string]*bintree{
 	"footer.html": &bintree{footerHtml, map[string]*bintree{}},
 	"header.html": &bintree{headerHtml, map[string]*bintree{}},
 	"home.html": &bintree{homeHtml, map[string]*bintree{}},
+	"partial": &bintree{nil, map[string]*bintree{
+		"h-menu.html": &bintree{partialHMenuHtml, map[string]*bintree{}},
+	}},
 }}
 
 // RestoreAsset restores an asset under the given directory
