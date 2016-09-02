@@ -9,7 +9,7 @@ import (
 )
 
 func TestMarkdown(t *testing.T) {
-	m := markdown()
+	m := Markdown()
 	vm := otto.New()
 	vm.Set("md", m.ToValue(vm))
 	f := &File{
