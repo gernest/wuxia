@@ -11,15 +11,15 @@ import (
 func TestMarkdown(t *testing.T) {
 	m := Markdown()
 	vm := otto.New()
-	vm.Set("md", m.ToValue(vm))
+	_ = vm.Set("md", m.ToValue(vm))
 	f := &File{
 		Name:     "test file",
 		Contents: "hello, world",
 	}
 	b, _ := json.Marshal(f)
-	vm.Set("data", string(b))
+	_ = vm.Set("data", string(b))
 	expect := string(blackfriday.MarkdownCommon([]byte(f.Contents)))
-	vm.Set("expect", expect)
+	_ = vm.Set("expect", expect)
 	var mdTest = `
 	var file=JSON.parse(data);
 	var out =md.exec(file);

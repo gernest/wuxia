@@ -46,7 +46,7 @@ func TestConfigure(t *testing.T) {
 		t.Error(err)
 	}
 	if ctx.WorkDir != wd {
-		t.Error("expected %s got %s", wd, ctx.WorkDir)
+		t.Errorf("expected %s got %s", wd, ctx.WorkDir)
 	}
 }
 
@@ -67,7 +67,7 @@ func TestPlanExecution(t *testing.T) {
 		t.Fatal("expected default plan")
 	}
 	if np.Title != "default_plan" {
-		t.Errorf("expected default_plan got 5s", np.Title)
+		t.Errorf("expected default_plan got %s", np.Title)
 	}
 
 	// Testcase for missing modules
