@@ -11,6 +11,12 @@ const (
 	fileContentKey = "contents"
 )
 
+// markdown plugin for the otto runtime. This exposes one method exec, which
+// accepts a File object as an argument. It renders the Contents of the file to
+// markdown.
+//
+// A render method is provided just in case you want to render a piece of text
+// as markdown.
 func markdown() Export {
 	e := make(Export)
 	e.Set("exec", func(call otto.FunctionCall) otto.Value {
