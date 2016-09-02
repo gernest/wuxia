@@ -6,9 +6,9 @@ import (
 )
 
 const (
-	fileNameKey   = "name"
-	fileMetaKey   = "meta"
-	fileCOnentKey = "contents"
+	fileNameKey    = "name"
+	fileMetaKey    = "meta"
+	fileContentKey = "contents"
 )
 
 func markdown() Export {
@@ -22,10 +22,10 @@ func markdown() Export {
 		if !ok {
 			panicOtto("markdown: wrong ragument type, expected a file object")
 		}
-		if c, ok := o[fileCOnentKey]; ok {
+		if c, ok := o[fileContentKey]; ok {
 			if cv, cok := c.(string); cok {
 				if cv != "" {
-					o[fileCOnentKey] = blackfriday.MarkdownCommon([]byte(cv))
+					o[fileContentKey] = blackfriday.MarkdownCommon([]byte(cv))
 				}
 			}
 		}
