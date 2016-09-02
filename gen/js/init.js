@@ -6,9 +6,10 @@ var Wu ={
         return _.map(this.tplFuncs, function(v){return v;});
     },
     prepare:function(plan){
+        var that=this;
         if (plan){
             _.each(plan.Dependency, function(el){
-                require(el);
+               that.plugins[el]= require(el);
             });
             return true;
         }
