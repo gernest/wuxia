@@ -15,7 +15,7 @@ const (
 // accepts a File object as an argument. It renders the Contents of the file to
 // markdown.
 //
-// A render method is provided just in case you want to render a piece of text
+// A HTML method is provided just in case you want to render a piece of text
 // as markdown.
 func markdown() Export {
 	e := make(Export)
@@ -36,6 +36,15 @@ func markdown() Export {
 			}
 		}
 		ov, _ := call.Otto.ToValue(o)
+		return ov
+	})
+	e.Set("HTML", func(call otto.FunctionCall) otto.Value {
+		v, err := call.Argument(0).ToString()
+		if err != nil {
+			panicOtto(err.Error())
+		}
+		v = string(blackfriday.MarkdownCommon([]byte(v)))
+		ov, _ := call.Otto.ToValue(v)
 		return ov
 	})
 	return e
