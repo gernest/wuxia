@@ -31,7 +31,7 @@ func markdown() Export {
 		if c, ok := o[fileContentKey]; ok {
 			if cv, cok := c.(string); cok {
 				if cv != "" {
-					o[fileContentKey] = blackfriday.MarkdownCommon([]byte(cv))
+					o[fileContentKey] = string(blackfriday.MarkdownCommon([]byte(cv)))
 				}
 			}
 		}
