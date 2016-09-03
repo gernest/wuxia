@@ -3,7 +3,6 @@ package gen
 import (
 	"encoding/json"
 	"errors"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"sync"
@@ -133,12 +132,7 @@ func defaultSystem() *System {
 // execute the javascript without mutating the state of the generato'r
 // javascript runtime.
 func EvaluateFile(fs afero.Fs, vm *otto.Otto, path string) error {
-	f, err := fs.Open(path)
-	if err != nil {
-		return err
-	}
-	defer func() { _ = f.Close() }()
-	data, err := ioutil.ReadAll(f)
+	data, err := afero.ReadFile(fs, path)
 	if err != nil {
 		return err
 	}
