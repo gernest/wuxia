@@ -24,3 +24,21 @@ The generator is easy to use and extend.
 
 
 ## The structure of a wuxia static website project
+
+```
+├── scripts
+│   ├── init
+│   │   └── index.js
+│   ├── plan
+│   │   └── index.js
+│   └── plugin
+│       └── index.js
+├── src
+│   ├── front_matter.md
+│   └── home.md
+├── templates
+│   └── index.html
+├── LICENCE
+├── README.md
+└── config.json
+```
