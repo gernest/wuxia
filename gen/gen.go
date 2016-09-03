@@ -332,20 +332,7 @@ func ExecStrategy(ctx *Context, filename string, s *Strategy) (*File, error) {
 	}
 	vm := ctx.VM.Copy()
 	d, _ := json.Marshal(f)
-	//wu, err := vm.Get("Wu")
-	//if err != nil {
-	//return nil, err
-	//}
-	//if !wu.IsObject() {
-	//return nil, errors.New("no Wu object")
-	//}
-	//wo := wu.Object()
-	//process, err := wo.Get("process")
-	//if err != nil {
-	//return nil, err
-	//}
 	out := &bytes.Buffer{}
-	//_, err = process.Call(wo.Value(), s, string(d), out)
 	_, err = vm.Call("Wu.process", nil, s, string(d), out)
 	if err != nil {
 		return nil, err
