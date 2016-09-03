@@ -1,6 +1,7 @@
 package gen
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"os"
@@ -321,7 +322,40 @@ func Execute(ctx *Context) error {
 //
 // The strategy outlines how filename is processed.
 func ExecStrategy(ctx *Context, filename string, s *Strategy) (*File, error) {
-	return nil, nil
+	b, err := afero.ReadFile(ctx.FS, filename)
+	if err != nil {
+		return nil, err
+	}
+	f := &File{
+		Name:     filename,
+		Contents: string(b),
+	}
+	vm := ctx.VM.Copy()
+	d, _ := json.Marshal(f)
+	//wu, err := vm.Get("Wu")
+	//if err != nil {
+	//return nil, err
+	//}
+	//if !wu.IsObject() {
+	//return nil, errors.New("no Wu object")
+	//}
+	//wo := wu.Object()
+	//process, err := wo.Get("process")
+	//if err != nil {
+	//return nil, err
+	//}
+	out := &bytes.Buffer{}
+	//_, err = process.Call(wo.Value(), s, string(d), out)
+	_, err = vm.Call("Wu.process", nil, s, string(d), out)
+	if err != nil {
+		return nil, err
+	}
+	fd := &File{}
+	err = json.Unmarshal(out.Bytes(), fd)
+	if err != nil {
+		return nil, err
+	}
+	return fd, nil
 }
 
 //ExecPlan executes plan s for processing the FileList fi using the conetx ctx.

@@ -22,5 +22,26 @@ var Wu ={
     setCustomPlan: function(plan){
         addCustomPlan(JSON.stringify(plan));
     },
+    process: function(strategy,data,out){
+        var that=this;
+        var file=JSON.parse(data);
+
+        // before
+        _.each(strategy.Before,function(s){
+            file=require(s).exec(file);
+        }) ;
+
+        //exec
+        _.each(strategy.Exec,function(s){
+            file=require(s).exec(file);
+        }) ;
+
+        //after
+        _.each(strategy.After,function(s){
+            file=require(s).exec(file);
+        }) ;
+        var v=JSON.stringify(file);
+        out.WriteString(v);
+    }
 };
 
