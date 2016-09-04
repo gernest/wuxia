@@ -3,7 +3,9 @@
 // templates/footer.html
 // templates/header.html
 // templates/home.html
-// templates/partial/h-menu.html
+// templates/login.html
+// templates/partial/close-page.html
+// templates/partial/menu.html
 // DO NOT EDIT!
 
 package views
@@ -84,10 +86,46 @@ func homeHtml() (*asset, error) {
 	return a, err
 }
 
-// partialHMenuHtml reads file data from disk. It returns an error on failure.
-func partialHMenuHtml() (*asset, error) {
-	path := "/Volumes/gernest/personal/gopath/src/github.com/gernest/wuxia/templates/partial/h-menu.html"
-	name := "partial/h-menu.html"
+// loginHtml reads file data from disk. It returns an error on failure.
+func loginHtml() (*asset, error) {
+	path := "/Volumes/gernest/personal/gopath/src/github.com/gernest/wuxia/templates/login.html"
+	name := "login.html"
+	bytes, err := bindataRead(path, name)
+	if err != nil {
+		return nil, err
+	}
+
+	fi, err := os.Stat(path)
+	if err != nil {
+		err = fmt.Errorf("Error reading asset info %s at %s: %v", name, path, err)
+	}
+
+	a := &asset{bytes: bytes, info: fi}
+	return a, err
+}
+
+// partialClosePageHtml reads file data from disk. It returns an error on failure.
+func partialClosePageHtml() (*asset, error) {
+	path := "/Volumes/gernest/personal/gopath/src/github.com/gernest/wuxia/templates/partial/close-page.html"
+	name := "partial/close-page.html"
+	bytes, err := bindataRead(path, name)
+	if err != nil {
+		return nil, err
+	}
+
+	fi, err := os.Stat(path)
+	if err != nil {
+		err = fmt.Errorf("Error reading asset info %s at %s: %v", name, path, err)
+	}
+
+	a := &asset{bytes: bytes, info: fi}
+	return a, err
+}
+
+// partialMenuHtml reads file data from disk. It returns an error on failure.
+func partialMenuHtml() (*asset, error) {
+	path := "/Volumes/gernest/personal/gopath/src/github.com/gernest/wuxia/templates/partial/menu.html"
+	name := "partial/menu.html"
 	bytes, err := bindataRead(path, name)
 	if err != nil {
 		return nil, err
@@ -157,7 +195,9 @@ var _bindata = map[string]func() (*asset, error){
 	"footer.html": footerHtml,
 	"header.html": headerHtml,
 	"home.html": homeHtml,
-	"partial/h-menu.html": partialHMenuHtml,
+	"login.html": loginHtml,
+	"partial/close-page.html": partialClosePageHtml,
+	"partial/menu.html": partialMenuHtml,
 }
 
 // AssetDir returns the file names below a certain
@@ -203,8 +243,10 @@ var _bintree = &bintree{nil, map[string]*bintree{
 	"footer.html": &bintree{footerHtml, map[string]*bintree{}},
 	"header.html": &bintree{headerHtml, map[string]*bintree{}},
 	"home.html": &bintree{homeHtml, map[string]*bintree{}},
+	"login.html": &bintree{loginHtml, map[string]*bintree{}},
 	"partial": &bintree{nil, map[string]*bintree{
-		"h-menu.html": &bintree{partialHMenuHtml, map[string]*bintree{}},
+		"close-page.html": &bintree{partialClosePageHtml, map[string]*bintree{}},
+		"menu.html": &bintree{partialMenuHtml, map[string]*bintree{}},
 	}},
 }}
 

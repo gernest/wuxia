@@ -1,15 +1,8 @@
 {{ template "header.html" .}}
-<div class="pusher">
-    <div class="ui inverted vertical masthead center aligned segment">
-        {{template "partial/h-menu.html" .}}
-        <div class="ui text container">
-            <h1 class="ui inverted header">
-                You never saw this coming.
-            </h1>
-            <h2>Desing,  Build, Deploy , Host, Scale static website like a true
-                biliever.</h2>
-            <div class="ui huge primary button">Get Started </div>
-        </div>
+<div class="container">
+    {{ template "partial/menu.html" .}}
+    <div class="row">
     </div>
-</div>
 {{ template "footer.html" .}}
+</div>
+{{ template "partial/close-page.html" .}}
