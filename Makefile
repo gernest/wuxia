@@ -14,6 +14,7 @@ test:generate
 
 setup:
 	@go get -v github.com/jteeuwen/go-bindata/...
+	@go tet github.com/Unknwon/bra
 
 migration/data.gen.go:$(shell find migration/scripts -type f)
 	@echo "generating: migration/data.gen.go "
@@ -49,5 +50,5 @@ generate: migration/data.gen.go  gen/data.gen.go views/data.gen.go data/data.gen
 cover:
 	./coverage.sh
 
-build:
+build:generate
 	@go build -o wu ./cmd/wuxia
