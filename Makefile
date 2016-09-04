@@ -14,7 +14,7 @@ test:generate
 
 setup:
 	@go get -v github.com/jteeuwen/go-bindata/...
-	@go tet github.com/Unknwon/bra
+	@go get github.com/Unknwon/bra
 
 migration/data.gen.go:$(shell find migration/scripts -type f)
 	@echo "generating: migration/data.gen.go "
