@@ -42,3 +42,6 @@ The generator is easy to use and extend.
 ├── README.md
 └── config.json
 ```
+This is supposed to be the default project layout. It meansthat it is possible
+for projects to decide how to structue the project, only one thing is imortant
+that is the configuration file that sits aat the root of the project.
