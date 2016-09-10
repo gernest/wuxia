@@ -1,4 +1,12 @@
 
+# Table of contents
+
+- [introduction](#introduction)
+  - [overview](#overview)
+  - [getting started](#getting-started)
+
+
+
 # Introduction
 
 ## overview
@@ -41,3 +49,43 @@ generators out there, so why did I decide we need a room for one more?
   This opens up a wide array of good stuffs to the static web generation
   experience.
 
+
+## Overview of features of the generator
+
+- Convention plus configuration. It comes with sane defaults, sane conventions
+  of the way the project should be structured. On to p of this, it gives full
+  freedom if the user is advanced enough to configure it in way that it suits
+  his/her needs.
+
+- Themes : Support customizing of project's look and feel. The default template
+  language is is Go. Effort is underway to add popular javascript templating
+  engines.
+
+- Javascript Plugins: Write plugins in javascript. You can tap almost every
+  aspect of the generation process through javascript. The generator comes with
+  a simple module loader `require` which you can use to break down your modules
+  into separate files.
+
+- Metrics: The generator is wired with exhaustive metrics. You can have full
+  understanding of the resources used and perfomrance of rendering your project.
+
+
+## The structure of a wuxia static website project
+
+```
+├── scripts
+│   ├── init
+│   │   └── index.js
+│   ├── plan
+│   │   └── index.js
+│   └── plugin
+│       └── index.js
+├── src
+│   ├── front_matter.md
+│   └── home.md
+├── templates
+│   └── index.html
+├── LICENCE
+├── README.md
+└── config.json
+```
