@@ -350,7 +350,11 @@ func ExecPlan(ctx *Context, fl FileList, s *Plan) error {
 	return nil
 }
 
-//RegisterBuiltins adds important modules  like underscore and fs.
+//RegisterBuiltins adds important modules  like underscore and fs. This relies
+//on the assumption that the reuire function that is vailable in the ctx.VM
+//instance is the one passed as r.
+//
+// It caches the  pre evaluated  values for the modules to the reauire object.
 func RegisterBuiltins(ctx *Context, r *Require) error {
 	f := &fileSys{}
 	f.Fs = ctx.FS
